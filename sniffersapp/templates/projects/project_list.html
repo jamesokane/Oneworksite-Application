@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+
+{% block title %}Projects{% endblock %}
+{% block head_title %}Projects{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Projects</strong>
+    </li>
+</ol>
+{% endblock %}
+
+{% block actions %}
+<a class="btn btn-primary visible-sm visible-xs" href="{% url 'projects:project_new' %}">Create Project</a></li>
+{% endblock %}
+
+
+{% block content %}
+<div class="docket_buttons btn-group visible-md visible-lg pull-left">
+    <a class="btn btn-primary btn-sm" href="{% url 'projects:project_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Project</a></li>
+</div>
+<div class="docket_buttons btn-group visible-md visible-lg pull-left">
+    <a class="btn btn-primary btn-sm" href="{% url 'daily_dockets:export_dockets' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export Projects</a></li>
+</div>
+
+<div class="col-lg-12">
+    <div class="ibox float-e-margins col-lg-12">
+        <div class="ibox-content ibox-content-65vh">
+            <div class="table-responsive">
+                <table id="dataTables-projects" class="table table-hover dataTables-projects">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Client</th>
+                            <th class="hidden-xs hidden-sm">Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in project_list %}
+                        <tr style="cursor: pointer;">
+                            <td class="docket-status">
+                                {% if project.project_status == "Open" %}
+                                <span class="label label-success">{{ project.project_status }} </span>
+                                {% else %}
+                                <span class="label label-warning">{{ project.project_status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="docket-text">
+                                <b>{{ project.project_name }}</b><br>
+                            </td>
+                            <td class="docket-text">
+                                {{ project.company }}
+                            </td>
+                            <td class="docket-text hidden-xs">
+                                {{ project.project_address }}
+                            </td>
+                        </tr>
+                        {% endfor project%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+$('.dataTables-projects').DataTable({
+    "ordering": false,
+    "dom": "ft",
+    "lengthChange": false,
+    "paging": false,
+    responsive: true,
+    language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search Projects",
+        "emptyTable": "No projects have been created yet."
+    },
+});
+$('tr.change_project').click(function() {
+    window.location = $(this).attr('data-href');
+});
+</script>
+
+{% endblock javascript %}
+
+{% block css %}
+<link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}

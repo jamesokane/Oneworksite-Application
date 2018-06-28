@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}Clients{% endblock %}
+{% block head_title %}Clients{% endblock %}
+
+{% block breadcrumb %}
+<h2>Contact</h2>
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Clients</strong>
+    </li>
+</ol>
+{% endblock %}
+
+
+{% block action_btn %}
+<!--Action Btn Start-->
+<div class="btn-group pull-right">
+    <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Actions <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li onclick="contact_form.myVariable.name='new_contact';contact_form.submit();">
+            <a href="#">Save Contact</a>
+        </li>
+        <li>
+            <a href="{% url 'clients:list' %}">Go Back</a>
+        </li>
+    </ul>
+</div>
+<!--Action Btn End-->
+{% endblock %}
+
+
+{% block content %}
+<div class="col-lg-12">
+    <div class="ibox">
+        {% for company in company_list %}
+        <div class="ibox-content">
+            <h3>{{ company }}</h3>
+            <ul class="sortable-list connectList agile-list" id="{{ company.id }}">
+                {% for contact in contact_list %}
+                    {% if contact.company_name == company.company_name %}
+                        <li class="warning-element table-row" id="entry_{{ contact.id }}" data-href="{% url 'clients:contact_detail' contact.slug %}" style="cursor: pointer;">
+                        {{ contact.contact_name }} - {{ contact.order }}
+                        </li>
+                    {% endif %}
+                {% endfor contact %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<!-- jquery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- Touch Punch - Touch Event Support for jQuery UI -->
+<script src="js/plugins/touchpunch/jquery.ui.touch-punch.min.js"></script>
+
+
+<script type="text/javascript" language="javascript">
+{% for company in company_list %}
+$(document).ready(function() {
+    $("#{{ company.id }}").sortable({
+        connectWith: ".connectList",
+        update: function(event, ui) {
+            var serial = $('#{{ company.id }}').sortable('serialize');
+            $.ajax({
+                url: "{% url 'clients:list' %}",
+                type: "POST",
+                data: { 'content': serial,
+                        'csrfmiddlewaretoken' : '{{ csrf_token }}',
+                        'action': '{{ company }}'}
+            });
+        },
+    }).disableSelection();
+});
+{% endfor company %}
+
+</script>
+
+<script>
+
+    $(document).ready(function($) {
+    		$(".table-row").click(function() {
+    				window.location = $(this).data("href");
+    		});
+    });
+
+
+</script>
+
+
+{% endblock %}

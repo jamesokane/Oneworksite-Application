@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+{% load static i18n %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block head_title %}{% endblock head_title %} - Sniffersapp</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'font-awesome/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'css/plugins/datapicker/datepicker3.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/james.css' %}" rel="stylesheet">
+    {% block css %}{% endblock %}
+</head>
+
+<body class="">
+    <div id="wrapper">
+        {% include "includes/sidebar.html" %}
+
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0px;">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
+                    </div>
+                    <div class="nav navbar-top-links navbar-right">
+                        <div class="btn-group minimalize-styl-2">
+                            {% block actions %}{% endblock %}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-xs-12">
+                    <div class="title">
+                        <h2>{% block title %}{% endblock %}</h2>
+                    </div>
+                    <div class="hidden-xs hidden-sm">
+                        {% block breadcrumb %}{% endblock %}
+                    </div>
+                </div>
+                {% comment %}
+                <div class="col-xs-6">
+                    <div class="title-action">
+                        {% block action_btn %}{% endblock %}
+                    </div>
+                </div>
+                {% endcomment %}
+            </div>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            <div class="wrapper wrapper-content">
+                <div class="row">
+                    {% block content %}{% endblock content %}
+                </div>
+            </div>
+            <!-- <div class="footer">
+                <div>
+                    <strong>Copyright</strong> &copy; 2018 Oneworksite
+                </div>
+            </div> -->
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+    <script src="{% static 'js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+    <script src="{% static 'js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'js/inspinia.js' %}"></script>
+    {% block javascript %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}Members{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <br>
+  <br>
+  <a href="{% url 'invitations:send-invite' %}" class="btn btn-primary">Invite User </a>
+  <a href="{% url 'users:list' %}" class="btn btn-primary">Users </a>
+
+  <br>
+  <br>
+<h2>Pending Requests</h2>
+
+  <table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Invitation Created</th>
+      <th>Invitation Sent</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+    {% for invitation in invitation_list %}
+  <tbody>
+    <tr>
+      <th>{{ invitation.email }}</th>
+      <td>{{ invitation.created }}</td>
+      <td>{{ invitation.sent }}</td>
+      <td>
+          <a href="{% url 'users:resend-invite' invitation.id %}" type="button" class="btn btn-primary btn-sm">Resend Invite</a>
+          <button type="button" class="btn btn-danger btn-sm">Remove Invite</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+{% endfor %}
+</div>
+
+
+
+{% endblock content %}

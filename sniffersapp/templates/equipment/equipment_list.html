@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% load static i18n humanize %}
+
+{% block title %}Equipment{% endblock %}
+{% block head_title %}Equipment{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Equipment</strong>
+    </li>
+</ol>
+{% endblock %}
+
+{% block actions %}
+<a href="{% url 'equipment:add' %}" class="btn btn-primary">New Equipment</a>
+<a href="{% url 'equipment:bookings' %}" class="btn btn-info">Bookings</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3">
+        <div class="widget style1">
+            <div class="row">
+                <div class="col-xs-4 text-center"><i class="fa fa-trophy fa-5x"></i></div>
+                <div class="col-xs-8 text-right">
+                    <span>Equipment count</span>
+                    <h2 class="font-bold">{{ equipment_list.count }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 navy-bg">
+            <div class="row">
+                <div class="col-xs-4"><i class="fa fa-usd fa-5x"></i></div>
+                <div class="col-xs-8 text-right">
+                    <span>This month's booking value</span>
+                    <h2 class="font-bold">$33,960</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 lazur-bg">
+            <div class="row">
+                <div class="col-xs-4"><i class="fa fa-money fa-5x"></i></div>
+                <div class="col-xs-8 text-right">
+                    <span>Last month's booking value</span>
+                    <h2 class="font-bold">$26,498</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="widget style1 yellow-bg">
+            <div class="row">
+                <div class="col-xs-4"><i class="fa fa-truck fa-5x"></i></div>
+                <div class="col-xs-8 text-right">
+                    <span>Most active equipment</span>
+                    <h2 class="font-bold">Truck</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <table id="datatables-equlist" class="table table-hover dataTables-equipment">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Model</th>
+                            <th>Equipment Type</th>
+                            <th>Purchase Date</th>
+                            <th>Purchase Amount</th>
+                            <th>Base Rate</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for equipment in equipment_list %}
+                        <tr>
+                            <td>{{ equipment.name }}</td>
+                            <td>{{ equipment.model}}</td>
+                            <td>{{ equipment.equipment_type }}</td>
+                            <td>{{ equipment.purchase_date }}</td>
+                            <td>${{ equipment.purchase_amount|intcomma }}</td>
+                            <td>${{ equipment.base_rate|intcomma }}</td>
+                            <td>
+                                <a href="{% url 'equipment:edit' equipment.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="{% url 'equipment:book' equipment.id %}" class="btn btn-info btn-sm">Book</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+$('.dataTables-equipment').DataTable({
+    "dom": "ft",
+    "lengthChange": false,
+    pageLength:1000,
+    responsive: true,
+    language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search Equipment",
+        "emptyTable": "No equipment has been created yet."
+    },
+});
+</script>
+{% endblock %}

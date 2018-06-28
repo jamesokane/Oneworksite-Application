@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% load static i18n humanize %}
+
+{% block title %}Connections{% endblock %}
+{% block head_title %}Connections{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Connections</strong>
+    </li>
+</ol>
+{% endblock %}
+
+{% block actions %}
+<a class="btn btn-primary visible-xs visible-sm" href="{% url 'connections:contact_new' %}">New Person</a>
+<a class="btn btn-primary visible-xs visible-sm" href="{% url 'connections:company_new' %}">New Company</a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'connections:contact_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Person</a></li>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> People</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> Companies</a></li>
+    </ul>
+</div>
+
+
+<!--Tab Content Start-->
+<div class="col-lg-12">
+    <div class="ibox float-e-margins col-lg-12">
+      <div class="ibox-content ibox-content-65vh">
+        <div class="tab-content">
+            <!--Contact Tab Start-->
+            <div id="tab-1" class="tab-pane active">
+                <div class="ibox float-e-margins">
+                    <div>
+                        <!--Contact Data Table Start-->
+                        <div class="table-responsive">
+                            <table id="dataTables-contact" class="table table-hover dataTables-contact">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Name</th>
+                                        <th class="hidden-xs">Client</th>
+                                        <th class="hidden-xs hidden-sm hidden-md">Position</th>
+                                        <th class="hidden-xs hidden-sm">Email</th>
+                                        <th class="hidden-xs hidden-sm">Phone</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contact in contact_list %}
+                                    <tr class="change_contact" id="{{ contact.slug }} "data-toggle="modal" data-target="#modal-contact-sum" style="cursor: pointer;">
+                                        <td class="docket-status">
+                                            {% if contact.contact_status == "Working With" %}
+                                            <span class="label label-success" style="padding-top: 5px;">{{ contact.contact_status }}</span>
+                                            {% elif contact.contact_status == "Have Worked" %}
+                                            <span class="label label-info" style="padding-top: 5px;">{{ contact.contact_status }}</span>
+                                            {% else %}
+                                            <span class="label label-warning" style="padding-top: 5px;">{{ contact.contact_status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="docket-text">
+                                            <b>{{ contact.contact_name }}</b><br>
+                                        </td>
+                                        <td class="docket-text hidden-xs">
+                                            {{ contact.company }}
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm hidden-md">
+                                            {{ contact.job_title }}
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm">
+                                            {{ contact.email_work }}
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm">
+                                            {% if contact.phone_mobile != "" %}
+                                            {{ contact.phone_mobile }}
+                                            {% else %}
+                                            {{ contact.phone_work }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor contact%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Contact Tab End-->
+
+            <!--Company Tab Start-->
+            <div id="tab-2" class="tab-pane">
+                <div class="ibox float-e-margins">
+                    <div>
+                        <!--Company Data Table Start-->
+                        <div class="table-responsive">
+                            <table id="dataTables-company" class="table table-hover dataTables-company">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Name</th>
+                                        <th class="hidden-xs">Website</th>
+                                        <th class="hidden-xs hidden-sm">Email</th>
+                                        <th class="hidden-xs hidden-sm">Phone</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for company in company_list %}
+                                    <tr class="change_company" id="{{ company.slug }} "data-toggle="modal" data-target="#modal-company-sum" style="cursor: pointer;">
+                                        <td class="docket-status">
+                                            {% if company.company_status == "Working With" %}
+                                            <span class="label label-success" style="padding-top: 5px;">{{ company.company_status }}</span>
+                                            {% elif company.company_status == "Have Worked" %}
+                                            <span class="label label-info" style="padding-top: 5px;">{{ company.company_status }}</span>
+                                            {% else %}
+                                            <span class="label label-warning" style="padding-top: 5px;">{{ company.company_status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="docket-text">
+                                            <b>{{ company.company_name }}</b><br>
+                                        </td>
+                                        <td class="docket-text hidden-xs">
+                                            {{ company.webaddress_company }}
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm">
+                                            {{ company.company_email }}
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm">
+                                            {{ company.company_phone }}
+                                        </td>
+                                    </tr>
+                                    {% endfor contact%}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Company Data Table End-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--Tab Content End-->
+    </div>
+  </div>
+</div>
+
+<div id="modal-contact-sum" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content"  id="contact_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                {{ contact.contact_name }}
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                              <a class="btn btn-primary visible-md visible-lg pull-right" href="{% url 'connections:contact_edit' contact.slug %}">Edit contact</a>
+                            </div>
+                            <div class="row">
+                              <a class="btn btn-primary btn-lg visible-xs visible-sm pull-right" href="{% url 'connections:contact_edit' contact.slug %}" style="margin-bottom: 15px;">
+                                Edit contact
+                              </a>
+                            </div>
+                            <strong>Contact details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ contact.company }}</span>
+                                        Company
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.job_title }}</span>
+                                        Position
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.email_work }}</span>
+                                        Email
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.phone_mobile}}</span>
+                                        Mobile
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.phone_work }}</span>
+                                        Office Phone
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Social media details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.linkedin }}</span>
+                                        Linkedin
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.facebook }}</span>
+                                        Facebook
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ contact.twitter }}</span>
+                                        Twitter
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Additional info</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span>{{ contact.additional_info|safe }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary visible-md visible-lg pull-right" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary btn-lg visible-xs visible-sm pull-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-company-sum" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-company"  id="company_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                {{ company.company_name }}
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <strong>Company details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ company.webaddress_company }}</span>
+                                        Website
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ company.company_email }}</span>
+                                        Office email
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ company.company_phone }}</span>
+                                        Office phone
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Social media details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ company.linkedin }}</span>
+                                        Linkedin
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ company.facebook }}</span>
+                                        Facebook
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ company.twitter }}</span>
+                                        Twitter
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Additional info</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span>{{ company.additional_info }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+
+<!-- Data tables -->
+<script src="{% static 'js/datatables.min.js' %}"></script>
+
+<script>
+
+    $('.change_contact').click(function(){
+      var catid;
+      catid = $(this).attr("id");
+      $.get("{% url 'connections:list' %}", {content: catid, name: "contact_sum"},
+      function(data){
+        var result = $('<div />').append(data).find('#contact_summary').html();
+        $('#contact_summary').html(result);
+      });
+    });
+
+
+    $('.change_company').click(function(){
+      var catid;
+      catid = $(this).attr("id");
+      $.get("{% url 'connections:list' %}", {content: catid, name: "company_sum"},
+      function(data){
+        var result = $('<div />').append(data).find('#company_summary').html();
+        $('#company_summary').html(result);
+      });
+    });
+
+
+    $('.dataTables-contact').DataTable({
+        "pagingType": "simple",
+        "ordering": false,
+        "lengthChange": false,
+        pageLength:15,
+        responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search Contacts",
+            "emptyTable": "No contact have been created yet.",
+            "info": "",
+        },
+    });
+
+
+    $('.dataTables-company').DataTable({
+      "pagingType": "simple",
+      "ordering": false,
+      "lengthChange": false,
+      pageLength:15,
+      responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search Companies",
+            "emptyTable": "No company have been created yet.",
+            "info": "",
+        },
+    });
+
+
+    {% for message in messages %}
+    $(".alert-{{ message.tags }}").fadeTo(3000, 500).slideUp(500, function(){
+        $(".alert-{{ message.tags }}").alert('close');
+    });
+    {% endfor message %}
+
+</script>
+{% endblock javascript %}
+
+{% block css %}
+<link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}

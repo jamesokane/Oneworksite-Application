@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit user profile for {{ user.username }}{% endblock %}
+
+{% block breadcrumb %}
+<h2>Edit user profile for {{ user.username }}</h2>
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Profile</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<div class="col-lg-12">
+    <div class="ibox-content">
+        <form class="form-horizontal" method="post" action="{% url 'users:update' %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            {% for formset in inlines %}
+            {{ formset|crispy }}
+            {% endfor %}
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-success">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

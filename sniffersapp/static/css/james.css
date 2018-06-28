@@ -1,0 +1,516 @@
+
+
+.select2-container--default .select2-selection--single {
+    height: 35px !important;
+    border-radius: 0px !important;
+    border: 1px solid #e5e6e7 !important;
+}
+
+/*nav bar */
+
+.snifferapp-logo-container {
+  width: 60px;
+  float:left;
+  display: inline-block;
+}
+.snifferapp-logo {
+  color: black;
+  position: absolute;
+  margin: 8px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* Daily Docket Module*/
+.dropdown-toggle.btn-primary:focus{
+  background-color: #1ab394 !important;
+  border-color: #1ab394 !important;
+}
+
+.docket-status{
+    vertical-align: middle !important;
+    width: 70px !important;
+    padding-right: 30px!important;
+}
+
+.docket-text{
+    padding-top: 10px !important;
+}
+
+.docket_buttons{
+    margin-left: 15px;
+    margin-bottom: 15px;
+}
+
+.docket-title{
+    border: none;
+    padding-top: 15px !important;
+    padding-right: 10px !important;
+    padding-bottom: 15px !important;
+    padding-left: 0px !important;
+    vertical-align: middle !important;
+    line-height: 17px !important;
+}
+
+.docket-check{
+    width: 35px;
+    border: none;
+    padding-top: 5px !important;
+    padding-right: 10px !important;
+    padding-bottom: 5px !important;
+    padding-left: 0px !important;
+    vertical-align: middle !important;
+    line-height: 17px !important;
+}
+
+.docket_colour_div {
+    vertical-align: middle !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    padding-left: 0px !important;
+    padding-right: 5px !important;
+    width: 10px !important;
+}
+
+.docket_colour_element, .client_colour_element {
+    border-left: 4px solid #1ab394;
+    height: 35px;
+}
+
+.docket_sum_item{
+    margin-bottom: 10px;
+}
+
+.docket_image{
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e5e6e7;
+}
+
+.docket_text{
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.docket_text_heading{
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.docket_signature, .docket_checklist {
+    padding-top: 30px;
+    border-top: 2px solid #e5e6e7;
+
+}
+
+#operator_sign_tag, #supervisor_sign_tag, .docket_text_signature {
+    font-family: 'Schoolbell', arial, serif;
+    font-size: 25px;
+
+}
+
+.docket_disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+
+
+/* DataTable */
+.next, .previous {
+    font-size: 20px;
+}
+
+.dataTables_filter .form-control {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: -webkit-fill-available !important;
+    margin-bottom: 0;
+    display: table-cell;
+}
+
+div.dataTables_wrapper div.dataTables_filter label {
+    width: 100%;
+}
+
+.dataTables_filter label {
+    margin-right: 0px;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: 0px;
+}
+
+.table-responsive {
+    /*margin-top: -40px;*/
+    border: none !important;
+}
+
+#DataTables_Table_0_info, #DataTables_Table_0_paginate, #DataTables_Table_1_info, #DataTables_Table_1_paginate {
+    visibility: hidden;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    border-top: 0px solid #ddd;
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    border-top: 0px solid #e7eaec;
+
+}
+
+
+/* ibox*/
+.ibox-content {
+    border-style: none;
+
+}
+
+.ibox-content-65vh {
+    border-style: none;
+    min-height: 65vh;
+}
+
+/* Nav Tabs */
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    background: #ffffff;
+    border-color: #ffffff;
+}
+
+.nav-tabs {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: 0px;
+}
+
+.client_sum_heading {
+    margin-top: 20px !important;
+}
+
+.fa-envelope, .fa-phone, .fa-map-marker, .fa-building, .fa-globe {
+    margin-right: 10px;
+}
+
+.fa-linkedin-square, .fa-facebook-official, .fa-twitter-square {
+    margin-right: 10px;
+}
+
+.company_summary {
+    float: left;
+    width: 100%;
+    overflow: hidden;
+    clear: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.company_summary_title{
+    margin-top: 0px;
+}
+
+.company_summary dt {
+    margin-top: 10px;
+}
+
+.nav.nav-tabs > li.active {
+    border-bottom: 4px solid #1ab394;
+}
+
+.social-feed-box {
+    padding: 0px;
+    border: 0px;
+    border-bottom: 2px solid #e7eaec;
+}
+
+dl {
+    margin-bottom: 0px;
+}
+
+.dl-horizontal dt {
+    margin-bottom: 5px;
+}
+
+dd.project-people {
+    margin-top: 0px;
+}
+
+.social-body {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.social-avatar {
+    padding-top: 5px;
+}
+
+.social-feed-box {
+    margin-bottom: 5px;
+    padding-top: 15px;
+}
+
+
+/* Contact & Company Forms */
+.form_control_contact, .form_control_company {
+    margin-bottom: 10px;
+    width: 280px;
+    height: 30px;
+}
+
+.form_control_prestart{
+    text-align: left !important;
+    margin-bottom: 20px;
+    width: 400px;
+    height: 35px;
+}
+
+
+.form_control_prestart_title{
+    text-align: left !important;
+    margin-bottom: 10px;
+    width: 130px !important;
+    height: 30px;
+    margin-top: 5px;
+}
+
+.form_control_prestart_form{
+    margin-left: 130px !important;;
+}
+
+#contact_info_tag, #company_info_tag {
+    width: 70%;
+}
+
+
+
+
+
+.project-status, .project-title, .project-completion, .project_forecast {
+    border: none;
+    padding-top: 15px !important;
+    padding-right: 10px !important;
+    padding-bottom: 15px !important;
+    padding-left: 0px !important;
+    vertical-align: middle !important;
+    line-height: 17px !important;
+}
+
+
+.project-status{
+    width: 70px !important;
+}
+
+.project_sum_item{
+    margin-bottom: 10px;
+}
+
+.company-wrapper-content {
+    padding-top: 20px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+}
+
+.cct-leftpad{
+    padding-left: 0px;
+}
+
+.cct-rightpad{
+    padding-right: 0px;
+}
+
+
+.data-table-seach-pad {
+    padding-top: 50px;
+}
+
+/* Project Forms */
+.form_control_project {
+    margin-bottom: 10px;
+    width: 280px;
+    height: 35px;
+}
+#id_additional_info_iframe{
+    width: 70%;
+    border: 0px;
+    padding-left: 0px;
+}
+
+/* Summernote Edits */
+.note-editor.note-frame {
+    border: 2px solid #e5e6e7 !important;
+}
+
+.elements-list .list-group-item.active, .elements-list .list-group-item:hover {
+    background: #fff !important;
+    border-left: 3px solid #676a6c;
+}
+
+.com_detail_info {
+    margin-top: 20px;
+}
+
+.com_detail_address {
+    margin-bottom: 0px;
+}
+
+.fh-column {
+    min-height: 65vh;
+}
+
+.full-height-scroll {
+    min-height: 65vh;
+}
+
+.com_detail_contact{
+    padding-left: 0px;
+    border-left: 2px solid #f3f3f4;
+}
+
+.project-timeline-heading {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+
+#map {
+  height: 400px;
+  width: 100%;
+}
+
+
+
+#fault_tag, #reported_to_tag {
+height: 100px;
+
+}
+
+/* Timesheet Calender */
+.fc-event {
+    height: 30px;
+}
+
+
+/* Timesheet Weekly View */
+.weekly_timesheet_date_ibox{
+    margin-bottom: 0px !important;
+    border-bottom: 0px !important;
+}
+
+.weekly_timesheet_table{
+    margin-top: 25px;
+    margin-bottom: 0px;
+}
+
+.weekly_timesheet_table_heading{
+    padding-bottom: 0px;
+    padding-top: 20px;
+}
+
+.weekly_timesheet_table_border {
+    border: 0px !important;
+    background-color: #d1dade !important;
+    padding-top: 7px !important;
+    padding-right: 15px !important;
+    padding-bottom: 7px !important;
+    padding-left: 15px !important;
+    min-height: 30px !important;
+}
+
+.table-hover > tbody > tr.no-hover:hover > td {
+     background-color: white;
+ }
+
+.weekly_timesheet_sum_heading{
+    border: 0px !important;
+    background-color: #1ab394 !important;
+    color: #FFFFFF !important;
+    min-height: 40px !important;
+    padding-bottom: 0px !important;
+    padding-top: 18px !important;
+ }
+
+.no_border{
+    border: 0px !important;
+ }
+
+.weekly_timesheet_days{
+    padding-bottom: 0px;
+ }
+
+.timesheet-top-content {
+    padding-top: 0px;
+    padding-right: 10px;
+    padding-bottom: 0px;
+    padding-left: 10px;
+}
+
+.form_control_timesheet{
+    text-align: left !important;
+    width: 200px;
+    height: 35px;
+    font-size: 13px;
+}
+
+.timesheet-form-item {
+    border-bottom: 1px solid #e7eaec !important;
+
+}
+
+.timesheet_form_item_name{
+    margin-top: 10px;
+}
+
+.new_timesheet_modal{
+    padding-bottom: 0px !important;
+    margin-bottom: 5px !important;
+}
+
+
+.clockpicker-popover {
+    z-index: 999999;
+}
+
+.create_timesheet_modal{
+    border-top: 0px !important;
+    padding-top: 20px;
+}
+
+.timesheet-detail {
+    position: relative;
+    max-height: 620px;
+}
+
+/* Added by Wade */
+
+.chart-div {
+    height: 30vh;
+    max-height: 30vh;
+    float: left;
+    margin-bottom: 20px;
+}
+
+#prestart_form .col-lg-12 {
+    padding-left: 0;
+}
+
+.btn-lg {
+}
+
+.title {
+    float: left;
+}
+
+.breadcrumb {
+    clear: both;
+    margin-bottom: 10px;
+}
+
+.right {
+    text-align: right;
+}
+
+.navbar-static-top .btn-group .btn {
+    margin-left: 5px;
+}

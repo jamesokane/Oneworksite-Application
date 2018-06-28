@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}Suppliers{% endblock %}
+{% block head_title %}Suppliers{% endblock %}
+
+{% block breadcrumb %}
+<h2>Company</h2>
+<ol class="breadcrumb">
+    <li>
+        <a href="">Home</a>
+    </li>
+    <li>
+        <a href="{% url 'suppliers:list' %}">Suppliers</a>
+    </li>
+    <li class="active">
+        <strong>{{ company.company_name }}</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block action_btn %}
+<div class="btn-group pull-right">
+    <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Actions <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li><a href="">Edit Company</a></li>
+        <li><a href="#">New Note</a></li>
+    </ul>
+</div>
+{% endblock action_btn %}
+
+{% block content %}
+<div class="col-lg-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-1" data-toggle="tab">About</a></li>
+        <li><a href="#tab-2" data-toggle="tab">Notes</a></li>
+        <li><a href="#tab-3" data-toggle="tab">Contacts</a></li>
+    </ul>
+</div>
+
+<!--Tab Content Start-->
+<div class="col-lg-12">
+    <div class="tab-content">
+        <!--Tab 1 Start-->
+        <div class="tab-pane active ibox-content" id="tab-1">
+            <div class="row ">
+                <div class="col-lg-12">
+                    <div class="m-b-md">
+                        <h2>{{ company.company_name }}</h2>
+                        <dd class="project-people">
+                            <a href=""><i class="fa fa-linkedin-square fa-2x" aria-hidden="true"></i></a>
+                            <a href=""><i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i></a>
+                            <a href=""><i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i></a>
+                        </dd>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-5">
+                    <dl class="dl-horizontal">
+                        <dt>Website:</dt> <dd>{{ company.webaddress_company }}</dd>
+                        <dt>Email:</dt> <dd>{{ company.company_email }}</dd>
+                        <dt>Phone:</dt> <dd>{{ company.company_phone }}</dd>
+                    </dl>
+                </div>
+                <div class="col-lg-7" id="cluster_info">
+                    <dl class="dl-horizontal" >
+                        <dt>Added by:</dt> <dd>USER NAME</dd>
+                        <dt>Last Updated:</dt> <dd>{{ company.updated_on }}</dd>
+                        <dt>Created:</dt> <dd> 	{{ company.created_on }} </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row com_detail_info">
+                <div class="col-lg-8">
+                    <dl class="dl-horizontal">
+                        <dt>Primary Location:</dt>
+                        <dd>
+                            <p  class="com_detail_address">58 Conte Circuit</p>
+                            <p class="com_detail_address">Augustine Heights 4300</p>
+                            <p class="com_detail_address">Queensland Australia</p>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row com_detail_info">
+                <div class="col-lg-8">
+                    <dl class="dl-horizontal">
+                        <dt>More Info:</dt>
+                        <dd>
+                            <p>{{ company.additional_info }}</p>
+                            <br />
+                            <p>{{ company.additional_info }}</p>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <!--Tab 1 End-->
+        <!--Tab 2 Start-->
+        <div class="tab-pane" id="tab-2">
+            <div class="fh-column">
+                <div class="full-height-scroll">
+                    <ul class="list-group elements-list">
+                        {% if note_list.0 is None %}
+                            <li class="list-group-item change_note" id="{{ note.slug }}" style="cursor: pointer;">
+                                <small class="pull-right text-muted">TEST</small>
+                                <strong>TEST</strong>
+                                <div class="small m-t-xs">
+                                    <p>TEST</p>
+                                </div>
+                            </li>
+                        {% else %}
+                            {% for note in note_list %}
+                                <li class="list-group-item change_note" id="{{ note.slug }}" style="cursor: pointer;">
+                                    <small class="pull-right text-muted">{{ note.created_on }}</small>
+                                    <strong>{{ note.note_name }}</strong>
+                                    <div class="small m-t-xs">
+                                        <p>{{ note.description_summary }}</p>
+                                    </div>
+                                </li>
+                            {% endfor note %}
+                        {% endif %}
+                    </ul>
+
+                </div>
+            </div>
+            <div class="full-height">
+                <div class="full-height-scroll white-bg border-left">
+                    <div class="element-detail-box">
+                        <div id="note_summary">
+                            <div>
+                                <div class="small text-muted">
+                                    <i class="fa fa-clock-o"></i> {{ note.created_on }}
+                                </div>
+                                <h1>
+                                    {{ note.note_name }}
+                                </h1>
+                                <p>
+                                    {{ note.note_description }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Tab 2 End-->
+        <!--Tab 3 Start-->
+        <div id="tab-3" class="tab-pane">
+            <div class="ibox float-e-margins col-lg-9">
+                <div class="ibox-content full-height-scroll">
+                    <!--Contact Data Table Start-->
+                    <div class="table-responsive">
+                        <table class="table table-hover dataTables-contact" >
+                            <thead style="display: none;">
+                                <tr>
+                                    <th></th>
+                                    <th>Status</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for contact in contact_list %}
+                                <tr class="change_contact" id="{{ contact.slug }}" style="cursor: pointer;">
+                                    <td class="client_colour_div" ><div class="client_colour_element"></div></td>
+                                    <td class="project-status">
+                                        {% if contact.contact_status == "Working With" %}
+                                        <span class="label label-success">{{ contact.contact_status }}</span>
+                                        {% elif contact.contact_status == "Have Worked" %}
+                                        <span class="label label-info">{{ contact.contact_status }}</span>
+                                        {% elif contact.contact_status == "Yet To Work" %}
+                                        <span class="label label-warning">{{ contact.contact_status }}</span>
+                                        {% else %}
+                                        <span class="label label-default"></span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="project-title">
+                                        <b>{{ contact.contact_name }}</b>
+                                        <br/>
+                                        <small>{{ contact.created_on }}</small>
+                                    </td>
+                                </tr>
+                                {% endfor contact%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--Contact Data Table End-->
+                </div>
+            </div>
+            <div class="col-lg-3 com_detail_contact" >
+                <div class="ibox" id="contact_summary">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <h3>{{ contact.contact_name }}</h3>
+                                {% if contact.contact_status == "Working With" %}
+                                <a href="{% url 'connections:contact_detail' contact.slug %}" class="btn btn-success btn-xs company_edit_btn">View contact Profile</a>
+                                {% elif contact.contact_status == "Have Worked" %}
+                                <a href="{% url 'connections:contact_detail' contact.slug %}" class="btn btn-info btn-xs company_edit_btn">View contact Profile</a>
+                                {% elif contact.contact_status == "Yet To Work" %}
+                                <a href="{% url 'connections:contact_detail' contact.slug %}" class="btn btn-warning btn-xs company_edit_btn">View contact Profile</a>
+                                {% else %}
+                                <a href="#" class="btn btn-default btn-xs company_edit_btn">View contact Profile</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <dl>
+                            {% if contact.company != ""  %}
+                            <div class="project_sum_item">
+                                <dt>Company</dt> <dd>{{ contact.company }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if contact.job_title != ""  %}
+                            <div class="project_sum_item">
+                                <dt>Job Title</dt> <dd>{{ contact.job_title }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if contact.email_work != ""  %}
+                            <div class="project_sum_item">
+                                <dt>Email</dt> <dd>{{ contact.email_work }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if contact.phone_mobile != ""  %}
+                            <div class="project_sum_item">
+                                <dt>Phone</dt> <dd>{{ contact.phone_mobile }}</dd>
+                            </div>
+                            {% endif %}
+                            {% if contact.location != ""  %}
+                            <div class="project_sum_item">
+                                <dt>Location</dt> <dd>{{ contact.location }}</dd>
+                            </div>
+                            {% endif %}
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Tab 3 End-->
+    </div>
+    <!--Tab Content End-->
+</div>
+{% endblock content %}
+
+
+{% block javascript %}
+<!-- Page-Level Scripts -->
+<script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
+
+<script>
+
+    $('.change_note').click(function(){
+        var catid;
+        noteid = $(this).attr("id");
+        $.get("{% url 'connections:company_detail' company.slug %}", {content: noteid, name: "note_sum"}, function(data){
+            var result = $('<div />').append(data).find('#note_summary').html();
+            $('#note_summary').html(result);
+        });
+    });
+
+
+    $('.change_contact').click(function(){
+        var catid;
+        catid = $(this).attr("id");
+        $.get("{% url 'connections:list' %}", {content: catid, name: "contact_sum"}, function(data){
+            var result = $('<div />').append(data).find('#contact_summary').html();
+            $('#contact_summary').html(result);
+        });
+    });
+
+
+    $('.dataTables-contact').DataTable({
+        "lengthChange": false,
+        pageLength:1000,
+        responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search Contacts"
+        },
+    });
+
+
+    {% for message in messages %}
+    $(".alert-{{ message.tags }}").fadeTo(3000, 500).slideUp(500, function(){
+        $(".alert-{{ message.tags }}").alert('close');
+    });
+    {% endfor message %}
+
+</script>
+{% endblock javascript %}

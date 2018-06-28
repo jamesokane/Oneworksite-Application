@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+{% block title %}Dockets{% endblock %}
+{% block head_title %}Dockets{% endblock %}
+
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li>
+        <a href="{% url 'daily_dockets:list' %}">Dockets</a>
+    </li>
+    <li class="active">
+        <strong>New Docket</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+
+{% block actions %}
+<a class="btn btn-primary btn-lg visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:list' %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
+{% endblock %}
+
+
+{% block action_btn %}
+<div class="btn-group pull-right">
+    <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Actions <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li><a href="{% url 'daily_dockets:list' %}">Go Back</a></li>
+    </ul>
+</div>
+{% endblock action_btn %}
+
+
+{% block content %}
+<div class="row">
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'daily_dockets:list' %}">
+          <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+        </a>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" onclick="prestart_form.myVariable.name='new_prestart';prestart_form.submit();">
+          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Docket
+        </a>
+    </div>
+</div>
+<div class="col-lg-12">
+    <div class="ibox">
+        <div class="ibox-content ibox-content-65vh">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="m-b-md">
+                        <h3>Create a new Daily Docket</h3>
+                        <h5>Operators are required to complete the daily prestart at the start of every shift. These records are for the basis of a safety and plant maintenace procedure and will be subject to random inspection. Keep the record with you at all times.</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <table class="table table-hover" >
+                        <tbody>
+                            <tr class="table-row" data-href="{% url 'daily_dockets:prestart_form' %}" style="cursor: pointer;">
+                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
+                                <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="docket-title"><b>Complete Daily Prestart</b></td>
+                            </tr>
+                            <tr class="docket_disabled">
+                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
+                                <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="docket-title"><b>Complete Daily Docket</b></td>
+                            </tr>
+                            <tr class="docket_disabled">
+                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
+                                <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
+                                <td class="docket-title"><b>Sign Daily Docket</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block javascript %}
+<script>
+$(document).ready(function($) {
+		$(".table-row").click(function() {
+				window.location = $(this).data("href");
+		});
+});
+</script>
+{% endblock javascript %}

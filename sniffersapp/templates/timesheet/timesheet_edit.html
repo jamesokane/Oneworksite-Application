@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+{% block title %}Timesheets{% endblock %}
+{% block head_title %}Timesheets{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/clockpicker/clockpicker.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumb %}
+<h2>Weekly Timesheet</h2>
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Timesheet</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block action_btn %}
+<div class="btn-group pull-right">
+    <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Actions <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li>
+            <a data-toggle="modal" data-target="#modal-timseheet-form">Create Timecard</a>
+        </li>
+        <li>
+            <a data-toggle="modal" data-target="#csvWeeklyExportModal">Export Weekly Timesheet</a>
+        </li>
+        <li>
+            <a data-toggle="modal" data-target="#csvMonthlyExportModal">Export Timesheet</a>
+        </li>
+        <li>
+            <a href="">Go Back</a>
+        </li>
+    </ul>
+</div>
+{% endblock action_btn %}
+
+
+{% block content %}
+<div class="col-lg-12">
+    <form action="" id="prestart_form" role="form" method="POST">
+        <input type="hidden" id="myVariable" name="" />
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <table class="table table-hover" >
+                            <tbody>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>Date</b></td>
+                                    <td class="docket-check"><b>{{ edit_timesheet_form.docket_date }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item2.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item2 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item3.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item3 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item4.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item4 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item5.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item5 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item6.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item6 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item7.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item7 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item8.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item8 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item9.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item9 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item10.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item10 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item11.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item11 }}</b></td>
+                                </tr>
+                                <tr style="cursor: pointer;">
+                                    <td class="docket-title"><b>{{ prestart_form.item12.label }}</b></td>
+                                    <td class="docket-check"><b>{{ prestart_form.item12 }}</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+<!-- Date Picker -->
+<script src="{% static 'js/plugins/fullcalendar/moment.min.js' %}"></script>
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+
+<!-- Autocomplete -->
+<script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+
+<!-- Clockpicker -->
+<script src="{% static 'js/plugins/clockpicker/clockpicker.js' %}"></script>
+
+<script>
+
+
+$('#docket_date_tag').datepicker({
+    format: 'yyyy-mm-dd',
+    todayBtn: "linked",
+    keyboardNavigation: false,
+    forceParse: false,
+    calendarWeeks: true,
+    autoclose: true
+});
+
+var equipment = [
+    {% for equipment in equipment_list %}
+    '{{ equipment }}',
+    {% endfor %}
+];
+
+var companies = [
+  {% for company in company_list %}
+  '{{ company }}',
+  {% endfor %}
+];
+
+var projects = [
+  {% for project in project_list %}
+  '{{ project }}',
+  {% endfor %}
+];
+
+$(function() {
+    $("#equipment_name_tag").autocomplete({
+        source:[equipment]
+    });
+});
+
+$(function() {
+  $("#company_name_tag").autocomplete({
+    source:[companies]
+  });
+});
+
+$(function() {
+  $("#project_name_tag").autocomplete({
+    source:[projects]
+  });
+});
+
+$('.clockpicker').clockpicker()
+
+</script>
+
+{% endblock javascript %}

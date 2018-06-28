@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% load static i18n humanize %}
+
+{% block title %}Dockets{% endblock %}
+{% block head_title %}Dockets{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Dockets</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block actions %}
+<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:daily_docket_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Docket</a></li>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="docket_buttons btn-group visible-md visible-lg pull-left">
+    <a class="btn btn-primary btn-sm" href="{% url 'daily_dockets:daily_docket_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Docket</a></li>
+</div>
+<div class="docket_buttons btn-group visible-md visible-lg pull-left">
+    <a class="btn btn-primary btn-sm" href="{% url 'daily_dockets:export_dockets' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export Dockets</a></li>
+</div>
+
+<div class="col-lg-12">
+    <div class="ibox float-e-margins col-lg-12">
+        <div class="ibox-content ibox-content-65vh">
+            <div class="table-responsive">
+                <table id="dataTables-dockets" class="table table-hover dataTables-dockets">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Number</th>
+                            <th>Date</th>
+                            <th class="hidden-xs">Equipment</th>
+                            <th class="hidden-xs hidden-sm">Project</th>
+                            <th class="hidden-xs hidden-sm">User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for docket in docket_list %}
+                        {% if docket.locked %}
+                        <tr class="table-row" data-href="{% url 'daily_dockets:docket_summary' docket.slug %}" id="{{ docket.slug }}" style="cursor: pointer;">
+                        {% else %}
+                        <tr class="table-row" data-href="{% url 'daily_dockets:docket_start' docket.slug %}" id="{{ docket.slug }}" style="cursor: pointer;">
+                        {% endif %}
+                            <td class="docket-status">
+                                {% if docket.locked %}
+                                <span class="label label-success">Complete </span>
+                                {% else %}
+                                <span class="label label-warning">In Progress</span>
+                                {% endif %}
+                            </td>
+                            <td class="docket-text">
+                                <b>{{ docket.slug }}</b><br>
+                            </td>
+                            <td class="docket-text">
+                                {{ docket.docket_date }}
+                            </td>
+                            <td class="docket-text hidden-xs">
+                                {{ docket.equipment }}
+                            </td>
+                            <td class="docket-text hidden-xs hidden-sm">
+                                {{ docket.project }}<br>
+                            </td>
+                            <td class="docket-text hidden-xs hidden-sm">
+                                {{ docket.created_user.first_name }} {{ docket.created_user.last_name }}
+                            </td>
+                        </tr>
+                        {% endfor docket%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-docket-summary" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog docket_summary">
+        <div class="modal-content"></div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+// $('.docket').click(function() {
+//     var slug = $(this).attr('id');
+//     var locked = $(this).hasClass('locked');
+//     if (locked) {
+//         $.get('/dockets/' + slug + '/summary/', function(data) {
+//             $('#modal-docket-summary .modal-content').html(data);
+//             $('#modal-docket-summary').modal();
+//         });
+//     } else {
+//         window.location = '/dockets/' + slug + '/';
+//     }
+// });
+
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+
+
+$('.dataTables-dockets').DataTable({
+    "pagingType": "simple",
+    "ordering": false,
+    "lengthChange": false,
+    pageLength:15,
+    responsive: true,
+    language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search Dockets",
+        "emptyTable": "No dockets have been created yet.",
+        "info": "",
+    },
+});
+</script>
+{% endblock javascript %}
+
+{% block css %}
+<link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}

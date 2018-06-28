@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load static crispy_forms_tags %}
+
+{% block title %}Equipment{% endblock %}
+{% block head_title %}Equipment{% endblock %}
+
+{% block css %}
+{{ form.media.css }}
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li>
+        <a href="{% url 'equipment:list' %}">Equipment</a>
+    </li>
+    <li class="active">
+        <strong>Add/edit</strong>
+    </li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="col-lg-12">
+    <div class="ibox-content m-b-sm border-bottom">
+        <div class="row">
+            <form id="equipment_form" role="form" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            </div>
+            {% endfor %}
+            <input type="submit" class="btn btn-primary btn-lg" value="Save Equipment">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'js/plugins/fullcalendar/moment.min.js' %}"></script>
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+<script>
+$('#purchase_date').datepicker({
+    todayBtn: "linked",
+    keyboardNavigation: false,
+    forceParse: false,
+    calendarWeeks: true,
+    autoclose: true
+});
+</script>
+{{ form.media.js }}
+{% endblock %}

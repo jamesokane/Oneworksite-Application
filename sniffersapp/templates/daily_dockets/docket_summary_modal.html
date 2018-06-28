@@ -1,0 +1,179 @@
+{% load static i18n %}
+{% load humanize %}
+
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/james.css' %}" rel="stylesheet">
+
+
+
+<div class="col-lg-12">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox">
+            <div class="ibox-title weekly_timesheet_sum_heading">
+                <div style="font-size: 20px; padding-bottom: 15px;">
+                    Docket {{ docket }}
+                </div>
+            </div>
+            <div class="ibox-content p-xl">
+                    <div class="row docket_image">
+                        <img alt="image" src="{% static 'images/logo.png' %}">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">DATE:</span>
+                            <span>{{ docket.docket_date }}</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">DATE:</span>
+                            <span>{{ docket.docket_date|date:"l" }}</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">SHIFT:</span>
+                            <span>{{ docket.docket_shift }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">CUSTOMER:</span>
+                            <span>{{ docket.company_name }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">PROJECT NAME/NUMBER:</span>
+                            <span>{{ docket.project_name }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">ITEM OR PLANT:</span>
+                            <span>{{ docket.equipment_name }}</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">UNIT NO:</span>
+                            <span>Need to add</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">OPERATOR:</span>
+                            <span>{{ docket.created_user }}</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">SUPERVISOR:</span>
+                            <span>{{ docket.supervisor }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">START TIME:</span>
+                            <span>{{ docket.start_time }}</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">FINISH TIME:</span>
+                            <span>{{ docket.finish_time }}</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">TOTAL HOURS:</span>
+                            <span>{{ docket.total_hours.0 }}h {{ docket.total_hours.1 }}m</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">LUNCH / SMOKO:</span>
+                            <span>{{ docket.lunch }}mins</span>
+                        </div>
+                        <div class="col-sm-4 docket_text">
+                            <span class="docket_text_heading">PAYABLE HOURS:</span>
+                            <span>{{ docket.payable_hours.0 }}h {{ docket.payable_hours.1 }}m</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">ATTACHMENTS USED:</span>
+                            <span>{{ docket.attachments }}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive m-t docket_checklist">
+                        <h3>PLANT OPERATORS' DAILY SAFETY CHECKLIST</h3>
+                        <table class="table invoice-table">
+                            <tbody>
+                            <tr>
+                                <td><div><strong>1. Brakes, steering, gauges, lights, warning devices</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>2. Visibility - windscreen, wipers, washers, demisters, mirrors, windows</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>3. Cabin - access, seating, seatbelts, loose objects, control levers</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>4. Wheels, tyres, nutes, damage, wear, pressure</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>5. Guards - in place, secure, warning signs lights, alarms</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>6. Hydraulics - rams, hoses, leaks, wear</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>7. Excessive wear - hooks, chains, pins, pivots, tracks, G.E.T.</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>8. Oils and coolants level</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>9. Misc, electrical, fire extinguisher, communications</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>10. Quick hitch attachments</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>11. You are free from the influences of drugs and alcohol</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            <tr>
+                                <td><div><strong>12. You are physically and mentally fit to operate or drive</strong></div>
+                                <td><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- /table-responsive -->
+                    <div class="row">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">Details of Fault/Defect:</span>
+                            <span>{{ docket.fault }}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">Fault Reported to:</span>
+                            <span>{{ docket.reported_to }}</span>
+                        </div>
+                    </div>
+                    <div class="row docket_signature">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">Operator's Signature:</span><br>
+                            <span class="docket_text_signature"><img src="{{ docket.operator_sign }}"></span>
+                        </div>
+                    </div>
+                    <div class="row docket_signature">
+                        <div class="col-sm-12 docket_text">
+                            <span class="docket_text_heading">Supervisor's Signature:</span><br>
+                            <span class="docket_text_signature"><img src="{{ docket.supervisor_sign }}"></span>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>

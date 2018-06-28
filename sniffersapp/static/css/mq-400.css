@@ -1,0 +1,17 @@
+@media all and (max-width: 400px) {
+  .form_control_project, .form_control_contact, .form_control_company {
+      width: 100% !important;
+  }
+
+  .create_timesheet_modal {
+    position: fixed;
+    bottom: 5px;
+  }
+
+  .modal-body {
+    min-height: 1050px;
+    max-height: calc(120vh - 400px);
+    overflow-y: auto;
+    margin-bottom: 30px;
+  }
+}

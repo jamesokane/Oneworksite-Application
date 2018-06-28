@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}Connections{% endblock %}
+{% block head_title %}Connections{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/jquery.autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/summernote/summernote.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/summernote/summernote-bs3.css' %}" rel="stylesheet">
+{% endblock %}
+
+
+{% block breadcrumb %}
+<h2>Contact</h2>
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li>
+        <a href="{% url 'connections:list' %}">Connections</a>
+    </li>
+    <li class="active">
+        <strong>Add Person</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="col-lg-12">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="m-b-md">
+                        <h2>New Contact</h2>
+                    </div>
+                </div>
+            </div>
+            <form id="contact_form" role="form" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <dl class="dl-horizontal">
+                            <dt>First name:</dt> <dd>{{ contact_form.first_name }}</dd>
+                            <dt>Last name:</dt> <dd>{{ contact_form.last_name }}</dd>
+                            <dt>Company:</dt> <dd>{{ contact_form.company_name }}</dd>
+                            <dt>Contact Status:</dt> <dd>{{ contact_form.contact_status }}</dd>
+                            <dt>Job title:</dt> <dd>{{ contact_form.job_title }}</dd>
+                            <dt>Location:</dt> <dd>{{ contact_form.location }}</dd>
+                            <dt>Email:</dt> <dd>{{ contact_form.email_work }}</dd>
+                            <dt>Mobile phone:</dt> <dd>{{ contact_form.phone_mobile }}</dd>
+                            <dt>Office phone:</dt> <dd>{{ contact_form.phone_work }}</dd>
+                            <dt>linkedin:</dt> <dd>{{ contact_form.linkedin }}</dd>
+                            <dt>facebook:</dt> <dd>{{ contact_form.facebook }}</dd>
+                            <dt>twitter:</dt> <dd>{{ contact_form.twitter }}</dd>
+                            <dt>Info:</dt> <dd>{{ contact_form.additional_info }}</dd>
+                        </dl>
+                    </div>
+                </div>
+                <input style="margin-left:15px;margin-top:20px;"type="submit" class="btn btn-primary btn-lg" value="Save Contact">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+
+<script>
+  // This example displays an address form, using the autocomplete feature
+  // of the Google Places API to help users fill in the information.
+
+  // This example requires the Places library. Include the libraries=places
+  // parameter when you first load the API. For example:
+  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+  var placeSearch, autocomplete;
+  var componentForm = {
+    street_number: 'short_name',
+    route: 'long_name',
+    locality: 'long_name',
+    administrative_area_level_1: 'short_name',
+    country: 'long_name',
+    postal_code: 'short_name'
+  };
+
+  function initAutocomplete() {
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
+    autocomplete = new google.maps.places.Autocomplete(
+        /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+        {types: ['geocode']});
+
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', fillInAddress);
+  }
+
+  function fillInAddress() {
+    // Get the place details from the autocomplete object.
+    var place = autocomplete.getPlace();
+
+    for (var component in componentForm) {
+      document.getElementById(component).value = '';
+      document.getElementById(component).disabled = false;
+    }
+
+    // Get each component of the address from the place details
+    // and fill the corresponding field on the form.
+    for (var i = 0; i < place.address_components.length; i++) {
+      var addressType = place.address_components[i].types[0];
+      if (componentForm[addressType]) {
+        var val = place.address_components[i][componentForm[addressType]];
+        document.getElementById(addressType).value = val;
+      }
+    }
+  }
+
+  // Bias the autocomplete object to the user's geographical location,
+  // as supplied by the browser's 'navigator.geolocation' object.
+  function geolocate() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var geolocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        var circle = new google.maps.Circle({
+          center: geolocation,
+          radius: position.coords.accuracy
+        });
+        autocomplete.setBounds(circle.getBounds());
+      });
+    }
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVvfJfbo6XezSoU_xZL17d5p5BBs5ik38&libraries=places&callback=initAutocomplete"
+    async defer>
+</script>
+
+<script src="{% static 'js/plugins/summernote/summernote.min.js' %}"></script>
+<script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+
+<script>
+$('#summernote').summernote({
+  toolbar: [
+    ['style', ['bold', 'italic', 'underline']],
+    ['fontsize', ['fontsize']],
+    ['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+  ]
+});
+
+
+var companies = [
+  {% for company in company_list %}
+  '{{ company }}',
+  {% endfor %}
+];
+
+$(function() {
+  $("#contact_company_tag").autocomplete({
+    source:[companies]
+  });
+});
+
+</script>
+
+
+{% endblock javascript %}

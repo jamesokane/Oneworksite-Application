@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+{% block title %}Daily Docket {{ docket }}{% endblock %}
+{% block head_title %}Daily Docket {{ docket }}{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/clockpicker/clockpicker.css' %}" rel="stylesheet">
+{{ docket_form.media.css }}
+{% endblock %}
+
+
+{% block actions %}
+<a class="btn btn-primary btn-lg visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:docket_start' docket.slug %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
+{% endblock %}
+
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li>
+        <a href="{% url 'daily_dockets:list' %}">Dockets</a>
+    </li>
+    <li>
+        <a href="{{ docket.get_absolute_url }}">{{ docket }}</a>
+    </li>
+    <li class="active">
+        <strong>Daily Docket</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+
+{% block content %}
+<div class="row">
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'daily_dockets:docket_start' docket.slug %}">
+          <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+        </a>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" onclick="docket_form.myVariable.name='new_docket';docket_form.submit();">
+          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Docket
+        </a>
+    </div>
+</div>
+<div class="col-lg-12">
+    <form id="docket_form" role="form" method="POST">
+        <input type="hidden" id="myVariable" name="" />
+        {% csrf_token %}
+
+        {% if docket_form.errors %}
+        <div class="ibox-content m-b-sm border-bottom">
+            <strong>Please correct the following errors:</strong>
+            {{ docket_form.errors.as_ul }}
+        </div>
+        {% endif %}
+
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.company.label }}</label>
+                        {{ docket_form.company }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.project.label }}</label>
+                        {{ docket_form.project }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.supervisor.label }}</label>
+                        {{ docket_form.supervisor }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group clockpicker" data-autoclose="true">
+                        <label>{{ docket_form.start_time.label }}</label>
+                        {{ docket_form.start_time }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group clockpicker" data-autoclose="true">
+                        <label>{{ docket_form.finish_time.label }}</label>
+                        {{ docket_form.finish_time }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.smoko.label }}</label>
+                        {{ docket_form.smoko }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.lunch.label }}</label>
+                        {{ docket_form.lunch }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+      <div class="docket_buttons btn-group pull-right" style="margin-right: 15px;">
+          <a class="btn btn-primary btn-lg visible-xs visible-sm" onclick="docket_form.myVariable.name='new_docket';docket_form.submit();">
+            <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Prestart
+          </a>
+      </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block javascript %}
+<!-- Autocomplete -->
+<!-- Clockpicker -->
+<script src="{% static 'js/plugins/clockpicker/clockpicker.js' %}"></script>
+{{ docket_form.media.js }}
+<script>
+$('.clockpicker').clockpicker();
+</script>
+{% endblock javascript %}

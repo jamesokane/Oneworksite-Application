@@ -1,0 +1,18 @@
+@media all and (max-width: 768px) {
+  .equipment-table-768-min {
+    visibility: hidden;
+    height: 0;
+  }
+  .snifferapp-logo-container, .snifferapp-logo {
+    display: none;
+  }
+  .navbar-user-profile {
+    width: 220px;
+  }
+}
+
+@media all and (min-width: 769px) {
+  /*.navbar-user-profile {
+    width: 70px;
+  }*/
+}

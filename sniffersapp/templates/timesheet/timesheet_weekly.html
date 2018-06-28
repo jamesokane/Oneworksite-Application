@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+{% block title %}Timesheets{% endblock %}
+{% block head_title %}Timesheets{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.autocomplete.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/clockpicker/clockpicker.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumb %}
+<h2>Weekly Timesheet</h2>
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Timesheet</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block action_btn %}
+<div class="btn-group pull-right">
+    <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Actions <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+        <li>
+            <a data-toggle="modal" data-target="#modal-timseheet-form">Create Timecard</a>
+        </li>
+        <li>
+            <a data-toggle="modal" data-target="#csvWeeklyExportModal">Export Weekly Timesheet</a>
+        </li>
+        <li>
+            <a data-toggle="modal" data-target="#csvMonthlyExportModal">Export Timesheet</a>
+        </li>
+        <li>
+            <a href="">Go Back</a>
+        </li>
+    </ul>
+</div>
+{% endblock action_btn %}
+
+
+{% block content %}
+<div class="wrapper timesheet-top-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="widget style1">
+                <div class="row">
+                    <div class="col-lg-1 text-center">
+                        <i class="fa fa-clock-o fa-4x" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-lg-3">
+                        <span> Hours worked this week </span>
+                        <h2 class="font-bold">{{ weekly_total_hours_hours }}h {{ weekly_total_hours_mins }}m</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12"  style="margin-bottom: 30px;">
+    <div class="ibox-title weekly_timesheet_sum_heading">
+        <div class="table-responsive">
+            <table class="table table-hover weekly_timesheet_table">
+                <thead>
+                    <tr>
+                        <th class="col-lg-2 no_border"><div style="font-size: 14px; padding-bottom: 0px;">Time start</div></th>
+                        <th class="col-lg-2 no_border"><div style="font-size: 14px; padding-bottom: 0px;">Time finish</div></th>
+                        <th class="col-lg-2 no_border"><div style="font-size: 14px; padding-bottom: 0px;">Lunch/Smoko</div></th>
+                        <th class="col-lg-2 no_border"><div style="font-size: 14px; padding-bottom: 0px;">Duration</div></th>
+                        <th class="col-lg-2 no_border"><div style="font-size: 14px; padding-bottom: 0px;">Client</div></th>
+                        <th class="col-lg-2 no_border"><div style="font-size: 14px; padding-bottom: 0px;">Project</div></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    {% for date in dates %}
+        {% if date.0 in timesheet_date_list %}
+        <div class="ibox weekly_timesheet_date_ibox">
+        {% else %}
+        <div class="ibox weekly_timesheet_date_ibox">
+        {% endif %}
+            <div class="ibox weekly_timesheet_date_ibox">
+                <div class="ibox-title weekly_timesheet_table_border">
+                    <div class="col-lg-6"><strong>{{ date.1 }} {{ date.0 }}</strong></div>
+                    {% if date.1 == "Monday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ monday_total_hours_hours }}h {{ monday_total_hours_mins }}m</b></div>
+                    {% elif date.1 == "Tuesday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ tuesday_total_hours_hours }}h {{ tuesday_total_hours_mins }}m</b></div>
+                    {% elif date.1 == "Wednesday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ wednesday_total_hours_hours }}h {{ wednesday_total_hours_mins }}m</b></div>
+                    {% elif date.1 == "Thursday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ thursday_total_hours_hours }}h {{ thursday_total_hours_mins }}m</b></div>
+                    {% elif date.1 == "Friday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ friday_total_hours_hours }}h {{ friday_total_hours_mins }}m</b></div>
+                    {% elif date.1 == "Saturday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ saturday_total_hours_hours }}h {{ saturday_total_hours_mins }}m</b></div>
+                    {% elif date.1 == "Sunday" %}
+                    <div class="col-lg-6" style="padding-left: 5px;"><b>{{ sunday_total_hours_hours }}h {{ sunday_total_hours_mins }}m</b></div>
+                    {% endif %}
+                </div>
+                {% if date.0 in timesheet_date_list %}
+                    <div class="ibox-content weekly_timesheet_days">
+                        <div class="table-responsive">
+                            <table class="table table-hover weekly_timesheet_table">
+                                <tbody>
+                                    {% for item in timesheet_list %}
+                                        {% if item.docket_date == date.0 %}
+                                            <tr class="change_timesheet" id="{{ item.slug }}" style="cursor: pointer;border-bottom: 1px solid #e7eaec;" data-toggle="modal" data-target="#modal-timseheet-sum">
+                                                <td class="col-lg-2">{{ item.start_time }}</td>
+                                                <td class="col-lg-2">{{ item.finish_time }}</td>
+                                                <td class="col-lg-2">{{ item.lunch }}m</td>
+                                                <td class="col-lg-2">{{ item.payable_hours.1 }}h {{ item.payable_hours.2 }}m</td>
+                                                <td class="col-lg-2">{{ item.company }}</td>
+                                                <td class="col-lg-2">{{ item.project }}</td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor item %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                {% else %}
+                <div class="ibox-content weekly_timesheet_days">
+                    <div class="table-responsive">
+                        <table class="table table-hover weekly_timesheet_table">
+                            <tbody>
+                                <tr style="cursor: pointer;border-bottom: 1px solid #e7eaec;">
+                                    <td class="col-lg-2">No timesheet created</td>
+                                    <td class="col-lg-2"></td>
+                                    <td class="col-lg-2"></td>
+                                    <td class="col-lg-2"></td>
+                                    <td class="col-lg-2"></td>
+                                    <td class="col-lg-2"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<div id="modal-timseheet-sum" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content"  id="timesheet_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading">
+                            <div style="font-size: 20px; padding-bottom: 15px;">{{ day_name }} {{ timesheet_sum.docket_date }}</div>
+                        </div>
+                        <div class="ibox-content">
+                            <h4><i class="fa fa-clock-o" aria-hidden="true"></i> {{ timesheet_sum.start_time }} to {{ timesheet_sum.finish_time }}</h4>
+                            <div class="timesheet-detail">
+                                <strong>Time details</strong>
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.start_time }}</span>
+                                        Time start
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.finish_time }}</span>
+                                        Time finish
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.lunch }} mins</span>
+                                        Lunch
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.payable_hours.1 }}h {{ timesheet_sum.payable_hours.2 }}m</span>
+                                        Duration
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.docket_shift }}</span>
+                                        Shift
+                                    </li>
+                                </ul>
+                                <strong>Project details</strong>
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.company }}</span>
+                                        Client
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.project }}</span>
+                                        Project
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.docket_number }}</span>
+                                        Docket Number
+                                    </li>
+                                </ul>
+                                <strong>Equipment details</strong>
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.equipment }}</span>
+                                        Machine
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.equipment_num }}</span>
+                                        Machine number
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.equipment_hours }}</span>
+                                        Machine hours
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="modal-footer create_timesheet_modal">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <a id="{{ timesheet_sum.slug }}" class="ajx_edit_timesheet" data-toggle="modal" data-target="#modal-edit_timseheet-form" data-dismiss="modal">
+                                <button  type="button" class="btn btn-primary">Edit timecard</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-timseheet-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal" id="">
+                        <div class="ibox-title weekly_timesheet_sum_heading">
+                            <div style="font-size: 20px; padding-bottom: 15px;">Create new timecard</div>
+                        </div>
+                        <form action="" id="new_timesheet" role="form" method="POST">
+                            <div class="ibox-content">
+
+                                {% csrf_token %}
+                                <div class="client-detail">
+                                    <strong>Time details</strong>
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.docket_date }}</div>
+                                            <div class="timesheet_form_item_name">Date</div>
+                                        </li>
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right clockpicker" data-autoclose="true">{{ timesheet_form.start_time }}</div>
+                                            <div class="timesheet_form_item_name">Time start</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item" >
+                                            <div class="pull-right clockpicker" data-autoclose="true">{{ timesheet_form.finish_time }}</div>
+                                            <div class="timesheet_form_item_name">Time finish</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.lunch }}</div>
+                                            <div class="timesheet_form_item_name">Lunch</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.docket_shift }}</div>
+                                            <div class="timesheet_form_item_name">Shift</div>
+                                        </li>
+                                    </ul>
+                                    <strong>Project details</strong>
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.company_name }}</div>
+                                            <div class="timesheet_form_item_name">Client</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.project_name }}</div>
+                                            <div class="timesheet_form_item_name">Project</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.docket_number }}</div>
+                                            <div class="timesheet_form_item_name">Docket Number</div>
+                                        </li>
+                                    </ul>
+                                    <strong>Equipment details</strong>
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.equipment_name }}</div>
+                                            <div class="timesheet_form_item_name">Machine</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.equipment_num }}</div>
+                                            <div class="timesheet_form_item_name">Machine number</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ timesheet_form.equipment_hours }}</div>
+                                            <div class="timesheet_form_item_name">Machine hours</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer create_timesheet_modal">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                <input type="submit" value="Save Timecard" class="btn btn-primary" name="new_timesheet">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-edit_timseheet-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal" id="timesheet_edit">
+                        <div class="ibox-title weekly_timesheet_sum_heading">
+                            <div style="font-size: 20px; padding-bottom: 15px;">Create new timecard</div>
+                            <div style="font-size: 20px; padding-bottom: 15px;">{{ timesheet_ed }}</div>
+                        </div>
+                        <form action="" id="" role="form" method="POST">
+                            <div class="ibox-content">
+
+                                {% csrf_token %}
+                                <div class="client-detail">
+                                    <strong>Time details</strong>
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.docket_date }}</div>
+                                            <div class="timesheet_form_item_name">Date</div>
+                                        </li>
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right clockpicker" data-autoclose="true">{{ edit_timesheet_form.start_time }}</div>
+                                            <div class="timesheet_form_item_name">Time start</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item" >
+                                            <div class="pull-right clockpicker" data-autoclose="true">{{ edit_timesheet_form.finish_time }}</div>
+                                            <div class="timesheet_form_item_name">Time finish</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.lunch }}</div>
+                                            <div class="timesheet_form_item_name">Lunch</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.docket_shift }}</div>
+                                            <div class="timesheet_form_item_name">Shift</div>
+                                        </li>
+                                    </ul>
+                                    <strong>Project details</strong>
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.company_name }}</div>
+                                            <div class="timesheet_form_item_name">Client</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.project_name }}</div>
+                                            <div class="timesheet_form_item_name">Project</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.docket_number }}</div>
+                                            <div class="timesheet_form_item_name">Docket Number</div>
+                                        </li>
+                                    </ul>
+                                    <strong>Equipment details</strong>
+                                    <ul class="list-group clear-list">
+                                        <li class="list-group-item fist-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.equipment_name }}</div>
+                                            <div class="timesheet_form_item_name">Machine</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.equipment_num }}</div>
+                                            <div class="timesheet_form_item_name">Machine number</div>
+                                        </li>
+                                        <li class="list-group-item timesheet-form-item">
+                                            <div class="pull-right">{{ edit_timesheet_form.equipment_hours }}</div>
+                                            <div class="timesheet_form_item_name">Machine hours</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="modal-footer create_timesheet_modal">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                <input type="submit" value="Save Timecard" class="btn btn-primary" name="edit_timesheet">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="csvWeeklyExportModal" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading">
+                            <div style="font-size: 20px; padding-bottom: 15px;">Export Weekly Timesheet</div>
+                        </div>
+                        <div class="ibox-content">
+                            Blah BLah
+                        </div>
+                        <div class="modal-footer create_timesheet_modal">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <a href="{% url 'timesheets:export_weekly_timesheet_csv' timesheet.slug %}">
+                                <button  type="button" class="btn btn-primary">Export Timesheets</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="csvMonthlyExportModal" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading">
+                            <div style="font-size: 20px; padding-bottom: 15px;">Export Weekly Timesheet</div>
+                        </div>
+                        <div class="ibox-content">
+                            Blah BLah
+                        </div>
+                        <div class="modal-footer create_timesheet_modal">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                            <a href="{% url 'timesheets:export_timesheet_csv' %}">
+                                <button  type="button" class="btn btn-primary">Export Timesheets</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+<!-- Date Picker -->
+<script src="{% static 'js/plugins/fullcalendar/moment.min.js' %}"></script>
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+
+<!-- Autocomplete -->
+<script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+
+<!-- Clockpicker -->
+<script src="{% static 'js/plugins/clockpicker/clockpicker.js' %}"></script>
+
+<script>
+$('.change_timesheet').click(function(){
+    var catid;
+    catid = $(this).attr("id");
+    $.get("{% url 'timesheets:weekly_timesheet' timesheet.slug %}", {content: catid, name: "timesheet_sum"}, function(data){
+        var result = $('<div />').append(data).find('#timesheet_summary').html();
+        $('#timesheet_summary').html(result);
+    });
+});
+
+$('.ajx_edit_timesheet').click(function(){
+    var catid;
+    catid = $(this).attr("id");
+    $.get("{% url 'timesheets:weekly_timesheet' timesheet.slug %}", {content: catid, name: "timesheet_ed"}, function(data){
+        var result = $('<div />').append(data).find('#timesheet_edit').html();
+        $('#timesheet_edit').html(result);
+    });
+});
+
+$('#docket_date_tag').datepicker({
+    format: 'yyyy-mm-dd',
+    todayBtn: "linked",
+    keyboardNavigation: false,
+    forceParse: false,
+    calendarWeeks: true,
+    autoclose: true
+});
+
+var equipment = [
+    {% for equipment in equipment_list %}
+    '{{ equipment }}',
+    {% endfor %}
+];
+
+var companies = [
+  {% for company in company_list %}
+  '{{ company }}',
+  {% endfor %}
+];
+
+var projects = [
+  {% for project in project_list %}
+  '{{ project }}',
+  {% endfor %}
+];
+
+$(function() {
+    $("#equipment_name_tag").autocomplete({
+        source:[equipment]
+    });
+});
+
+$(function() {
+  $("#company_name_tag").autocomplete({
+    source:[companies]
+  });
+});
+
+$(function() {
+  $("#project_name_tag").autocomplete({
+    source:[projects]
+  });
+});
+
+$('.clockpicker').clockpicker()
+
+</script>
+
+{% endblock javascript %}
