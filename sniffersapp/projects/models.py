@@ -14,9 +14,9 @@ class Project(models.Model):
             blank=True, null=True, on_delete=models.PROTECT)
 
     # Company
-    company = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
+    company = models.ForeignKey(Company, models.SET_NULL, null=True)
     # Project Name
-    project_name = models.CharField(max_length=80, blank=True)
+    project_name = models.CharField(max_length=80)
     # Address Info
     project_address = models.CharField(max_length=200, blank=True, null=True)
     # Project Status
@@ -35,6 +35,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.project_name
+
+    def get_absolute_url(self):
+        return reverse('projects:project_new', kwargs={'slug': self.slug})        
 
     @property
     def duration(self):

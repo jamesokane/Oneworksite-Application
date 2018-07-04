@@ -56,11 +56,11 @@ class Contact(models.Model):
     uuid = ShortUUIDField()
     slug = models.CharField(max_length=80, unique=True)
     # Company
-    company = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
+    company = models.ForeignKey(Company, models.SET_NULL, null=True)
     company_name = models.CharField(max_length=80, blank=True)
     # Name
-    first_name = models.CharField(max_length=80)
-    last_name = models.CharField(max_length=80)
+    first_name = models.CharField(max_length=80, blank=False)
+    last_name = models.CharField(max_length=80, blank=False)
     # Job Title
     job_title = models.CharField(max_length=80, blank=True)
     # Emails

@@ -1,6 +1,7 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
+from django_select2.forms import Select2Widget
 
 from .models import Contact, Company
 
@@ -11,15 +12,15 @@ class ContactForm(forms.ModelForm):
 
     class Meta:
         model = Contact
-        exclude = ('uuid', 'slug', 'created_on', 'updated_on', 'order')
+        exclude = ('uuid', 'slug', 'created_on', 'updated_on', 'order', 'company_name')
 
         widgets = {
-            'company_name': forms.TextInput(attrs={'id': 'contact_company_tag',
-                                                   'class': 'form_control_contact form-control'}),
             'first_name': forms.TextInput(attrs={'id': 'contact_first_name_tag',
                                                  'class': 'form_control_contact form-control'}),
             'last_name': forms.TextInput(attrs={'id': 'contact_last_name_tag',
                                                 'class': 'form_control_contact form-control'}),
+            'company': Select2Widget(attrs={'id': 'contact_company_tag',
+                                                   'class': 'form_control_contact form-control'}),
             'job_title': forms.TextInput(attrs={'id': 'contact_job_title_tag',
                                                 'class': 'form_control_contact form-control'}),
             'email_work': forms.EmailInput(attrs={'id': 'contact_email_work_tag',

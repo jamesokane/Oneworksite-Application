@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static i18n %}
-
+{% load humanize %}
 {% block title %}{{ title }}{% endblock %}
 {% block head_title %}{{ title }}{% endblock %}
 
@@ -29,7 +29,15 @@
         <div class="row">
             <form id="project_form" role="form" method="POST">
             {% csrf_token %}
-            {% for field in form %}
+
+            {% if project_form.errors %}
+            <div class="ibox-content m-b-sm border-bottom">
+                <strong>Please correct the following errors:</strong>
+                {{ project_form.errors.as_ul }}
+            </div>
+            {% endif %}
+
+            {% for field in project_form %}
             <div class="col-sm-12">
                 <div class="form-group">
                     <label>{{ field.label }}</label>

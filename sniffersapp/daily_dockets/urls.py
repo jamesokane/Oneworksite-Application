@@ -10,6 +10,7 @@ urlpatterns = [
     path('new/', daily_docket_new, name='daily_docket_new'),
     path('new/prestart/', prestart_form, name='prestart_form'),
     path('export/dockets/', export_dockets, name='export_dockets'),
+    path('export/myob/', dockets_myob, name='dockets_myob'),
 
     # Docket workflow: start/overview -> prestart -> daily -> signature
     path('<slug:slug>/', docket_start, name='docket_start'),

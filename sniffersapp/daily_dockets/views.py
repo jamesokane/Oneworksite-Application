@@ -1,15 +1,11 @@
 import csv
-import cv2
 import base64
 import PIL
-import numpy as np
 
-from PIL import Image
-
-from io import BytesIO, StringIO
+from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
-from reportlab.platypus import Frame, Image
+from reportlab.platypus import Image
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponseForbidden, HttpResponse
@@ -127,8 +123,25 @@ def export_dockets(request):
                      'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
 
     docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',
-                                                   'start_time', 'finish_time', 'smoko', 'lunch', 'equipment', 'equipment_num',
-                                                   'equipment_hours', 'attachments', 'company', 'project')
+                                                   'start_time', 'finish_time', 'smoko', 'lunch', 'equipment_name', 'equipment_num',
+                                                   'equipment_hours', 'attachments', 'company_name', 'project_name')
+
+    for docket in docket_list:
+        writer.writerow(docket)
+    return response
+
+def dockets_myob(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="myob.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Docket Number', 'Created By', 'Docket Date', 'Docket Day', 'Docket Shift',
+                     'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment Name', 'Equipment Number',
+                     'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
+
+    docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',
+                                                   'start_time', 'finish_time', 'smoko', 'lunch', 'equipment_name', 'equipment_num',
+                                                   'equipment_hours', 'attachments', 'company_name', 'project_name')
 
     for docket in docket_list:
         writer.writerow(docket)
@@ -144,26 +157,13 @@ def dockets_pdf(request, slug):
     buffer = BytesIO()
     p = canvas.Canvas(buffer)
 
-
-    # data = docket.operator_sign
-    # im = PIL.Image.open(BytesIO(base64.b64decode(data.split(',')[1])))
-    # im.save("image.png")
-
-
-
-    # data = docket.operator_sign
-    # f = BytesIO()
-    # f.write(base64.b64decode(data.split(',')[1]))
-    # f.seek(0)
-    # image = PIL.Image.open(f)
-
+    # Operator Signature
     data = docket.operator_sign
-    imgdata = base64.b64decode(data.split(',')[1])
-    image = PIL.Image.open(BytesIO(imgdata))
+    img_file = BytesIO(base64.b64decode(data.split(',')[1]))
+    img_file.seek(0)
+    img = Image(PIL.Image.open(img_file))
+    p.drawImage(img, 100, 200)
 
-    signature = ImageReader(image)
-
-    p.drawImage(signature, 45, 100, width=150, height=75, mask=None, preserveAspectRatio=True, anchor='c')
 
     logo = ImageReader("sniffersapp/static/images/logo.png")
     p.drawImage(logo, 45, 745, width=150, height=75, mask=None, preserveAspectRatio=True, anchor='c')

@@ -70,51 +70,51 @@ def contact_new(request, *args, **kwargs):
     company_list = Company.objects.all()
     company_name_list = list(company_list.values_list('company_name', flat=True))
 
+    contact_form = ContactForm(request.POST or None)
+
     if request.method == "POST":
-        contact_form = ContactForm(request.POST)
-        company_form = CompanyContactForm(request.POST)
-        if contact_form.is_valid():
-            contact_form = contact_form.save(commit=False)
-            # Instead of having the standard dropdown menu for the company ForeignKey an additional field
-            # has been setup so that an Autocomplete field can be used instead. ( additional field = "company_name").
-            if contact_form.company_name in company_name_list:
-                # If the entered company name already exists within the company list than the company ForiegnKey
-                # is set to this company name
-                contact_form.company = company_list[company_name_list.index(contact_form.company_name)]
-                # Check and see if the contact already exists
-                for contact in contact_list:
-                    # If the first_name, last_name and company already exist show an Alert Message
-                    if contact_form.first_name == contact.first_name and contact_form.last_name == \
-                     contact.last_name and contact_form.company_id == contact.company_id:
-                        contact_form.save()
-                        messages.success(request, format_html('New contact added'))
-                        messages.warning(request, format_html('A contact with the same details already exists'))
-                        return redirect('connections:list')
-                contact_form.save()
-                messages.success(request, format_html('New contact Added'))
-                return redirect('connections:list')
-            else:
-                # If the entered company name is new save the company name to the company name field within
-                # the CompanyForm
-                company_form.company_name = contact_form.company_name
-                if company_form.is_valid():
-                    company_form = company_form.save(commit=False)
-                    company = company_form
-                    company_form.save()
-                    # Set the resource company ForiegnKey as the new company name
-                    contact_form.company_id = company.id
+        if 'new_contact' in request.POST:
+            company_form = CompanyContactForm(request.POST)
+            if contact_form.is_valid():
+                contact_form = contact_form.save(commit=False)
+                # Instead of having the standard dropdown menu for the company ForeignKey an additional field
+                # has been setup so that an Autocomplete field can be used instead. ( additional field = "company_name").
+                if contact_form.company_name in company_name_list:
+                    # If the entered company name already exists within the company list than the company ForiegnKey
+                    # is set to this company name
+                    contact_form.company = company_list[company_name_list.index(contact_form.company_name)]
+                    # Check and see if the contact already exists
+                    for contact in contact_list:
+                        # If the first_name, last_name and company already exist show an Alert Message
+                        if contact_form.first_name == contact.first_name and contact_form.last_name == \
+                         contact.last_name and contact_form.company_id == contact.company_id:
+                            contact_form.save()
+                            messages.success(request, format_html('New contact added'))
+                            messages.warning(request, format_html('A contact with the same details already exists'))
+                            return redirect('connections:list')
                     contact_form.save()
-                    # Redirect to new company page so that its information can be completed
+                    messages.success(request, format_html('New contact Added'))
                     return redirect('connections:list')
-    else:
-        contact_form = ContactForm()
-        context = {
-            'contact_list': contact_list,
-            'company_list': company_list,
-            'contact_form': contact_form,
-        }
-        template = 'connections/contact_new.html'
-        return render(request, template, context)
+                else:
+                    # If the entered company name is new save the company name to the company name field within
+                    # the CompanyForm
+                    company_form.company_name = contact_form.company_name
+                    if company_form.is_valid():
+                        company_form = company_form.save(commit=False)
+                        company = company_form
+                        company_form.save()
+                        # Set the resource company ForiegnKey as the new company name
+                        contact_form.company_id = company.id
+                        contact_form.save()
+                        # Redirect to new company page so that its information can be completed
+                        return redirect('connections:list')
+    context = {
+        'contact_list': contact_list,
+        'company_list': company_list,
+        'contact_form': contact_form,
+    }
+    template = 'connections/contact_new.html'
+    return render(request, template, context)
 
 
 def contact_edit(request, slug, *args, **kwargs):

@@ -25,6 +25,7 @@ def project_form(request, project_id=None, template='projects/project_form.html'
         existing_project = None
 
     project_form = ProjectForm(request.POST or None, instance=existing_project)
+    
     if request.method == 'POST':
         if project_form.is_valid():
             project = project_form.save(commit=False)
@@ -35,7 +36,7 @@ def project_form(request, project_id=None, template='projects/project_form.html'
             return redirect('projects:list')
 
     context = {
-        'form': project_form,
+        'project_form': project_form,
         'title': str(existing_project) if existing_project else 'New Project',
     }
 

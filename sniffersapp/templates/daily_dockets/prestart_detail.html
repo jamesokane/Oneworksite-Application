@@ -7,7 +7,7 @@
 
 {% block css %}
 <link href="{% static 'css/style.css' %}" rel="stylesheet">
-{{ docket_form.media.css }}
+{{ prestart_form.media.css }}
 {% endblock %}
 
 
@@ -216,4 +216,5 @@ $('#check_items tr td.project-title').click(function() {
     $(check).prop("checked", !$(check).prop('checked'));
 });
 </script>
+{{ prestart_form.media.js }}
 {% endblock javascript %}
