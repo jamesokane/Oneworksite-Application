@@ -21,7 +21,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-12">
             <div class="ibox">
                 <div class="ibox-content">
                     <div class="row">
@@ -38,6 +38,13 @@
                         <div class="col-lg-5">
                             <dl class="dl-horizontal">
                                 <dt>Equipment ID:</dt> <dd><a href="#" class="text-navy"> {{ equipment.equipment_id }}</a> </dd>
+                                <dt>Year</dt> <dd>{{ equipment.year }}</dd>
+                                <dt>Make</dt> <dd>{{ equipment.make }}</dd>
+                                <dt>Model</dt> <dd>{{ equipment.model }}</dd>
+                                <dt>Type</dt> <dd>{{ equipment.size }}</dd>
+                                <dt>Registration</dt> <dd>{{ equipment.registration }}</dd>
+                                <dt>Vehical Identification Number</dt> <dd>{{ equipment.vin }}</dd>
+                                <dt>Engine No</dt> <dd>{{ equipment.engine_no }}</dd>
                                 <dt>Year</dt> <dd>{{ equipment.year }}</dd>
                             </dl>
                         </div>
@@ -56,6 +63,7 @@
                                     <div class="panel-options">
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#tab-1" data-toggle="tab">About</a></li>
+                                            <li class=""><a href="#tab-2" data-toggle="tab">Fuel Card</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -69,6 +77,19 @@
                                             </div>
                                         </div>
                                         <!--About Tab End-->
+                                        <!--Fuel Tab Start-->
+                                        <div class="tab-pane" id="tab-2">
+                                            <div class="feed-activity-list">
+                                                <dl class="dl-horizontal">
+                                                <dt>Fuel Card Type</dt> <dd>{{ equipment_additional.card_type }}</dd>
+                                                <dt>Fuel Card Number</dt> <dd>{{ equipment_additional.fuel_card_no }}</dd>
+                                                <dt>Fuel Card Pin</dt> <dd>{{ equipment_additional.fuel_card_pin }}</dd>
+                                                <dt>Odometer Reading Required</dt> <dd>{{ equipment_additional.odometer_prompt }}</dd>
+                                                <dt>Product Restrictions</dt> <dd>{{ equipment_additional.product_restriction }}</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                        <!--Fuel Tab End-->
                                     </div>
                                 </div>
                                 <!--Tab Content End-->

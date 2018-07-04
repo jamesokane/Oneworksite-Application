@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Equipment
+from .models import Equipment, Equipment_AdditionalInfo
 from .forms import EquipmentForm, EquipmentExtendedForm
 
 def equipment_list(request, template='equipment/equipment_list.html'):
@@ -12,8 +12,10 @@ def equipment_list(request, template='equipment/equipment_list.html'):
 
 def equipment_detail(request, pk):
     equipment = get_object_or_404(Equipment, pk=pk)
+    equipment_additional = Equipment_AdditionalInfo
     context = {
         'equipment': equipment,
+        'equipment_additional': equipment_additional,
     }
     template = 'equipment/equipment_detail.html'
     return render(request, template, context)
@@ -42,6 +44,28 @@ def equipment_form(request, pk, template='equipment/equipment_form.html'):
     return render(request, template, context)
 
 
+def equipment_edit(request, pk, template='equipment/equipment_edit_form.html'):
+    if id:
+        existing_equipment = get_object_or_404(Equipment, pk=pk)
+    else:
+        existing_equipment = None
+
+    equipment_edit_form = Equipment_AdditionalInfo(request.POST or None, instance=existing_equipment)
+    if request.method == 'POST':
+        if equipment_edit_form.is_valid():
+            equipment = equipment_edit_form.save(commit=False)
+            if not existing_equipment:
+                equipment.created_user = request.user
+                equipment.save()
+            messages.success(request, 'equipment updated successfully.')
+            return redirect('equipment:list')
+
+    context = {
+        'form': equipment_edit_form,
+        'title': str(existing_equipment) if existing_equipment else 'New Equipment',
+    }
+
+    return render(request, template, context)
 
 
 

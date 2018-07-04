@@ -35,6 +35,7 @@ class EquipmentForm(forms.ModelForm):
                                            'class': 'form-control'}),
         }
 
+
 class EquipmentExtendedForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_tag = False
