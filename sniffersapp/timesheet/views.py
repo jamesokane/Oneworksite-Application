@@ -22,7 +22,7 @@ def timesheet_calender(request):
     project_list = Project.objects.all()
     project_name_list = list(project_list.values_list('project_name', flat=True))
     equipment_list = Equipment.objects.all()
-    equipment_name_list = list(equipment_list.values_list('name', flat=True))
+    equipment_name_list = list(equipment_list.values_list('equipment_id', flat=True))
 
     day_name = '(unset)'
 

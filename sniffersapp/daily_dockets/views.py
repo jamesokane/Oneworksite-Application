@@ -119,7 +119,7 @@ def export_dockets(request):
 
     writer = csv.writer(response)
     writer.writerow(['Docket Number', 'Created By', 'Docket Date', 'Docket Day', 'Docket Shift',
-                     'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment Name', 'Equipment Number',
+                     'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment ID', 'Equipment Number',
                      'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
 
     docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',

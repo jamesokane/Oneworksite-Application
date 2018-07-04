@@ -5,10 +5,8 @@ from .views import *
 app_name = 'equipment'
 
 urlpatterns = [
-    path('', EquipmentListView.as_view(), name='list'),
-    path('add/', EquipmentCreateView.as_view(), name='add'),
-    path('<int:pk>/edit/', EquipmentUpdateView.as_view(), name='edit'),
-    path('<int:equipment_id>/book/', EquipmentBookingCreateView.as_view(), name='book'),
-    path('<int:equipment_id>/book/<int:pk>/edit/', EquipmentBookingUpdateView.as_view(), name='book_edit'),
-    path('bookings/', EquipmentBookingListView.as_view(), name='bookings'),
+    path('', equipment_list, name='list'),
+    path('new/', equipment_form, name='equipment_new'),
+    path('<int:pk>/', equipment_detail, name='equipment_detail'),
+    path('<int:pk>/edit/', equipment_form, name='equipment_edit'),
 ]

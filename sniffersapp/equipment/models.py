@@ -6,16 +6,23 @@ from ..connections.models import Company
 from ..projects.models import Project
 
 class Equipment(models.Model):
-    name = models.CharField(max_length=80)
+    created_user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                     blank=True, null=True, on_delete=models.PROTECT)
+    equipment_id = models.CharField(max_length=20, unique=True)
+    year = models.CharField(max_length=5, blank=True)
     make = models.CharField(max_length=80, blank=True)
     model = models.CharField(max_length=80, blank=True)
-    equipment_type = models.CharField(max_length=80, blank=True)
+    size = models.CharField(max_length=80, blank=True)
+    registration = models.CharField(max_length=80, blank=True)
+    vin = models.CharField(max_length=80, blank=True)
+    engine_no = models.CharField(max_length=80, blank=True)
     purchase_date = models.DateField(blank=True, null=True)
     purchase_amount = models.CharField(max_length=20, blank=True)
-    base_rate = models.CharField(max_length=5, blank=True)
-    service_lag = models.CharField(max_length=5)
+    maintenance = models.CharField(max_length=20, blank=True)
+    fuel = models.CharField(max_length=20, blank=True)
+    rubber_tracks = models.NullBooleanField()
+    height_restrictor = models.BooleanField(blank=True, default=0)
     additional_info = models.TextField(blank=True)
-
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 
@@ -26,37 +33,22 @@ class Equipment(models.Model):
         verbose_name_plural = 'Equipment'
 
     def __str__(self):
-        return self.name
+        return self.equipment_id
 
     def get_absolute_url(self):
         return reverse('equipment:edit', args=(self.id,))
 
-class EquipmentBooking(models.Model):
-    equipment = models.ForeignKey(Equipment, on_delete=models.PROTECT, null=True)
-    project = models.ForeignKey(Project, on_delete=models.PROTECT, null=True)
-    company = models.ForeignKey(Company, on_delete=models.PROTECT, null=True)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
-    bookings_days = models.SmallIntegerField(blank=True, null=True)
-    booking_cost = models.CharField(max_length=6, blank=True, null=True)
-    additional_info = models.TextField(blank=True)
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
-
+class Equipment_AdditionalInfo(models.Model):
     created_user = models.ForeignKey(settings.AUTH_USER_MODEL,
-            blank=True, null=True, on_delete=models.PROTECT)
+                                     blank=True, null=True, on_delete=models.PROTECT)
 
-    class Meta:
-        verbose_name = 'Equipment booking'
+    equipment_id = models.ForeignKey(Equipment, models.SET_NULL, blank=True, null=True)
+    card_type = models.CharField(max_length=20, blank=True)
+    toll_tag_no = models.CharField(max_length=20, blank=True)
+    fuel_card_no = models.CharField(max_length=40, blank=True)
+    fuel_card_pin = models.CharField(max_length=8, blank=True)
+    odometer_prompt = models.BooleanField(blank=True)
+    product_restriction = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return f'Booking of {self.equipment} for {self.company}'
-
-    def edit_url(self):
-        if not self.equipment:
-            return '#'
-        d = {'equipment_id': self.equipment.id,
-             'pk': self.id,
-        }
-        return reverse('equipment:book_edit', kwargs=d)
+        return self.id

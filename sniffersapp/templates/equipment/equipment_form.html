@@ -1,12 +1,12 @@
 {% extends "base.html" %}
+{% load static i18n %}
 
-{% load static crispy_forms_tags %}
-
-{% block title %}Equipment{% endblock %}
-{% block head_title %}Equipment{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block head_title %}{{ title }}{% endblock %}
 
 {% block css %}
-{{ form.media.css }}
+<link href="{% static 'css/plugins/summernote/summernote.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/summernote/summernote-bs3.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -15,13 +15,13 @@
         <a href="{% url 'home' %}">Home</a>
     </li>
     <li>
-        <a href="{% url 'equipment:list' %}">Equipment</a>
+        <a href="{% url 'equipment:list' %}">Equipment List</a>
     </li>
     <li class="active">
-        <strong>Add/edit</strong>
+        <strong>{{ title }}</strong>
     </li>
 </ol>
-{% endblock %}
+{% endblock breadcrumb %}
 
 {% block content %}
 <div class="col-lg-12">
@@ -37,7 +37,7 @@
                 </div>
             </div>
             {% endfor %}
-            <input type="submit" class="btn btn-primary btn-lg" value="Save Equipment">
+            <input style="margin-left:15px;margin-top:20px;"type="submit" class="btn btn-primary btn-lg" value="Save">
             </form>
         </div>
     </div>
@@ -45,9 +45,16 @@
 {% endblock content %}
 
 {% block javascript %}
+<!-- Page-Level Scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="{% static 'js/plugins/fullcalendar/moment.min.js' %}"></script>
 <script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+<script src="{% static 'js/plugins/summernote/summernote.min.js' %}"></script>
+
 <script>
+
 $('#purchase_date').datepicker({
     todayBtn: "linked",
     keyboardNavigation: false,
@@ -55,6 +62,16 @@ $('#purchase_date').datepicker({
     calendarWeeks: true,
     autoclose: true
 });
+
+
+$('#summernote').summernote({
+  toolbar: [
+    ['style', ['bold', 'italic', 'underline']],
+    ['fontsize', ['fontsize']],
+    ['color', ['color']],
+    ['para', ['ul', 'ol', 'paragraph']],
+  ]
+});
+
 </script>
-{{ form.media.js }}
-{% endblock %}
+{% endblock javascript %}

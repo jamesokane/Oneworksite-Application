@@ -91,8 +91,8 @@ class Docket(models.Model):
     docket_day = models.CharField(max_length=20, blank=False, default=week_day, choices=day_options)
     docket_shift = models.CharField(max_length=20, blank=False, default='Day', choices=shift_options)
     # Equipment
-    equipment = models.ForeignKey(Equipment, models.SET_NULL, null=True)
-    equipment_name = models.CharField(max_length=80) # copied from equipment.name
+    equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=True, null=True)
+    equipment_name = models.CharField(max_length=80) # copied from equipment.id
     equipment_num = models.CharField(max_length=80)
     equipment_hours = models.CharField(max_length=80)
     attachments = models.CharField(max_length=80, blank=True)
@@ -143,7 +143,7 @@ class Docket(models.Model):
     def save(self, **kwargs):
         # Copy over ForeignKey fields
         if self.equipment:
-            self.equipment_name = self.equipment.name
+            self.equipment_name = self.equipment.equipment_id
         if self.company:
             self.company_name = self.company.company_name
         if self.project:

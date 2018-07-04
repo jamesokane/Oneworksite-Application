@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="69959e5e-0fb7-492d-890d-e2478693d4a1" name="Default" comment="" />
+    <list default="true" id="69959e5e-0fb7-492d-890d-e2478693d4a1" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/daily_dockets/models.py" afterPath="$PROJECT_DIR$/sniffersapp/daily_dockets/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/daily_dockets/views.py" afterPath="$PROJECT_DIR$/sniffersapp/daily_dockets/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/equipment/admin.py" afterPath="$PROJECT_DIR$/sniffersapp/equipment/admin.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/equipment/forms.py" afterPath="$PROJECT_DIR$/sniffersapp/equipment/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/equipment/models.py" afterPath="$PROJECT_DIR$/sniffersapp/equipment/models.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/equipment/urls.py" afterPath="$PROJECT_DIR$/sniffersapp/equipment/urls.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/equipment/views.py" afterPath="$PROJECT_DIR$/sniffersapp/equipment/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_detail.html" afterPath="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_detail.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_form.html" afterPath="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_form.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_list.html" afterPath="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_list.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/timesheet/forms.py" afterPath="$PROJECT_DIR$/sniffersapp/timesheet/forms.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sniffersapp/timesheet/views.py" afterPath="$PROJECT_DIR$/sniffersapp/timesheet/views.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,28 +26,43 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/sniffersapp/daily_dockets/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1669">
-              <caret line="148" column="24" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+            <state relative-caret-position="705">
+              <caret line="94" column="79" lean-forward="false" selection-start-line="94" selection-start-column="79" selection-end-line="94" selection-end-column="79" />
               <folding>
-                <marker date="1530705803000" expanded="true" signature="736:5983" ph="..." />
-                <marker date="1530705803000" expanded="true" signature="4976:5714" ph="..." />
-                <marker date="1530705803000" expanded="true" signature="5243:5553" ph="..." />
-                <marker date="1530705803000" expanded="true" signature="5751:5810" ph="..." />
-                <marker date="1530705803000" expanded="true" signature="5852:5902" ph="..." />
-                <marker date="1530705803000" expanded="true" signature="5946:5983" ph="..." />
+                <element signature="e#0#39#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sniffersapp/equipment/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="22" column="44" lean-forward="true" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sniffersapp/daily_dockets/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-223">
-              <caret line="110" column="13" lean-forward="true" selection-start-line="110" selection-start-column="13" selection-end-line="110" selection-end-column="13" />
+              <caret line="110" column="13" lean-forward="false" selection-start-line="110" selection-start-column="13" selection-end-line="110" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="_gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/_gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -61,7 +91,6 @@
         <option value="$PROJECT_DIR$/sniffersapp/equipment/models.py" />
         <option value="$PROJECT_DIR$/sniffersapp/timesheet/forms.py" />
         <option value="$PROJECT_DIR$/sniffersapp/timesheet/views.py" />
-        <option value="$PROJECT_DIR$/sniffersapp/daily_dockets/models.py" />
         <option value="$PROJECT_DIR$/sniffersapp/equipment/forms.py" />
         <option value="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_list.html" />
         <option value="$PROJECT_DIR$/sniffersapp/projects/urls.py" />
@@ -70,6 +99,7 @@
         <option value="$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_form.html" />
         <option value="$PROJECT_DIR$/sniffersapp/equipment/views.py" />
         <option value="$PROJECT_DIR$/sniffersapp/daily_dockets/views.py" />
+        <option value="$PROJECT_DIR$/sniffersapp/daily_dockets/models.py" />
       </list>
     </option>
   </component>
@@ -118,6 +148,12 @@
               <item name="sniffersapp" type="462c0819:PsiDirectoryNode" />
               <item name="daily_dockets" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="sniffersapp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sniffersapp" type="462c0819:PsiDirectoryNode" />
+              <item name="sniffersapp" type="462c0819:PsiDirectoryNode" />
+              <item name="equipment" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -156,8 +192,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1366" height="741" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -376,14 +413,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sniffersapp/equipment/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="22" column="44" lean-forward="true" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sniffersapp/templates/equipment/equipment_form.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="121">
@@ -422,7 +451,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="27" column="32" lean-forward="true" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
-          <folding />
+          <folding>
+            <element signature="e#0#35#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -452,26 +483,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sniffersapp/daily_dockets/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1669">
-          <caret line="148" column="24" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
-          <folding>
-            <marker date="1530705803000" expanded="true" signature="736:5983" ph="..." />
-            <marker date="1530705803000" expanded="true" signature="4976:5714" ph="..." />
-            <marker date="1530705803000" expanded="true" signature="5243:5553" ph="..." />
-            <marker date="1530705803000" expanded="true" signature="5751:5810" ph="..." />
-            <marker date="1530705803000" expanded="true" signature="5852:5902" ph="..." />
-            <marker date="1530705803000" expanded="true" signature="5946:5983" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sniffersapp/daily_dockets/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-223">
-          <caret line="110" column="13" lean-forward="true" selection-start-line="110" selection-start-column="13" selection-end-line="110" selection-end-column="13" />
+          <caret line="110" column="13" lean-forward="false" selection-start-line="110" selection-start-column="13" selection-end-line="110" selection-end-column="13" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sniffersapp/equipment/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="22" column="44" lean-forward="true" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sniffersapp/daily_dockets/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="94" column="79" lean-forward="false" selection-start-line="94" selection-start-column="79" selection-end-line="94" selection-end-column="79" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -21,7 +21,7 @@ class TimesheetForm(forms.ModelForm):
                                                   'class': 'form_control_timesheet form-control '}),
             'docket_shift': forms.Select(attrs={'id': 'docket_shift_tag',
                                                 'class': 'form_control_timesheet form-control '}),
-            'equipment_name': forms.TextInput(attrs={'id': 'equipment_name_tag',
+            'equipment_id': forms.TextInput(attrs={'id': 'equipment_name_tag',
                                                      'class': 'form_control_timesheet form-control '}),
             'equipment_num': forms.TextInput(attrs={'id': 'equipment_num_tag',
                                                     'class': 'form_control_timesheet form-control '}),
