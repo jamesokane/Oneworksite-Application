@@ -159,10 +159,15 @@ def dockets_pdf(request, slug):
 
     # Operator Signature
     data = docket.operator_sign
-    img_file = BytesIO(base64.b64decode(data.split(',')[1]))
-    img_file.seek(0)
-    img = Image(PIL.Image.open(img_file))
-    p.drawImage(img, 100, 200)
+    op_img= PIL.Image.open(BytesIO(base64.b64decode(data.split(',')[1])))
+    op_sig = ImageReader(op_img)
+    p.drawImage(op_sig, 50, 80, width=150, height=75, mask='auto', preserveAspectRatio=True, anchor='c')
+
+    # Supervisor Signature
+    data = docket.supervisor_sign
+    sup_img = PIL.Image.open(BytesIO(base64.b64decode(data.split(',')[1])))
+    sup_sig = ImageReader(sup_img)
+    p.drawImage(sup_sig, 350, 80, width=150, height=75, mask='auto', preserveAspectRatio=True, anchor='c')
 
 
     logo = ImageReader("sniffersapp/static/images/logo.png")
