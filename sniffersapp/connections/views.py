@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
 import csv
+import os
+import glob
 
 from collections import OrderedDict
 
@@ -8,13 +10,15 @@ from django.contrib import messages
 from django.http import HttpResponse
 # from django.http import QueryDict
 from django.shortcuts import render, get_object_or_404, redirect
-from django.utils.html import format_html
-
+from django.utils.html import format_html, strip_tags
 
 from .models import Contact, Company
 from .forms import ContactForm, CompanyForm, CompanyContactForm, DeleteContactForm, DeleteCompanyForm
 
 from ..notes.models import Notes
+
+from ..csv_import.models import FileImport
+from ..csv_import.forms import CSVImportForm
 
 # ----------------------------------------#
 # ----- CONTACT & COMPANY LIST VIEW ----- #
@@ -41,11 +45,54 @@ def connections_list(request):
             company = get_object_or_404(Company, slug=slug)
             contact = None
 
+    csv_import_form = CSVImportForm(request.POST, request.FILES)
+    if request.method == "POST":
+        if 'csv_upload' in request.POST:
+            if csv_import_form.is_valid():
+                csv_import_form = csv_import_form.save(commit=False)
+                csv_import = csv_import_form
+                csv_import_form.save()
+                # Create file path for csv_import file
+                filename = "sniffersapp/media/" + str(csv_import.csv_import)
+                with open(filename, 'r') as f:
+                    reader = csv.reader(f)
+                    for row in reader:
+                        if row[0] != 'First Name' or row[0] != 'FirstName':
+                            _, created = Company.objects.get_or_create(
+                                company_name=row[2],
+                            )
+                            company_list = Company.objects.all()
+                            company_name_list = list(Company.objects.all().values_list('company_name', flat=True))
+                            _, created = Contact.objects.get_or_create(
+                                first_name=row[0],
+                                last_name=row[1],
+                                company=company_list[company_name_list.index(row[2])],
+                                company_name=row[2],
+                                job_title=row[3],
+                                email_work=row[4],
+                                phone_mobile=row[5],
+                                phone_work=row[6],
+                                linkedin=row[7],
+                                facebook=row[8],
+                                twitter=row[9],
+                                location=row[10],
+                                additional_info=row[11],
+                                contact_status=row[12],
+                            )
+                # At the end of the import process delete any files in the FileImport model
+                FileImport.objects.all().delete()
+                # At the end of the import process delete any files in the csv_import folder
+                csv_import_files = glob.glob("sniffersapp/media/csv_import/*")
+                for files in csv_import_files:
+                    os.remove(files)
+                return redirect('connections:list')
+
     context = {
          'contact_list': contact_list,
          'company_list': company_list,
          'contact': contact,
          'company': company,
+         'csv_import_form': csv_import_form,
      }
     template = 'connections/connection_list.html'
     return render(request, template, context)
@@ -175,7 +222,7 @@ def contact_edit(request, slug, *args, **kwargs):
 
 def export_contacts_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="contacts.csv"'
+    response['Content-Disposition'] = 'attachment; filename="people.csv"'
     writer = csv.writer(response)
     writer.writerow(['Company',
                      'First Name',
@@ -189,6 +236,7 @@ def export_contacts_csv(request):
                      'Facebook',
                      'Twitter',
                      'Additional Info'])
+
     contact_list = Contact.objects.all().values_list('company_name',
                                                      'first_name',
                                                      'last_name',
@@ -275,7 +323,7 @@ def export_companies_csv(request):
                      'Facebook',
                      'Twitter',
                      'Additional Info'])
-    company_list = Contact.objects.all().values_list('company_name',
+    company_list = Company.objects.all().values_list('company_name',
                                                      'webaddress_company',
                                                      'company_email',
                                                      'company_phone',

@@ -12,4 +12,7 @@ urlpatterns = [
     path('company/<slug:slug>/', company_detail, name='company_detail'),
     path('contact/<slug:slug>/edit/', contact_edit, name='contact_edit'),
     path('company/<slug:slug>/edit/', company_edit, name='company_edit'),
+    path('people/export/', export_contacts_csv, name='export_contacts_csv'),
+    path('companies/export/', export_companies_csv, name='export_companies_csv'),
+
 ]

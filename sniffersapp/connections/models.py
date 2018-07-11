@@ -7,9 +7,9 @@ from shortuuidfield import ShortUUIDField
 
 class Company(models.Model):
     status_options = (
-        ('Working With', 'Working With'),
-        ('Have Worked', 'Have Worked'),
-        ('Yet To Work', 'Yet To Work'),
+        ('Warm', 'Warm'),
+        ('Hot', 'Hot'),
+        ('Cold', 'Cold'),
     )
     uuid = ShortUUIDField()
     slug = models.CharField(max_length=80, unique=True)
@@ -22,7 +22,7 @@ class Company(models.Model):
     # Phone
     company_phone = models.CharField(max_length=20, blank=True)
     # Company Status
-    company_status = models.CharField(max_length=20, blank=False, default='Working With', choices=status_options)
+    company_status = models.CharField(max_length=20, blank=False, default='Warm', choices=status_options)
     # Social
     linkedin = models.CharField(max_length=120, blank=True)
     facebook = models.CharField(max_length=120, blank=True)
@@ -49,10 +49,11 @@ class Company(models.Model):
 
 class Contact(models.Model):
     status_options = (
-        ('Working With', 'Working With'),
-        ('Have Worked', 'Have Worked'),
-        ('Yet To Work', 'Yet To Work'),
+        ('Warm', 'Warm'),
+        ('Hot', 'Hot'),
+        ('Cold', 'Cold'),
     )
+
     uuid = ShortUUIDField()
     slug = models.CharField(max_length=80, unique=True)
     # Company
@@ -69,7 +70,7 @@ class Contact(models.Model):
     phone_mobile = models.CharField(max_length=20, blank=True)
     phone_work = models.CharField(max_length=20, blank=True)
     # Contact Status
-    contact_status = models.CharField(max_length=20, blank=False, default='Working With Them', choices=status_options)
+    contact_status = models.CharField(max_length=20, blank=False, default='Warm', choices=status_options)
     # Social
     linkedin = models.CharField(max_length=120, blank=True)
     facebook = models.CharField(max_length=120, blank=True)

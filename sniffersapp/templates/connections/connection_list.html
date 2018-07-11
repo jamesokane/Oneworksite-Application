@@ -24,10 +24,19 @@
 {% block content %}
 <div class="row">
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a class="btn btn-primary btn-sm" href="{% url 'connections:contact_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Person</a></li>
+      <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-user" style="padding-right: 5px;"></i>People<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'connections:contact_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Person</a></li>
+          <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li>
+      </ul>
     </div>
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a class="btn btn-primary btn-sm" href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
+      <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-briefcase" style="padding-right: 5px;"></i>Company<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
+          <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li>
+      </ul>
     </div>
 </div>
 
@@ -64,7 +73,7 @@
                                 </thead>
                                 <tbody>
                                     {% for contact in contact_list %}
-                                    <tr class="change_contact" id="{{ contact.slug }} "data-toggle="modal" data-target="#modal-contact-sum" style="cursor: pointer;">
+                                    <tr class="change_contact" id="{{ contact.slug }}" data-toggle="modal" data-target="#modal-contact-sum" style="cursor: pointer;">
                                         <td class="docket-status">
                                             {% if contact.contact_status == "Working With" %}
                                             <span class="label label-success" style="padding-top: 5px;">{{ contact.contact_status }}</span>
@@ -294,6 +303,53 @@
                                         <span>{{ company.additional_info }}</span>
                                     </li>
                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-contact-upload" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-company"  id="company_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                Import People
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <strong>Import Details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        You can import people using the provided .csv file. Download
+                                        <a href="{{ MEDIA_URL }}/csv_import_examples/contact_import.csv"><span style="text-decoration: underline;">here.</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Import File</strong>
+                            <div class="timesheet-detail">
+                              <form id="csv_import_form" role="form" method="POST" style="margin-top: 10px;">
+                                <input type="hidden" id="myVariable" name="" />
+                                {% csrf_token %}
+                                  {{ csv_import_form.csv_import }}
+                              </form>
+                              <div class="row">
+                                <div class="pull-right" style="margin-top: 30px;">
+                                    <button type="button" class="btn btn-primary btn-sm " data-dismiss="modal">
+                                      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;" aria-hidden="true"></i>Go Back
+                                    </button>
+                                    <a class="btn btn-primary btn-sm" onclick="csv_import_form.myVariable.name='csv_upload';csv_import_form.submit();" style="margin-left: 15px;" >
+                                      <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Import People
+                                    </a>
+                                </div>
+                              </div>
                             </div>
                         </div>
                     </div>

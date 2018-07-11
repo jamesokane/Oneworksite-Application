@@ -54,7 +54,6 @@ THIRD_PARTY_APPS = [
     'import_export',
     'easyaudit',
     'django_select2',
-    'pdfkit',
 ]
 
 # Apps specific for this project go here.
