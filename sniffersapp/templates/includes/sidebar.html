@@ -15,7 +15,7 @@
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
                         {% if request.user.is_staff %}
-                        <li><a href="{% url 'users:pending-invites' %}">Pending invites</a></li>
+                        <li><a href="{% url 'users:list' %}">User Administration</a></li>
                         {% endif %}
                         <li><a href="{% url 'users:update' %}">My profile</a></li>
                         <li><a href="{% url 'account_logout' %}">Log out</a></li>
