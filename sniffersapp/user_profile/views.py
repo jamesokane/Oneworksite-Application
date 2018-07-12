@@ -1,12 +1,35 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, redirect
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, UpdateView
 from django.urls import reverse
 from extra_views import UpdateWithInlinesView, InlineFormSet
 from invitations.models import Invitation
 
+
 from .models import UserProfile
+
+#-------------------------------------------------------------------#
+#  List - View
+#-------------------------------------------------------------------#
+
+def user_list(request):
+    user_list = User.objects.all()
+    invitation_list = Invitation.objects.all().filter(accepted=0)
+
+    context = {
+        'user_list': user_list,
+        'invitation_list': invitation_list,
+    }
+    template = 'auth/user_list.html'
+    return render(request, template, context)
+
+
+#-------------------------------------------------------------------#
+# existing stuff
+#-------------------------------------------------------------------#
 
 class UserListView(ListView):
     model = User
@@ -58,4 +81,4 @@ def resend_invitation(request, pk):
     invite = get_object_or_404(Invitation, pk=pk)
     invite.send_invitation(request)
     messages.success(request, 'Invitation request re-sent to ' + invite.email)
-    return redirect('users:pending-invites')
+    return redirect('users:list')

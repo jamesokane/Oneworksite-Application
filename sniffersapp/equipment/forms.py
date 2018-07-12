@@ -1,6 +1,5 @@
 from django import forms
 from crispy_forms.helper import FormHelper
-from django_select2.forms import Select2Widget
 
 from .models import Equipment
 

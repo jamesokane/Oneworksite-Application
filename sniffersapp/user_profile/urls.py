@@ -1,11 +1,12 @@
 from django.urls import path
 
 from . import views
+from .views import *
 
 app_name = 'users'
 
 urlpatterns = [
-    path('', views.UserListView.as_view(), name='list'),
+    path('', user_list , name='list'),
     path('~update/', views.UserEditView.as_view(), name='update'),
     path('pending-invites/', views.PendingInvites.as_view(), name='pending-invites'),
     path('resend-invite/<int:pk>/', views.resend_invitation, name='resend-invite'),

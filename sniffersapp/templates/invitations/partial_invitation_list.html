@@ -1,0 +1,15 @@
+{% for invitation in invitation_list %}
+<tr>
+  <th>{{ invitation.email }}</th>
+  <td>{{ invitation.created }}</td>
+  <td>{{ invitation.sent }}</td>
+  <td>
+      <a href="{% url 'users:resend-invite' invitation.id %}" type="button" class="btn btn-primary btn-sm">Resend Invite</a>
+      <button type="button" class="btn btn-danger btn-sm">Remove Invite</button>
+  </td>
+</tr>
+{% empty %}
+  <tr>
+    <td colspan="8" class="text-center bg-warning">No Pending Invitations</td>
+  </tr>
+{% endfor %}

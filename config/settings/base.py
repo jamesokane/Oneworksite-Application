@@ -54,6 +54,8 @@ THIRD_PARTY_APPS = [
     'import_export',
     'easyaudit',
     'django_select2',
+    'pdfkit',
+    'widget_tweaks',
 ]
 
 # Apps specific for this project go here.
@@ -67,6 +69,7 @@ LOCAL_APPS = [
     'sniffersapp.daily_dockets',  # Daily Dockets app
     'sniffersapp.timesheet',  # Timesheets app
     'sniffersapp.csv_import',  # Timesheets app
+    'sniffersapp.dashboard', #dashboard app
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

@@ -31,11 +31,12 @@
                             </div>
                         </div>
                         <div class="col-xs-4 right">
-                            <a href="{% url 'equipment:equipment_edit' equipment.id %}" class="btn btn-primary">Edit Equipment</a>
+                            <a class="btn btn-primary" href="{% url 'equipment:equipment_edit' equipment.id %}"><i class="fa fa-edit" style="padding-right: 5px;"></i>Edit</a></li>
+                            <a class="btn btn-primary" href="{% url 'equipment:equipment_edit' equipment.id %}"><i class="fa fa-plus" style="padding-right: 5px;"></i>Add Exta Info</a></li>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-5">
+                        <div class="col-lg-7">
                             <dl class="dl-horizontal">
                                 <dt>Equipment ID:</dt> <dd><a href="#" class="text-navy"> {{ equipment.equipment_id }}</a> </dd>
                                 <dt>Year</dt> <dd>{{ equipment.year }}</dd>
@@ -45,10 +46,9 @@
                                 <dt>Registration</dt> <dd>{{ equipment.registration }}</dd>
                                 <dt>Vehical Identification Number</dt> <dd>{{ equipment.vin }}</dd>
                                 <dt>Engine No</dt> <dd>{{ equipment.engine_no }}</dd>
-                                <dt>Year</dt> <dd>{{ equipment.year }}</dd>
                             </dl>
                         </div>
-                        <div class="col-lg-7" id="cluster_info">
+                        <div class="col-lg-5" id="cluster_info">
                             <dl class="dl-horizontal" >
                                 <dt>Added by:</dt> <dd>{{ equipment.created_user.username }}</dd>
                                 <dt>Last Updated:</dt> <dd>{{ equipment.updated_on }}</dd>
@@ -64,6 +64,7 @@
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#tab-1" data-toggle="tab">About</a></li>
                                             <li class=""><a href="#tab-2" data-toggle="tab">Fuel Card</a></li>
+                                            <li class=""><a href="#tab-3" data-toggle="tab">Past Jobs</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -90,6 +91,19 @@
                                             </div>
                                         </div>
                                         <!--Fuel Tab End-->
+                                         <!--Past Tab Start-->
+                                        <div class="tab-pane" id="tab-3">
+                                            <div class="feed-activity-list">
+                                                {% for docket in docket_info %}
+
+                                                Hours works: {{ docket.equipment_hours }}<br>
+                                                Project Name: {{ docket.project_name }}
+
+                                                {% endfor%}
+
+                                            </div>
+                                        </div>
+                                        <!--Past Tab End-->
                                     </div>
                                 </div>
                                 <!--Tab Content End-->

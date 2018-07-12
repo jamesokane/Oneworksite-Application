@@ -20,54 +20,49 @@ def equipment_detail(request, pk):
     template = 'equipment/equipment_detail.html'
     return render(request, template, context)
 
-def equipment_form(request, pk, template='equipment/equipment_form.html'):
-    if id:
-        existing_equipment = get_object_or_404(Equipment, pk=pk)
-    else:
-        existing_equipment= None
+def equipment_form(request, template='equipment/equipment_form.html'):
 
-    equipment_form = EquipmentForm(request.POST or None, instance=existing_equipment)
     if request.method == 'POST':
+        equipment_form = EquipmentForm(request.POST)
         if equipment_form.is_valid():
-            equipment = equipment_form.save(commit=False)
-            if not existing_equipment:
-                equipment.created_user = request.user
-                equipment.save()
-            messages.success(request, 'equipment saved successfully.')
-            return redirect('equipment:list')
+            equipment_form.save(commit=False)
+            if request.user.is_authenticated:
+                equipment_form.created_user = request.user
+            equipment_form.save()
+        messages.success(request, 'equipment saved successfully.')
+        return redirect('equipment:list')
+
+    else:
+        equipment_form = EquipmentForm
 
     context = {
         'form': equipment_form,
-        'title': str(existing_equipment) if existing_equipment else 'New Equipment',
     }
 
     return render(request, template, context)
 
-
-def equipment_edit(request, pk, template='equipment/equipment_edit_form.html'):
-    if id:
-        existing_equipment = get_object_or_404(Equipment, pk=pk)
-    else:
-        existing_equipment = None
-
-    equipment_edit_form = Equipment_AdditionalInfo(request.POST or None, instance=existing_equipment)
+def equipment_edit(request, pk, template='equipment/equipment_form.html'):
+    equipment = get_object_or_404(Equipment, pk=pk)
     if request.method == 'POST':
-        if equipment_edit_form.is_valid():
-            equipment = equipment_edit_form.save(commit=False)
-            if not existing_equipment:
-                equipment.created_user = request.user
-                equipment.save()
-            messages.success(request, 'equipment updated successfully.')
-            return redirect('equipment:list')
+        equipment_form = EquipmentForm(request.POST, instance=equipment)
+
+        if equipment_form.is_valid():
+            equipment_form.save(commit=False)
+            if request.user.is_authenticated:
+                equipment_form.created_user = request.user
+            equipment_form.save()
+        messages.success(request, 'equipment updated successfully.')
+        return redirect('equipment:list')
+
+    else:
+        equipment_form = EquipmentForm(instance=equipment)
+
 
     context = {
-        'form': equipment_edit_form,
-        'title': str(existing_equipment) if existing_equipment else 'New Equipment',
+        'form': equipment_form,
     }
 
     return render(request, template, context)
-
-
 
 # from django.contrib.messages.views import SuccessMessageMixin
 # from django.shortcuts import get_object_or_404

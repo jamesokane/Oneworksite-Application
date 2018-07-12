@@ -4,11 +4,10 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
+from sniffersapp.dashboard.views import dashboard
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='pages/home.html'), name='home'),
-    path('about/', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-
+    path('', dashboard, name='home'),
     path('users/', include('sniffersapp.user_profile.urls')),
     path('accounts/', include('allauth.urls')),
     path('invitations/', include('invitations.urls')),
