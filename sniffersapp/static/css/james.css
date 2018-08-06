@@ -447,10 +447,11 @@ height: 100px;
 }
 
 .form_control_timesheet{
+    font-size: 13px;
     text-align: left !important;
+    margin-bottom: 20px;
     width: 200px;
     height: 35px;
-    font-size: 13px;
 }
 
 .timesheet-form-item {
@@ -481,6 +482,7 @@ height: 100px;
     position: relative;
     max-height: 620px;
 }
+
 
 /* Added by Wade */
 

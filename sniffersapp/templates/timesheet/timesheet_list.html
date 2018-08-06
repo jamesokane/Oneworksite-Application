@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% load static i18n humanize %}
+
+{% block title %}Timesheets{% endblock %}
+{% block head_title %}Timesheets{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Timesheets</strong>
+    </li>
+</ol>
+{% endblock breadcrumb %}
+
+{% block actions %}
+<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href=""><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timesheet</a></li>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="row">
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:timecard_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timecard</a></li>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href=""><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href=""><i class="fa fa-exchange" style="padding-right: 5px;"></i>Export MYOB</a></li>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="ibox float-e-margins col-lg-12">
+        <div class="ibox-content ibox-content-65vh">
+            <div class="table-responsive">
+                <table id="dataTables-timesheets" class="table table-hover dataTables-timesheets">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Week Starting</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for date in weekly_list %}
+                        <tr class="table-row" data-href="{% url 'timesheet:weekly_timesheet' date.slug %}" id="{{ date.slug }}" style="cursor: pointer;">
+                          <td class="docket-status">
+                              {% if docket.locked %}
+                              <span class="label label-success">Complete </span>
+                              {% else %}
+                              <span class="label label-warning">In Progress</span>
+                              {% endif %}
+                          </td>
+                            <td class="docket-text">
+                                <b>{{ date.docket_date }}</b><br>
+                            </td>
+                        </tr>
+                        {% endfor timesheet%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+
+
+$('.dataTables-timesheets').DataTable({
+    "pagingType": "simple",
+    "ordering": false,
+    "lengthChange": false,
+    pageLength:15,
+    responsive: true,
+    language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search Timesheets",
+        "emptyTable": "No timesheets have been created yet.",
+        "info": "",
+    },
+});
+</script>
+{% endblock javascript %}
+
+{% block css %}
+<link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}

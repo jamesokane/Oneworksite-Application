@@ -35,6 +35,22 @@ class Timesheet(models.Model):
         ('60', '60 mins'),
     )
 
+    smoko_options = (
+        ('0', '0 min'),
+        ('5', '5 mins'),
+        ('10', '10 mins'),
+        ('15', '15 mins'),
+        ('20', '20 mins'),
+        ('25', '25 mins'),
+        ('30', '30 mins'),
+        ('35', '35 mins'),
+        ('40', '40 mins'),
+        ('45', '45 mins'),
+        ('50', '50 mins'),
+        ('55', '55 mins'),
+        ('60', '60 mins'),
+    )
+
     created_user = models.ForeignKey(settings.AUTH_USER_MODEL,
             blank=True, null=True, on_delete=models.PROTECT)
     timesheet_num = models.PositiveSmallIntegerField(blank=True, null=True, default=1000)
@@ -61,7 +77,8 @@ class Timesheet(models.Model):
     # Time
     start_time = models.TimeField(blank=True, null=True)
     finish_time = models.TimeField(blank=True, null=True)
-    lunch = models.CharField(max_length=20, blank=True, choices=lunch_options)
+    lunch = models.CharField(max_length=20, blank=False, default='30', choices=lunch_options)
+    smoko = models.CharField(max_length=20, blank=False, default='30', choices=smoko_options)
     # Created/Updated
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
