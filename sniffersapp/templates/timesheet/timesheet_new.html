@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% load static i18n %}
 {% load humanize %}
-{% block title %}Timesheets{% endblock %}
+
+{% block title %}
+<div class="visible-md visible-lg">Timesheets</div>
+<div class="visible-xs visible-sm"> New Timecard</div>
+{% endblock %}
 {% block head_title %}Timesheets{% endblock %}
 
 {% block css %}
@@ -10,28 +14,32 @@
 {{ timesheet_form.media.css }}
 {% endblock %}
 
-{% block actions %}
-<a class="btn btn-primary btn-lg visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'timesheet:timesheet_list' %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
-{% endblock %}
-
 {% block breadcrumb %}
 <ol class="breadcrumb">
     <li>
         <a href="{% url 'home' %}">Home</a>
     </li>
     <li>
-        <a href="{% url 'timesheet:timesheet_list' %}">Timesheets</a>
+        <a href="{% url 'timesheet:timesheet_list' %}">Weekly Timesheets</a>
     </li>
     <li class="active">
-        <strong>Add Timecard</strong>
+        <strong>New Timecard</strong>
     </li>
 </ol>
 {% endblock breadcrumb %}
 
+{% block actions %}
+<div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+    <a class="btn btn-primary" href="{% url 'timesheet:weekly_timesheet' timesheet.slug %}">
+      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+    </a>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:timesheet_list' %}">
+        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:weekly_timesheet' timesheet.slug %}">
           <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
         </a>
     </div>
@@ -59,73 +67,87 @@
       </div>
       {% endif %}
       <div class="ibox-content m-b-sm border-bottom">
-          <div class="row">
+        <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label>Date</label>
               {{ timesheet_form.docket_date }}
             </div>
           </div>
-          <div class="row">
+          <div class="col-sm-4">
             <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
               <label>{{ timesheet_form.start_time.label }}</label>
               {{ timesheet_form.start_time }}
             </div>
           </div>
-          <div class="row">
+          <div class="col-sm-4">
             <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
               <label>{{ timesheet_form.finish_time.label }}</label>
               {{ timesheet_form.finish_time }}
             </div>
           </div>
-          <div class="row">
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label>{{ timesheet_form.lunch.label }}</label>
               {{ timesheet_form.lunch }}
             </div>
           </div>
-          <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label>{{ timesheet_form.smoko.label }}</label>
               {{ timesheet_form.smoko }}
             </div>
           </div>
-          <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label>Shift</label>
               {{ timesheet_form.docket_shift }}
             </div>
           </div>
-          <div class="row">
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label style="display: block;" >{{ timesheet_form.company.label }}</label>
               {{ timesheet_form.company }}
             </div>
           </div>
-          <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label style="display: block;" >{{ timesheet_form.project.label }}</label>
               {{ timesheet_form.project }}
             </div>
           </div>
-          <div class="row">
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label style="display: block;" >{{ timesheet_form.equipment.label }}</label>
               {{ timesheet_form.equipment }}
             </div>
           </div>
-          <div class="row">
+          <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label style="display: block;" >{{ timesheet_form.equipment_hours.label }}</label>
               {{ timesheet_form.equipment_hours }}
             </div>
           </div>
-
-
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >additional Info</label>
+              {{ timesheet_form.additional_info }}
+            </div>
+          </div>
+        </div>
       </div>
   </form>
   <div class="row">
     <div class="docket_buttons btn-group pull-right" style="margin-right: 15px; margin-top: 20px;">
-        <a class="btn btn-primary btn-lg visible-xs visible-sm" onclick="timesheet_form.myVariable.name='new_timecard';timesheet_form.submit();">
+        <a class="btn btn-primary visible-xs visible-sm" onclick="timesheet_form.myVariable.name='new_timecard';timesheet_form.submit();">
           <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Timecard
         </a>
     </div>

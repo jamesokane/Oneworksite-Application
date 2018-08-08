@@ -1,132 +1,174 @@
 {% extends "base.html" %}
 {% load static i18n %}
 {% load humanize %}
-{% block title %}Timesheets{% endblock %}
+{% block title %}
+<div class="visible-md visible-lg">Timesheets</div>
+<div class="visible-xs visible-sm"> Edit Timecard</div>
+{% endblock %}
 {% block head_title %}Timesheets{% endblock %}
 
 {% block css %}
-<link href="{% static 'css/style.css' %}" rel="stylesheet">
 <link href="{% static 'css/jquery.autocomplete.css' %}" rel="stylesheet">
 <link href="{% static 'css/plugins/clockpicker/clockpicker.css' %}" rel="stylesheet">
+{{ edit_timesheet_form.media.css }}
+{% endblock %}
+
+{% block actions %}
+<div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+    <a class="btn btn-primary" href="{% url 'timesheet:weekly_timesheet' timesheet.slug %}">
+      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+    </a>
+</div>
 {% endblock %}
 
 {% block breadcrumb %}
-<h2>Weekly Timesheet</h2>
 <ol class="breadcrumb">
     <li>
         <a href="{% url 'home' %}">Home</a>
     </li>
+    <li>
+        <a href="{% url 'timesheet:timesheet_list' %}">Timesheets</a>
+    </li>
     <li class="active">
-        <strong>Timesheet</strong>
+        <strong>Edit Timecard</strong>
     </li>
 </ol>
 {% endblock breadcrumb %}
 
-{% block action_btn %}
-<div class="btn-group pull-right">
-    <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle">Actions <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-        <li>
-            <a data-toggle="modal" data-target="#modal-timseheet-form">Create Timecard</a>
-        </li>
-        <li>
-            <a data-toggle="modal" data-target="#csvWeeklyExportModal">Export Weekly Timesheet</a>
-        </li>
-        <li>
-            <a data-toggle="modal" data-target="#csvMonthlyExportModal">Export Timesheet</a>
-        </li>
-        <li>
-            <a href="">Go Back</a>
-        </li>
-    </ul>
-</div>
-{% endblock action_btn %}
-
-
 {% block content %}
+<div class="row">
+  <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+      <a class="btn btn-primary btn-sm" href="{% url 'timesheet:weekly_timesheet' timesheet.slug %}">
+        <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+      </a>
+  </div>
+  <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+      <a class="btn btn-primary btn-sm" onclick="edit_timesheet_form.myVariable.name='edit_timecard';edit_timesheet_form.submit();">
+        <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Timecard
+      </a>
+  </div>
+</div>
+
 <div class="col-lg-12">
-    <form action="" id="prestart_form" role="form" method="POST">
-        <input type="hidden" id="myVariable" name="" />
-        {% csrf_token %}
+  <form id="edit_timesheet_form" role="form" method="POST">
+      <input type="hidden" id="myVariable" name="" />
+      {% csrf_token %}
+      {% if edit_timesheet_form.errors %}
+      <div class="ibox-content m-b-sm border-bottom">
+          <h4><strong>Please complete the following fields:</strong></h4>
+          {% for field in edit_timesheet_form %}
+            {% if field.errors %}
+            <li style="font-weight: 700;font-size: 13px;">
+              {{ field.label }}
+            </li>
+            {% endif %}
+          {% endfor %}
+      </div>
+      {% endif %}
+      <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <table class="table table-hover" >
-                            <tbody>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>Date</b></td>
-                                    <td class="docket-check"><b>{{ edit_timesheet_form.docket_date }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item2.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item2 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item3.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item3 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item4.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item4 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item5.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item5 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item6.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item6 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item7.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item7 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item8.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item8 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item9.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item9 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item10.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item10 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item11.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item11 }}</b></td>
-                                </tr>
-                                <tr style="cursor: pointer;">
-                                    <td class="docket-title"><b>{{ prestart_form.item12.label }}</b></td>
-                                    <td class="docket-check"><b>{{ prestart_form.item12 }}</b></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>Date</label>
+              {{ edit_timesheet_form.docket_date }}
             </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
+              <label>{{ edit_timesheet_form.start_time.label }}</label>
+              {{ edit_timesheet_form.start_time }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
+              <label>{{ edit_timesheet_form.finish_time.label }}</label>
+              {{ edit_timesheet_form.finish_time }}
+            </div>
+          </div>
         </div>
-    </form>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>{{ edit_timesheet_form.lunch.label }}</label>
+              {{ edit_timesheet_form.lunch }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>{{ edit_timesheet_form.smoko.label }}</label>
+              {{ edit_timesheet_form.smoko }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>Shift</label>
+              {{ edit_timesheet_form.docket_shift }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ edit_timesheet_form.company.label }}</label>
+              {{ edit_timesheet_form.company }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ edit_timesheet_form.project.label }}</label>
+              {{ edit_timesheet_form.project }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ edit_timesheet_form.equipment.label }}</label>
+              {{ edit_timesheet_form.equipment }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ edit_timesheet_form.equipment_hours.label }}</label>
+              {{ edit_timesheet_form.equipment_hours }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >additional Info</label>
+              {{ edit_timesheet_form.additional_info }}
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+  <div class="row">
+    <div class="docket_buttons btn-group pull-right" style="margin-right: 15px; margin-top: 20px;">
+        <a class="btn btn-primary visible-xs visible-sm" onclick="edit_timesheet_form.myVariable.name='edit_timecard';edit_timesheet_form.submit();">
+          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Timecard
+        </a>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}
 
 {% block javascript %}
+
 <!-- Date Picker -->
 <script src="{% static 'js/plugins/fullcalendar/moment.min.js' %}"></script>
 <script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
 
-<!-- Autocomplete -->
 <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
-
-<!-- Clockpicker -->
 <script src="{% static 'js/plugins/clockpicker/clockpicker.js' %}"></script>
 
 <script>
+$('.clockpicker').clockpicker();
+</script>
 
-
+<script>
 $('#docket_date_tag').datepicker({
     format: 'yyyy-mm-dd',
     todayBtn: "linked",
@@ -135,45 +177,7 @@ $('#docket_date_tag').datepicker({
     calendarWeeks: true,
     autoclose: true
 });
-
-var equipment = [
-    {% for equipment in equipment_list %}
-    '{{ equipment }}',
-    {% endfor %}
-];
-
-var companies = [
-  {% for company in company_list %}
-  '{{ company }}',
-  {% endfor %}
-];
-
-var projects = [
-  {% for project in project_list %}
-  '{{ project }}',
-  {% endfor %}
-];
-
-$(function() {
-    $("#equipment_name_tag").autocomplete({
-        source:[equipment]
-    });
-});
-
-$(function() {
-  $("#company_name_tag").autocomplete({
-    source:[companies]
-  });
-});
-
-$(function() {
-  $("#project_name_tag").autocomplete({
-    source:[projects]
-  });
-});
-
-$('.clockpicker').clockpicker()
-
 </script>
 
+{{ edit_timesheet_form.media.js }}
 {% endblock javascript %}

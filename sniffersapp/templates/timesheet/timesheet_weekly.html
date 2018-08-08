@@ -2,7 +2,10 @@
 
 {% load static i18n humanize %}
 
-{% block title %}Timesheets{% endblock %}
+{% block title %}
+<div class="visible-md visible-lg">Timesheets</div>
+<div class="visible-xs visible-sm"> Weekly Timesheet</div>
+{% endblock %}
 {% block head_title %}Timesheets{% endblock %}
 
 {% block breadcrumb %}
@@ -10,14 +13,21 @@
     <li>
         <a href="{% url 'home' %}">Home</a>
     </li>
+    <li>
+        <a href="{% url 'timesheet:timesheet_list' %}">Weekly Timesheets</a>
+    </li>
     <li class="active">
-        <strong>Timesheets</strong>
+        <strong>Monday {{ dates.0.0 }}</strong>
     </li>
 </ol>
 {% endblock breadcrumb %}
 
 {% block actions %}
-<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href=""><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timesheet</a></li>
+<div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+    <a class="btn btn-primary" href="{% url 'timesheet:timesheet_list' %}">
+      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+    </a>
+</div>
 {% endblock %}
 
 
@@ -48,9 +58,28 @@
           <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
         </a>
     </div>
+    {% if timesheet_list_weekly.0.status == "Open" %}
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:timecard_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timecard</a></li>
+        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:timecard_new' timesheet.slug %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timecard</a></li>
     </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:timecard_new' timesheet.slug %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timecard</a></li>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-timesheet-submit"><i class="fa fa-paste" style="padding-right: 5px;"></i>Submit Timesheet</a></li>
+    </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-right" style="margin-right: 15px;">
+        <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-timesheet-submit"><i class="fa fa-paste" style="padding-right: 5px;"></i>Submit Timesheet</a></li>
+    </div>
+    {% endif %}
+    {% if user.is_superuser and timesheet.status == "Submitted"%}
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-timesheet-approve"><i class="fa fa-paste" style="padding-right: 5px;"></i>Approve Timesheet</a></li>
+    </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-right" style="margin-right: 15px;">
+        <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-timesheet-approve"><i class="fa fa-paste" style="padding-right: 5px;"></i>Approve Timesheet</a></li>
+    </div>
+    {% endif %}
 </div>
 
 <div class="col-lg-12">
@@ -60,8 +89,10 @@
                 <table id="dataTables-timesheets" class="table table-hover ">
                     <thead>
                         <tr>
-                            <th>Date</th>
+                            <th class="hidden-xs hidden-sm">Status</th>
+                            <th class="hidden-xs hidden-sm">User</th>
                             <th>Day</th>
+                            <th>Date</th>
                             <th>Hours</th>
                             <th class="hidden-xs hidden-sm">Start Time</th>
                             <th class="hidden-xs hidden-sm">Finish Time</th>
@@ -72,11 +103,23 @@
                         {% for timesheet in timesheet_list_weekly %}
                         {% if timesheet.start_time is not None %}
                         <tr class="change_timesheet" id="{{ timesheet.slug }}" data-toggle="modal" data-target="#modal-timesheet-sum" style="cursor: pointer;">
-                            <td class="docket-text">
-                                <b>{{ timesheet.docket_date }}</b>
+                            <td class="docket-status hidden-xs hidden-sm">
+                                {% if timesheet.status == "Open" %}
+                                <span class="label label-warning">{{ timesheet.status }}</span>
+                                {% elif timesheet.status == "Submitted" %}
+                                <span class="label label-info">{{ timesheet.status }}</span>
+                                {% else %}
+                                <span class="label label-success">{{ timesheet.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="docket-text hidden-xs hidden-sm">
+                                <b>{{ timesheet.created_user.first_name }} {{ timesheet.created_user.last_name }}</b>
                             </td>
                             <td class="docket-text">
-                                {{ timesheet.docket_date|date:"l" }}
+                                <b>{{ timesheet.docket_date|date:"l"}}</b>
+                            </td>
+                            <td class="docket-text">
+                                {{ timesheet.docket_date }}
                             </td>
                             <td class="docket-text">
                                 {{ timesheet.payable_hours.0 }}h {{ timesheet.payable_hours.1 }}m
@@ -108,23 +151,32 @@
                 <div class="row">
                     <div class="ibox new_timesheet_modal">
                         <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
-                            <div style="font-size: 20px; padding-bottom: 15px;">
-                                {{ timesheet_sum.docket_date }}
+                            <div style="font-size: 20px; padding-bottom: 15px; border-bottom: 2px solid #b8bbbc;">
+                                Timecard<br>
+                                {{ timesheet_sum.docket_date|date:"l" }} {{ timesheet_sum.docket_date }}
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <div class="row">
-                              <a class="btn btn-primary visible-md visible-lg pull-right" href="#">Edit contact</a>
+                            {% if timesheet_sum.status == "Open" or user.is_superuser %}
+                            <div class="row" style="margin-bottom: 20px;">
+                              <a class="btn btn-primary visible-md visible-lg pull-right" href="{% url 'timesheet:timecard_edit' timesheet_sum.slug %}">Edit timecard</a>
+                              <button type="button" class="btn btn-primary visible-md visible-lg pull-left" data-dismiss="modal">Close</button>
                             </div>
                             <div class="row">
-                              <a class="btn btn-primary btn-lg visible-xs visible-sm pull-right" href="#" style="margin-bottom: 15px;">
-                                Edit contact
+                              <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'timesheet:timecard_edit' timesheet_sum.slug %}" style="margin-bottom: 15px;">
+                                Edit timecard
                               </a>
+                              <button type="button" class="btn btn-primary visible-xs visible-sm pull-left" data-dismiss="modal">Close</button>
                             </div>
+                            {% endif %}
                             <strong>Time details</strong>
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
                                     <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.docket_date }}</span>
+                                        Date
+                                    </li>
+                                    <li class="list-group-item">
                                         <span class="pull-right">{{ timesheet_sum.start_time }}</span>
                                         Time start
                                     </li>
@@ -133,33 +185,42 @@
                                         Time finish
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="pull-right">{{ contact.email_work }}</span>
-                                        Email
+                                        <span class="pull-right">{{ timesheet_sum.docket_shift }}</span>
+                                        Shift
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="pull-right">{{ contact.phone_mobile}}</span>
-                                        Mobile
+                                        <span class="pull-right">{{ timesheet_sum.lunch }}m</span>
+                                        Lunch
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="pull-right">{{ contact.phone_work }}</span>
-                                        Office Phone
+                                        <span class="pull-right">{{ timesheet_sum.smoko}}m</span>
+                                        Smoko
                                     </li>
                                 </ul>
                             </div>
-                            <strong>Social media details</strong>
+                            <strong>Project details</strong>
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
-                                    <li class="list-group-item">
-                                        <span class="pull-right">{{ contact.linkedin }}</span>
-                                        Linkedin
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.company }}</span>
+                                        Client
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="pull-right">{{ contact.facebook }}</span>
-                                        Facebook
+                                        <span class="pull-right">{{ timesheet_sum.project }}</span>
+                                        Project
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Equipment details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.equipment }}</span>
+                                        ID
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="pull-right">{{ contact.twitter }}</span>
-                                        Twitter
+                                        <span class="pull-right">{{ timesheet_sum.equipment_hours }}</span>
+                                        Hours
                                     </li>
                                 </ul>
                             </div>
@@ -167,7 +228,7 @@
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
                                     <li class="list-group-item">
-                                        <span>{{ contact.additional_info|safe }}</span>
+                                        <span>{{ timesheet_sum.additional_info|safe }}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -175,15 +236,54 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary visible-md visible-lg pull-right" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary btn-lg visible-xs visible-sm pull-right" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-timesheet-submit" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content" id="timesheet-submit">
+            <div class="modal-body new_timesheet_modal">
+              <div class="" style="text-align: center;">
+                  <div style="font-size: 20px; padding-bottom: 15px;">
+                      Are you sure you want to submit your timesheet.
+                      <br>
+                      <br>
+                      Once you have submitted your timesheet you will not be able to make any more changes.
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer" style="border: 0px; margin-top: 0px; ">
+                <form action="" name="submit_timesheet" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="submit_timesheet">Submit</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
-
+<div id="modal-timesheet-approve" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content" id="timesheet-approve">
+            <div class="modal-body new_timesheet_modal">
+              <div class="" style="text-align: center;">
+                  <div style="font-size: 20px; padding-bottom: 15px;">
+                      Are you sure you want to approve this timesheet
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer" style="border: 0px; margin-top: 0px; ">
+                <form action="" name="approve_timesheet" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" name="approve_timesheet">Approve</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}
 

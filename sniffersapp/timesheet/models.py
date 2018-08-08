@@ -13,6 +13,16 @@ from ..connections.models import Company
 
 from .utils import *
 
+
+class TimesheetManager(models.Manager):
+    def for_user(self, user):
+        """NOTE: you cannot chain this as it doesn't return a queryset."""
+        qs = super().get_queryset()
+        if not user.is_staff or not user.is_superuser:
+            return [o for o in qs if o.created_user == user]
+        return qs.all()
+
+
 class Timesheet(models.Model):
     shift_options = (
         ('Day', 'Day'),
@@ -51,6 +61,15 @@ class Timesheet(models.Model):
         ('60', '60 mins'),
     )
 
+    status_options = (
+        ('Open', 'Open'),
+        ('Submitted', 'Submitted'),
+        ('Approved', 'Approved'),
+    )
+
+
+    objects = TimesheetManager()
+
     created_user = models.ForeignKey(settings.AUTH_USER_MODEL,
             blank=True, null=True, on_delete=models.PROTECT)
     timesheet_num = models.PositiveSmallIntegerField(blank=True, null=True, default=1000)
@@ -60,8 +79,11 @@ class Timesheet(models.Model):
 
     dockets = models.ManyToManyField(Docket, blank=True)
 
+    #submitted
+    status = models.CharField(max_length=20, blank=True, default='Open', choices=status_options)
+
     # Date
-    docket_date = models.DateField(blank=True, null=True, default=todays_date)
+    docket_date = models.DateField(blank=True, null=True)
     docket_shift = models.CharField(max_length=20, blank=True, choices=shift_options)
     # Equipment
     equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=True, null=True)
@@ -77,8 +99,10 @@ class Timesheet(models.Model):
     # Time
     start_time = models.TimeField(blank=True, null=True)
     finish_time = models.TimeField(blank=True, null=True)
-    lunch = models.CharField(max_length=20, blank=False, default='30', choices=lunch_options)
-    smoko = models.CharField(max_length=20, blank=False, default='30', choices=smoko_options)
+    lunch = models.CharField(max_length=20, blank=True, default='30', choices=lunch_options)
+    smoko = models.CharField(max_length=20, blank=True, default='30', choices=smoko_options)
+    # Additional Info
+    additional_info = models.TextField(blank=True)
     # Created/Updated
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

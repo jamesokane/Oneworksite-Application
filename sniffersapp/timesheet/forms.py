@@ -13,7 +13,7 @@ class TimesheetForm(forms.ModelForm):
     class Meta:
         model = Timesheet
         fields = ('dockets', 'docket_date', 'docket_shift', 'equipment', 'equipment_hours',
-                  'company', 'project', 'start_time', 'finish_time', 'lunch', 'smoko')
+                  'company', 'project', 'start_time', 'finish_time', 'lunch', 'smoko', 'additional_info')
 
         widgets = {
             'docket': forms.Select(attrs={'id': 'docket_tag',
@@ -38,4 +38,15 @@ class TimesheetForm(forms.ModelForm):
                                          'class': 'form_control_timesheet form-control '}),
             'smoko': forms.Select(attrs={'id': 'smoko_tag',
                                          'class': 'form_control_timesheet form-control '}),
+            'additional_info': forms.Textarea(attrs={'id': 'additional_info_tag',
+                                                 'class': 'form_control_timesheet form-control '}),
                                                     }
+
+
+class ApproveTimesheetForm(forms.ModelForm):
+    helper = FormHelper()
+    helper.form_tag = False
+
+    class Meta:
+        model = Timesheet
+        fields = ('status',)

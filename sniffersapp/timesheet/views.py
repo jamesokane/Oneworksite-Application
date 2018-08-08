@@ -6,9 +6,10 @@ from django.http import HttpResponse
 import datetime
 import calendar
 import csv
+import pytz
 
 from .models import Timesheet
-from .forms import TimesheetForm
+from .forms import TimesheetForm, ApproveTimesheetForm
 
 from ..equipment.models import Equipment
 from ..connections.models import Company
@@ -16,41 +17,53 @@ from ..projects.models import Project
 
 
 def timesheet_list(request, template='timesheet/timesheet_list.html'):
+    timesheet_list = Timesheet.objects.for_user(user=request.user)
+    # Create a string list of dates within timesheet_list
+    timesheet_date_list = []
+    for item in timesheet_list:
+        timesheet_date_list.append(str(item.docket_date))
+
+    # #Create list of Mondays and Fridays
     week_dates = []
-    start_date = datetime.date(2018, 6, 4)
+    start_date = request.user.date_joined
+    start_date = start_date - datetime.timedelta(days=start_date.weekday())
     for x in range(0, 100):
         date = start_date + datetime.timedelta(days=(x*7))
-        if date <= datetime.date.today():
+        if date <= datetime.datetime.utcnow().replace(tzinfo=pytz.UTC):
             week_dates.append((date, date + datetime.timedelta(days=(4))))
+            # Create a dummy entry for the monday of each week
             timesheet_form = TimesheetForm(request.POST)
             if timesheet_form.is_valid():
                 timesheet_form = timesheet_form.save(commit=False)
                 timesheet_form.docket_date = date
                 timesheet_form.created_user = request.user
-                timesheet_date_list = list(Timesheet.objects.all().values_list('docket_date', flat=True))
-                timesheet_date_list = [str(item) for item in timesheet_date_list]
-                if str(timesheet_form.docket_date) not in timesheet_date_list:
+                test = datetime.datetime.strptime(str(date)[:10], '%Y-%m-%d')
+                test = test.date()
+                if str(test) not in timesheet_date_list:
                     timesheet_form.save()
 
-    timesheet_list = Timesheet.objects.all()
-    weekly_list = []
-    week_dates = [str(item[0]) for item in week_dates]
-    for item in timesheet_list:
-        if str(item.docket_date) in week_dates:
-            if item.start_time is None:
-                weekly_list.append(item)
 
+    timesheet_list = Timesheet.objects.for_user(user=request.user)
+    weekly_list = []
+    week_dates_2 = []
+    for item in week_dates:
+        item = datetime.datetime.strptime(str(item[0])[:10], '%Y-%m-%d')
+        week_dates_2.append(str(item.date()))
+
+    for item in timesheet_list:
+        if str(item.docket_date) in week_dates_2 and item.start_time is None:
+            weekly_list.append(item)
     weekly_list = list(dict.fromkeys(weekly_list))
 
 
     context = {
          'weekly_list': weekly_list,
+         'timesheet_date_list': timesheet_date_list,
      }
     return render(request, template, context)
 
-
-def timecard_new(request, *args, **kwargs):
-    timesheet = Timesheet.objects.all()
+def timecard_new(request, slug, *args, **kwargs):
+    timesheet = get_object_or_404(Timesheet, slug=slug)
 
     timesheet_form = TimesheetForm(request.POST or None)
 
@@ -59,69 +72,56 @@ def timecard_new(request, *args, **kwargs):
         if 'new_timecard' in request.POST:
             if timesheet_form.is_valid():
                 timesheet_form = timesheet_form.save(commit=False)
-                timesheet_form.created_user = request.user
+                timesheet_form.created_user = timesheet.created_user
                 timesheet_form.save()
                 return redirect('timesheet:weekly_timesheet', timesheet_form.slug)
 
+    # Determine the week range any selected date sits within
+    today = timesheet.docket_date
+    dates = []
+    for i in range(0 - today.weekday(), 7 - today.weekday()):
+        week_date = today + datetime.timedelta(days=i)
+        week_day = calendar.day_name[week_date.weekday()]
+        month_day = calendar.month_name[week_date.month]
+        dates.append([week_date, week_day, month_day])
+
     context = {
         'timesheet_form': timesheet_form,
+        'timesheet': timesheet,
+        'dates': dates,
     }
     template = 'timesheet/timesheet_new.html'
     return render(request, template, context)
 
+def timecard_edit(request, slug, *args, **kwargs):
+    timesheet = get_object_or_404(Timesheet, slug=slug)
 
-def timesheet_calender(request):
-    timesheet_list = Timesheet.objects.all()
-    company_list = Company.objects.all()
-    company_name_list = list(company_list.values_list('company_name', flat=True))
-    project_list = Project.objects.all()
-    project_name_list = list(project_list.values_list('project_name', flat=True))
-    equipment_list = Equipment.objects.all()
-    equipment_name_list = list(equipment_list.values_list('equipment_id', flat=True))
-
-    day_name = '(unset)'
-
-    # AJAX call for item summary modal
-    if request.method == 'GET':
-        slug = request.GET.get('content')
-        if slug is None:
-            try:
-                timesheet_sum = timesheet_list[0]
-                today = timesheet_sum.docket_date
-                day_name = calendar.day_name[today.weekday()]
-            except IndexError:
-                timesheet_sum = None
-        elif 'timesheet_sum' in request.GET.get('name'):
-            timesheet_sum = get_object_or_404(Timesheet, slug=slug)
-            today = timesheet_sum.docket_date
-            day_name = calendar.day_name[today.weekday()]
+    edit_timesheet_form = TimesheetForm(request.POST or None, instance=timesheet)
 
     # Create new timecard form
     if request.method == "POST":
-        if 'new_timesheet' in request.POST:
-            timesheet_form = TimesheetForm(request.POST)
-            if timesheet_form.is_valid():
-                timesheet_form = timesheet_form.save(commit=False)
-                timesheet_form.equipment = equipment_list[equipment_name_list.index(timesheet_form.equipment_name)]
-                timesheet_form.company = company_list[company_name_list.index(timesheet_form.company_name)]
-                timesheet_form.project = project_list[project_name_list.index(timesheet_form.project_name)]
-                timesheet_form.save()
-                return redirect('timesheets:timesheet_calender')
-    else:
-        timesheet_form = TimesheetForm()
-        context = {
-            'timesheet_list': timesheet_list,
-            'timesheet_form': timesheet_form,
-            'equipment_list': equipment_list,
-            'company_list': company_list,
-            'project_list': project_list,
-            'timesheet_sum': timesheet_sum,
-            'day_name': day_name,
+        if 'edit_timecard' in request.POST:
+            if edit_timesheet_form.is_valid():
+                edit_timesheet_form = edit_timesheet_form.save(commit=False)
+                edit_timesheet_form.save()
+                return redirect('timesheet:weekly_timesheet', edit_timesheet_form.slug)
 
-         }
-        template = 'timesheet/timesheet_calender.html'
-        return render(request, template, context)
+    # Determine the week range any selected date sits within
+    today = timesheet.docket_date
+    dates = []
+    for i in range(0 - today.weekday(), 7 - today.weekday()):
+        week_date = today + datetime.timedelta(days=i)
+        week_day = calendar.day_name[week_date.weekday()]
+        month_day = calendar.month_name[week_date.month]
+        dates.append([week_date, week_day, month_day])
 
+    context = {
+        'edit_timesheet_form': edit_timesheet_form,
+        'timesheet': timesheet,
+        'dates': dates,
+    }
+    template = 'timesheet/timesheet_edit.html'
+    return render(request, template, context)
 
 def export_weekly_timesheet_csv(request, slug, *args, **kwargs):
     timesheet = get_object_or_404(Timesheet, slug=slug)
@@ -176,7 +176,7 @@ def export_timesheet_csv(request):
 
 def weekly_timesheet(request, slug, *args, **kwargs):
     timesheet = get_object_or_404(Timesheet, slug=slug)
-    timesheet_list = Timesheet.objects.all().order_by('start_time')
+
 
     # Determine the week range any selected date sits within
     today = timesheet.docket_date
@@ -190,7 +190,7 @@ def weekly_timesheet(request, slug, *args, **kwargs):
     # Creates a specific list of all the timesheet items that fall within a given week
     week_start = dates[0][0]
     week_end = dates[6][0]
-    timesheet_list_weekly = Timesheet.objects.filter(docket_date__range=[week_start, week_end])
+    timesheet_list_weekly = Timesheet.objects.filter(docket_date__range=[week_start, week_end]).filter(created_user__id = timesheet.created_user.id)
     timesheet_list_weekly = timesheet_list_weekly.order_by('docket_date')
 
     weekly_hours = 0
@@ -213,47 +213,35 @@ def weekly_timesheet(request, slug, *args, **kwargs):
         elif 'timesheet_sum' in request.GET.get('name'):
             timesheet_sum = get_object_or_404(Timesheet, slug=slug)
 
-    context = {
-         'timesheet_list_weekly': timesheet_list_weekly,
-         'dates': dates,
-         'weekly_hours': weekly_hours,
-         'weekly_mins': weekly_mins,
-         'timesheet_sum': timesheet_sum,
-         'timesheet': timesheet,
-
-    }
-    template = 'timesheet/timesheet_weekly.html'
-    return render(request, template, context)
-
-
-def timesheet_edit(request, slug, *args, **kwargs):
-    timesheet = get_object_or_404(Timesheet, slug=slug)
-    company_list = Company.objects.all()
-    company_name_list = list(company_list.values_list('company_name', flat=True))
-    project_list = Project.objects.all()
-    project_name_list = list(project_list.values_list('project_name', flat=True))
-    equipment_list = Equipment.objects.all()
-    equipment_name_list = list(equipment_list.values_list('name', flat=True))
-
-    # Create new timecard form
+    # Submit timesheet form
     if request.method == "POST":
-        if 'edit_timesheet' in request.POST:
-            edit_timesheet_form = TimesheetForm(request.POST, instance=timesheet)
-            if edit_timesheet_form.is_valid():
-                edit_timesheet_form = edit_timesheet_form.save(commit=False)
-                edit_timesheet_form.equipment = equipment_list[equipment_name_list.index(edit_timesheet_form.equipment_name)]
-                edit_timesheet_form.company = company_list[company_name_list.index(edit_timesheet_form.company_name)]
-                edit_timesheet_form.project = project_list[project_name_list.index(edit_timesheet_form.project_name)]
-                edit_timesheet_form.save()
-                return redirect('timesheets:weekly_timesheet', edit_timesheet_form.slug)
-    else:
-        edit_timesheet_form = TimesheetForm(instance=timesheet)
-        context = {
-            'equipment_list': equipment_list,
-            'company_list': company_list,
-            'project_list': project_list,
-            'edit_timesheet_form': edit_timesheet_form,
+        if 'submit_timesheet' in request.POST:
+            for timesheet in timesheet_list_weekly:
+                approve_timesheet_form = ApproveTimesheetForm(request.POST, instance=timesheet)
+                if approve_timesheet_form.is_valid():
+                    approve_timesheet_form = approve_timesheet_form.save(commit=False)
+                    approve_timesheet_form.status = "Submitted"
+                    approve_timesheet_form.save()
+            return redirect('timesheet:timesheet_list')
+        elif 'approve_timesheet' in request.POST:
+            for timesheet in timesheet_list_weekly:
+                approve_timesheet_form = ApproveTimesheetForm(request.POST, instance=timesheet)
+                if approve_timesheet_form.is_valid():
+                    approve_timesheet_form = approve_timesheet_form.save(commit=False)
+                    approve_timesheet_form.status = "Approved"
+                    approve_timesheet_form.save()
+            return redirect('timesheet:timesheet_list')
 
-         }
-        template = 'timesheet/timesheet_edit.html'
+    else:
+        approve_timesheet_form = ApproveTimesheetForm()
+        context = {
+            'timesheet_list_weekly': timesheet_list_weekly,
+            'dates': dates,
+            'weekly_hours': weekly_hours,
+            'weekly_mins': weekly_mins,
+            'timesheet_sum': timesheet_sum,
+            'timesheet': timesheet,
+            'approve_timesheet_form': approve_timesheet_form,
+        }
+        template = 'timesheet/timesheet_weekly.html'
         return render(request, template, context)

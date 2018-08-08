@@ -11,22 +11,14 @@
         <a href="{% url 'home' %}">Home</a>
     </li>
     <li class="active">
-        <strong>Timesheets</strong>
+        <strong>Weekly Timesheets</strong>
     </li>
 </ol>
 {% endblock breadcrumb %}
 
-{% block actions %}
-<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href=""><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timesheet</a></li>
-{% endblock %}
-
-
-
 {% block content %}
+{% if user.is_staff %}
 <div class="row">
-    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a class="btn btn-primary btn-sm" href="{% url 'timesheet:timecard_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Timecard</a></li>
-    </div>
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
         <a class="btn btn-primary btn-sm" href=""><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
     </div>
@@ -34,6 +26,7 @@
         <a class="btn btn-primary btn-sm" href=""><i class="fa fa-exchange" style="padding-right: 5px;"></i>Export MYOB</a></li>
     </div>
 </div>
+{% endif %}
 
 <div class="col-lg-12">
     <div class="ibox float-e-margins col-lg-12">
@@ -43,6 +36,7 @@
                     <thead>
                         <tr>
                             <th>Status</th>
+                            <th>User</th>
                             <th>Week Starting</th>
                         </tr>
                     </thead>
@@ -50,15 +44,20 @@
                         {% for date in weekly_list %}
                         <tr class="table-row" data-href="{% url 'timesheet:weekly_timesheet' date.slug %}" id="{{ date.slug }}" style="cursor: pointer;">
                           <td class="docket-status">
-                              {% if docket.locked %}
-                              <span class="label label-success">Complete </span>
+                              {% if date.status == "Open" %}
+                              <span class="label label-warning">{{ date.status }}</span>
+                              {% elif date.status == "Submitted" %}
+                              <span class="label label-info">{{ date.status }}</span>
                               {% else %}
-                              <span class="label label-warning">In Progress</span>
+                              <span class="label label-success">{{ date.status }}</span>
                               {% endif %}
                           </td>
-                            <td class="docket-text">
-                                <b>{{ date.docket_date }}</b><br>
-                            </td>
+                          <td class="docket-text">
+                              <b>{{ date.created_user.first_name }} {{ date.created_user.last_name }}</b><br>
+                          </td>
+                          <td class="docket-text">
+                              <b>{{ date.docket_date }}</b><br>
+                          </td>
                         </tr>
                         {% endfor timesheet%}
                     </tbody>
