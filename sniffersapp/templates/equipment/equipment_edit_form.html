@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 {% load static i18n %}
+{% load humanize %}
 
-{% block title %}{{ title }}{% endblock %}
-{% block head_title %}{{ title }}{% endblock %}
+{% block title %}
+<div class="visible-md visible-lg">Equipment</div>
+<div class="visible-xs visible-sm"> Edit Equipment</div>
+{% endblock %}
+{% block head_title %}Equipment{% endblock %}
 
 {% block css %}
 <link href="{% static 'css/plugins/summernote/summernote.css' %}" rel="stylesheet">
 <link href="{% static 'css/plugins/summernote/summernote-bs3.css' %}" rel="stylesheet">
+{{ equipment_form.media.css }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -15,55 +20,105 @@
         <a href="{% url 'home' %}">Home</a>
     </li>
     <li>
-        <a href="{% url 'equipment:list' %}">Equipment List</a>
+        <a href="{% url 'equipment:list' %}">Equipment</a>
     </li>
     <li class="active">
-        <strong>{{ title }}</strong>
+        <strong>Edit Equipment</strong>
     </li>
 </ol>
 {% endblock breadcrumb %}
 
+{% block actions %}
+<div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+    <a class="btn btn-primary" href="{% url 'equipment:list' %}">
+      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+    </a>
+</div>
+{% endblock %}
+
 {% block content %}
-<div class="col-lg-12">
-    <div class="ibox-content m-b-sm border-bottom">
-        <div class="row">
-            <form id="equipment_form" role="form" method="POST">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label>{{ field.label }}</label>
-                    {{ field }}
-                </div>
-            </div>
-            {% endfor %}
-            <input style="margin-left:15px;margin-top:20px;"type="submit" class="btn btn-primary btn-lg" value="Save">
-            </form>
-        </div>
+<div class="row">
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" href="{% url 'equipment:list' %}">
+          <i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back
+        </a>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+        <a class="btn btn-primary btn-sm" onclick="edit_equipment_form.myVariable.name='edit_equipment';edit_equipment_form.submit();">
+          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Equipment
+        </a>
     </div>
 </div>
+
+<div class="col-lg-12">
+  <form id="edit_equipment_form" role="form" method="POST">
+      <input type="hidden" id="myVariable" name="" />
+      {% csrf_token %}
+      {% if edit_equipment_form.errors %}
+      <div class="ibox-content m-b-sm error-box">
+          <strong>Please ensure that you have completed all fields</strong>
+      </div>
+      {% endif %}
+      <div class="ibox-content m-b-sm border-bottom">
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>ID</label>
+              {{ edit_equipment_form.equipment_id }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
+              <label>Year</label>
+              {{ edit_equipment_form.year }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
+              <label>Make</label>
+              {{ edit_equipment_form.make }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>Model</label>
+              {{ edit_equipment_form.model }}
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>Registration</label>
+              {{ edit_equipment_form.registration }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;">Additional Info</label>
+              {{ edit_equipment_form.additional_info }}
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+  <div class="row">
+    <div class="docket_buttons btn-group pull-right" style="margin-right: 15px; margin-top: 20px;">
+        <a class="btn btn-primary visible-xs visible-sm" onclick="edit_equipment_form.myVariable.name='edit_equipment';edit_equipment_form.submit();">
+          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Equipment
+        </a>
+    </div>
+  </div>
+</div>
+
 {% endblock content %}
 
 {% block javascript %}
-<!-- Page-Level Scripts -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="{% static 'js/plugins/fullcalendar/moment.min.js' %}"></script>
-<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/plugins/summernote/summernote.min.js' %}"></script>
 
 <script>
-
-$('#purchase_date').datepicker({
-    todayBtn: "linked",
-    keyboardNavigation: false,
-    forceParse: false,
-    calendarWeeks: true,
-    autoclose: true
-});
-
-
 $('#summernote').summernote({
   toolbar: [
     ['style', ['bold', 'italic', 'underline']],
@@ -72,6 +127,6 @@ $('#summernote').summernote({
     ['para', ['ul', 'ol', 'paragraph']],
   ]
 });
-
 </script>
+{{ equipment_form.media.js }}
 {% endblock javascript %}

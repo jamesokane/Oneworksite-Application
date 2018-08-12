@@ -16,11 +16,6 @@
 </ol>
 {% endblock %}
 
-{% block actions %}
-<a class="btn btn-primary visible-xs visible-sm" href="{% url 'connections:contact_new' %}">New Person</a>
-<a class="btn btn-primary visible-xs visible-sm" href="{% url 'connections:company_new' %}">New Company</a>
-{% endblock %}
-
 {% block content %}
 <div class="row">
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
@@ -31,8 +26,23 @@
           <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li>
       </ul>
     </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+      <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-user" style="padding-right: 5px;"></i>People<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'connections:contact_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Person</a></li>
+          <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li>
+      </ul>
+    </div>
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
       <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-briefcase" style="padding-right: 5px;"></i>Company<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
+          <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li>
+      </ul>
+    </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+      <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-briefcase" style="padding-right: 5px;"></i>Company<span class="caret" style="margin-left: 5px;"></span></button>
       <ul class="dropdown-menu">
           <li><a href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
           <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li>

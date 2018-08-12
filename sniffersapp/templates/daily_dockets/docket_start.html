@@ -6,7 +6,7 @@
 
 
 {% block actions %}
-<a class="btn btn-primary btn-lg visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:list' %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
+<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:list' %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
 {% endblock %}
 
 
@@ -44,37 +44,33 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-8">
+                <div>
                     <table class="table table-hover" >
                         <tbody>
                             <!-- Complete Daily Prestart -->
                             <tr class="table-row" data-href="{% url 'daily_dockets:prestart_form' docket.slug %}" style="cursor: pointer;">
-                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
                                 <td class="docket-status"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
-                                <td class="docket-title"><b>Complete Daily Prestart</b></td>
+                                <td class="docket-title" style=" border: 0px;"><b>Complete Daily Prestart</b></td>
                             </tr>
                             <!-- Complete Daily Docket -->
                             <tr class="table-row" data-href="{% url 'daily_dockets:docket_form' docket.slug%}" style="cursor: pointer;">
-                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
                                 {% if docket.company_name == "" %}
                                 <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
                                 {% else %}
                                 <td class="docket-status"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
                                 {% endif %}
-                                <td class="docket-title"><b>Complete Daily Docket</b></td>
+                                <td class="docket-title" style=" border: 0px;"><b>Complete Daily Docket</b></td>
                             </tr>
                             <!-- Signed Daily Docket -->
                             {% if docket.company_name == "" %}
                             <tr class="docket_disabled">
-                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
                                 <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
-                                <td class="docket-title"><b>Sign Daily Docket</b></td>
+                                <td class="docket-title" style=" border: 0px;"><b>Sign Daily Docket</b></td>
                             </tr>
                             {% else %}
                             <tr class="table-row" data-href="{% url 'daily_dockets:docket_signature' docket.slug%}" style="cursor: pointer;">
-                                <td class="docket_colour_div" ><div class="docket_colour_element"></div></td>
                                 <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
-                                <td class="docket-title"><b>Sign Daily Docket</b></td>
+                                <td class="docket-title" style=" border: 0px;"><b>Sign Daily Docket</b></td>
                             </tr>
                             {% endif %}
                         </tbody>

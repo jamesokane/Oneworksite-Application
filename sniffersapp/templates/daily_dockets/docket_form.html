@@ -12,7 +12,7 @@
 
 
 {% block actions %}
-<a class="btn btn-primary btn-lg visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:docket_start' docket.slug %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
+<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'daily_dockets:docket_start' docket.slug %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
 {% endblock %}
 
 
@@ -112,7 +112,7 @@
     </form>
     <div class="row">
       <div class="docket_buttons btn-group pull-right" style="margin-right: 15px;">
-          <a class="btn btn-primary btn-lg visible-xs visible-sm" onclick="docket_form.myVariable.name='new_docket';docket_form.submit();">
+          <a class="btn btn-primary visible-xs visible-sm" onclick="docket_form.myVariable.name='new_docket';docket_form.submit();">
             <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Prestart
           </a>
       </div>

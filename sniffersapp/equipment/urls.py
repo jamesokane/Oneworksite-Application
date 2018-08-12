@@ -6,8 +6,8 @@ app_name = 'equipment'
 
 urlpatterns = [
     path('', equipment_list, name='list'),
-    path('new/', equipment_form, name='equipment_new'),
-    path('<int:pk>/detail/', equipment_detail, name='equipment_detail'),
-    path('<int:pk>/edit/', equipment_edit, name='equipment_edit'),
-
+    path('new_attachment', attachment_form, name='attachment_new'),
+    path('new_equipment', equipment_form, name='equipment_new'),
+    path('<slug:slug>/edit/attachment/', attachment_edit, name='attachment_edit'),
+    path('<slug:slug>/edit/equipment/', equipment_edit, name='equipment_edit'),
 ]

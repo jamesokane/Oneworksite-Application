@@ -4,14 +4,14 @@
 
 {% block title %}
 <div class="visible-md visible-lg">Equipment</div>
-<div class="visible-xs visible-sm"> New Equipment</div>
+<div class="visible-xs visible-sm"> New Attachement</div>
 {% endblock %}
 {% block head_title %}Equipment{% endblock %}
 
 {% block css %}
 <link href="{% static 'css/plugins/summernote/summernote.css' %}" rel="stylesheet">
 <link href="{% static 'css/plugins/summernote/summernote-bs3.css' %}" rel="stylesheet">
-{{ equipment_form.media.css }}
+{{ attachment_form.media.css }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -23,7 +23,7 @@
         <a href="{% url 'equipment:list' %}">Equipment</a>
     </li>
     <li class="active">
-        <strong>New Equipment</strong>
+        <strong>New Attachment</strong>
     </li>
 </ol>
 {% endblock breadcrumb %}
@@ -44,17 +44,17 @@
         </a>
     </div>
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a class="btn btn-primary btn-sm" onclick="equipment_form.myVariable.name='new_equipment';equipment_form.submit();">
-          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Equipment
+        <a class="btn btn-primary btn-sm" onclick="attachment_form.myVariable.name='new_attachment';attachment_form.submit();">
+          <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Attachement
         </a>
     </div>
 </div>
 
 <div class="col-lg-12">
-  <form id="equipment_form" role="form" method="POST">
+  <form id="attachment_form" role="form" method="POST">
       <input type="hidden" id="myVariable" name="" />
       {% csrf_token %}
-      {% if equipment_form.errors %}
+      {% if attachment_form.errors %}
       <div class="ibox-content m-b-sm error-box">
           <strong>Please ensure that you have completed all fields</strong>
       </div>
@@ -64,33 +64,13 @@
           <div class="col-sm-4">
             <div class="form-group" style="margin-left: 20px;">
               <label>ID</label>
-              {{ equipment_form.equipment_id }}
+              {{ attachment_form.attachment_id }}
             </div>
           </div>
           <div class="col-sm-4">
             <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
-              <label>Year</label>
-              {{ equipment_form.year }}
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
-              <label>Make</label>
-              {{ equipment_form.make }}
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="form-group" style="margin-left: 20px;">
-              <label>Model</label>
-              {{ equipment_form.model }}
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="form-group" style="margin-left: 20px;">
-              <label>Registration</label>
-              {{ equipment_form.registration }}
+              <label>Type</label>
+              {{ attachment_form.attachment_type }}
             </div>
           </div>
         </div>
@@ -98,7 +78,7 @@
           <div class="col-sm-12">
             <div class="form-group" style="margin-left: 20px;">
               <label style="display: block;">Additional Info</label>
-              {{ equipment_form.additional_info }}
+              {{ attachment_form.additional_info }}
             </div>
           </div>
         </div>
@@ -106,7 +86,7 @@
   </form>
   <div class="row">
     <div class="docket_buttons btn-group pull-right" style="margin-right: 15px; margin-top: 20px;">
-        <a class="btn btn-primary visible-xs visible-sm" onclick="equipment_form.myVariable.name='new_equipment';equipment_form.submit();">
+        <a class="btn btn-primary visible-xs visible-sm" onclick="attachment_form.myVariable.name='new_attachment';attachment_form.submit();">
           <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Equipment
         </a>
     </div>
@@ -129,5 +109,5 @@ $('#summernote').summernote({
 });
 </script>
 
-{{ equipment_form.media.js }}
+{{ attachment_form.media.js }}
 {% endblock javascript %}

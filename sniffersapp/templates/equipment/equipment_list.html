@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% load static i18n %}
-{% load humanize %}
+
+{% load static i18n humanize %}
 
 {% block title %}Equipment{% endblock %}
 {% block head_title %}Equipment{% endblock %}
@@ -16,77 +16,371 @@
 </ol>
 {% endblock %}
 
-{% block actions %}
-<a class="btn btn-primary visible-sm visible-xs" href="{% url 'equipment:equipment_new' %}">Add Equipment</a></li>
-{% endblock %}
-
 {% block content %}
-<div class="docket_buttons btn-group visible-md visible-lg pull-left">
-    <a class="btn btn-primary btn-sm" href="{% url 'equipment:equipment_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>Add Equipment</a></li>
-</div>
-<div class="docket_buttons btn-group visible-md visible-lg pull-left">
-    <a class="btn btn-primary btn-sm" href="#"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export</a></li>
-</div>
-<div class="docket_buttons btn-group visible-md visible-lg pull-left">
-    <a class="btn btn-primary btn-sm" href="#"><i class="fa fa-download" style="padding-right: 5px;"></i>Import</a></li>
+<div class="row">
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+      <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-user" style="padding-right: 5px;"></i>Equipment<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'equipment:equipment_new'  %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Equipment</a></li>
+          <!-- <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li> -->
+      </ul>
+    </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+      <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-user" style="padding-right: 5px;"></i>Equipment<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'equipment:equipment_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Equipment</a></li>
+          <!-- <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li> -->
+      </ul>
+    </div>
+    <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+      <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-paste" style="padding-right: 5px;"></i>Attachments<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'equipment:attachment_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Attachment</a></li>
+          <!-- <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li> -->
+      </ul>
+    </div>
+    <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+      <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-paste" style="padding-right: 5px;"></i>Attachments<span class="caret" style="margin-left: 5px;"></span></button>
+      <ul class="dropdown-menu">
+          <li><a href="{% url 'equipment:attachment_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Attachment</a></li>
+          <!-- <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li> -->
+      </ul>
+    </div>
 </div>
 
 <div class="col-lg-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> Equipment</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> Attachments</a></li>
+    </ul>
+</div>
+
+
+<!--Tab Content Start-->
+<div class="col-lg-12">
     <div class="ibox float-e-margins col-lg-12">
-        <div class="ibox-content ibox-content-65vh">
-            <div class="table-responsive">
-                <table id="dataTables-equipment" class="table table-hover dataTables-equipment">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Year</th>
-                            <th>Make</th>
-                            <th>Model</th>
-                            <th>Registration</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for equipment in equipment_list %}
-                        <tr class="table-row" data-href="{% url 'equipment:equipment_detail' equipment.id %}" id="{{ equipment.id }}" style="...">
-                            <td>{{ equipment.equipment_id }}</td>
-                            <td>{{ equipment.year }}</td>
-                            <td>{{ equipment.make }}</td>
-                            <td>{{ equipment.model }}</td>
-                            <td>{{ equipment.registration }}</td>
-                        </tr>
-                        {% endfor%}
-                    </tbody>
-                </table>
+      <div class="ibox-content ibox-content-65vh">
+        <div class="tab-content">
+            <!--Contact Tab Start-->
+            <div id="tab-1" class="tab-pane active">
+                <div class="ibox float-e-margins">
+                    <div>
+                        <!--Contact Data Table Start-->
+                        <div class="table-responsive">
+                            <table id="dataTables-equipment" class="table table-hover dataTables-equipment">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th class="hidden-xs hidden-sm">Year</th>
+                                        <th>Make</th>
+                                        <th>Model</th>
+                                        <th class="hidden-xs hidden-sm">Registration</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for equipment in equipment_list %}
+                                    <tr class="change_equipment" id="{{ equipment.slug }}" data-toggle="modal" data-target="#modal-equipment-sum" style="cursor: pointer;">
+                                        <td class="docket-text">
+                                            <b>{{ equipment.equipment_id }}</b>
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm">
+                                            {{ equipment.year }}
+                                        </td>
+                                        <td class="docket-text">
+                                            {{ equipment.make }}
+                                        </td>
+                                        <td class="docket-text">
+                                            {{ equipment.model }}
+                                        </td>
+                                        <td class="docket-text hidden-xs hidden-sm ">
+                                            {{ equipment.registration }}
+                                        </td>
+                                    </tr>
+                                    {% endfor equipment%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Contact Tab End-->
+
+            <!--Company Tab Start-->
+            <div id="tab-2" class="tab-pane">
+                <div class="ibox float-e-margins">
+                    <div>
+                        <!--Company Data Table Start-->
+                        <div class="table-responsive">
+                            <table id="dataTables-attachment" class="table table-hover dataTables-attachment">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for attachment in attachment_list %}
+                                    <tr class="change_attachment" id="{{ attachment.slug }} "data-toggle="modal" data-target="#modal-attachment-sum" style="cursor: pointer;">
+                                        <td class="docket-text">
+                                            <b>{{ attachment.attachment_id }}</b><br>
+                                        </td>
+                                        <td class="docket-text">
+                                            {{ attachment.attachment_type }}
+                                        </td>
+                                    </tr>
+                                    {% endfor attachment%}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--Company Data Table End-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!--Tab Content End-->
+    </div>
+  </div>
+</div>
+
+<div id="modal-equipment-sum" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content" id="equipment_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                {{ equipment.equipment_id }}
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            {% if equipment.slug is not None %}
+                            <div class="row">
+                              <a class="btn btn-primary btn-sm visible-md visible-lg pull-right" href="{% url 'equipment:equipment_edit' equipment.slug %}">Edit Equipment</a>
+                            </div>
+                            <div class="row">
+                              <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'equipment:equipment_edit' equipment.slug %}" style="margin-bottom: 15px;">
+                                Edit Equipment
+                              </a>
+                            </div>
+                            {% endif %}
+                            <strong>Equipment details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ equipment.equipment_id }}</span>
+                                        ID
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ equipment.year }}</span>
+                                        Year
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ equipment.make }}</span>
+                                        Make
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ equipment.model }}</span>
+                                        Model
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ equipment.registration }}</span>
+                                        Registration
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Additional info</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span>{{ equipment.additional_info|safe }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary btn-sm visible-md visible-lg pull-right" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary visible-xs visible-sm pull-right" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
+<div id="modal-attachment-sum" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-content" id="attachment_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                {{ attachment.attachment_id }} {{ attachment.attachment_type }}
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            {% if attachment.slug is not None %}
+                            <div class="row">
+                              <a class="btn btn-primary btn-sm visible-md visible-lg pull-right" href="{% url 'equipment:attachment_edit' attachment.slug %}">Edit Attachment</a>
+                            </div>
+                            <div class="row">
+                              <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'equipment:attachment_edit' attachment.slug %}" style="margin-bottom: 15px;">
+                                Edit Attachment
+                              </a>
+                            </div>
+                            {% endif %}
+                            <strong>Attachment details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ attachment.attachment_id }}</span>
+                                        ID
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ attachment.attachment_type }}</span>
+                                        Type
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Additional info</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span>{{ attachment.additional_info|safe }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary btn-sm visible-md visible-lg pull-right" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary visible-xs visible-sm pull-right" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div id="modal-contact-upload" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog timesheet_sum">
+        <div class="modal-company"  id="company_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                Import People
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <strong>Import Details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        You can import people using the provided .csv file. Download
+                                        <a href="{{ MEDIA_URL }}/csv_import_examples/contact_import.csv"><span style="text-decoration: underline;">here.</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Import File</strong>
+                            <div class="timesheet-detail">
+                              <form id="csv_import_form" role="form" method="POST" style="margin-top: 10px;">
+                                <input type="hidden" id="myVariable" name="" />
+                                {% csrf_token %}
+                                  {{ csv_import_form.csv_import }}
+                              </form>
+                              <div class="row">
+                                <div class="pull-right" style="margin-top: 30px;">
+                                    <button type="button" class="btn btn-primary btn-sm " data-dismiss="modal">
+                                      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;" aria-hidden="true"></i>Go Back
+                                    </button>
+                                    <a class="btn btn-primary btn-sm" onclick="csv_import_form.myVariable.name='csv_upload';csv_import_form.submit();" style="margin-left: 15px;" >
+                                      <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Import People
+                                    </a>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
 {% endblock content %}
 
-
 {% block javascript %}
-<script src="{% static 'js/datatables.min.js' %}"></script>
-<script>
-$('.dataTables-equipment').DataTable({
-    "ordering": false,
-    "dom": "ft",
-    "lengthChange": false,
-    "paging": false,
-    responsive: true,
-    language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Search Equipment",
-        "emptyTable": "No equipment has been created yet."
-    },
-});
-$(document).ready(function($) {
-    $(".table-row").click(function() {
-        window.location = $(this).data("href");
-    });
-});
-</script>
 
+<!-- Data tables -->
+<script src="{% static 'js/datatables.min.js' %}"></script>
+
+<script>
+
+    $('.change_equipment').click(function(){
+      var catid;
+      catid = $(this).attr("id");
+      $.get("{% url 'equipment:list' %}", {content: catid, name: "equipment_sum"},
+      function(data){
+        var result = $('<div />').append(data).find('#equipment_summary').html();
+        $('#equipment_summary').html(result);
+      });
+    });
+
+
+    $('.change_attachment').click(function(){
+      var catid;
+      catid = $(this).attr("id");
+      $.get("{% url 'equipment:list' %}", {content: catid, name: "attachment_sum"},
+      function(data){
+        var result = $('<div />').append(data).find('#attachment_summary').html();
+        $('#attachment_summary').html(result);
+      });
+    });
+
+
+    $('.dataTables-equipment').DataTable({
+        "pagingType": "simple",
+        "ordering": false,
+        "lengthChange": false,
+        pageLength:15,
+        responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search Equipment",
+            "emptyTable": "No Equipment have been created yet.",
+            "info": "",
+        },
+    });
+
+
+    $('.dataTables-attachment').DataTable({
+      "pagingType": "simple",
+      "ordering": false,
+      "lengthChange": false,
+      pageLength:15,
+      responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search Attachments",
+            "emptyTable": "No attachments have been created yet.",
+            "info": "",
+        },
+    });
+
+
+    {% for message in messages %}
+    $(".alert-{{ message.tags }}").fadeTo(3000, 500).slideUp(500, function(){
+        $(".alert-{{ message.tags }}").alert('close');
+    });
+    {% endfor message %}
+
+</script>
 {% endblock javascript %}
 
 {% block css %}

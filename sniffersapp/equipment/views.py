@@ -1,97 +1,106 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Equipment, Equipment_AdditionalInfo
-from .forms import EquipmentForm, EquipmentExtendedForm
+from .models import Equipment, Attachment
+from .forms import EquipmentForm, AttachmentForm
 
 def equipment_list(request, template='equipment/equipment_list.html'):
-    context = {
-         'equipment_list': Equipment.objects.all(),
-     }
-    return render(request, template, context)
+    equipment_list = Equipment.objects.order_by('equipment_id')
+    attachment_list = Attachment.objects.order_by('attachment_id')
 
-def equipment_detail(request, pk):
-    equipment = get_object_or_404(Equipment, pk=pk)
-    equipment_additional = Equipment_AdditionalInfo
+    if request.method == 'GET':
+        slug = request.GET.get('content')
+        if slug is None:
+            try:
+                equipment = equipment_list[0]
+                attachment = attachment_list[0]
+            except IndexError:
+                equipment = None
+                attachment = None
+        elif 'equipment_sum' in request.GET.get('name'):
+            equipment = get_object_or_404(Equipment, slug=slug)
+            attachment = None
+        elif 'attachment_sum' in request.GET.get('name'):
+            attachment = get_object_or_404(Attachment, slug=slug)
+            equipment = None
+
     context = {
-        'equipment': equipment,
-        'equipment_additional': equipment_additional,
-    }
-    template = 'equipment/equipment_detail.html'
+         'attachment_list': attachment_list,
+         'equipment_list': equipment_list,
+         'attachment': attachment,
+         'equipment': equipment,
+
+     }
     return render(request, template, context)
 
 def equipment_form(request, template='equipment/equipment_form.html'):
 
-    if request.method == 'POST':
-        equipment_form = EquipmentForm(request.POST)
-        if equipment_form.is_valid():
-            equipment_form.save(commit=False)
-            if request.user.is_authenticated:
-                equipment_form.created_user = request.user
-            equipment_form.save()
-        messages.success(request, 'equipment saved successfully.')
-        return redirect('equipment:list')
+    equipment_form = EquipmentForm(request.POST or None)
 
-    else:
-        equipment_form = EquipmentForm
+    if request.method == 'POST':
+        if 'new_equipment' in request.POST:
+            if equipment_form.is_valid():
+                equipment_form.save(commit=False)
+                equipment_form.created_user = request.user
+                equipment_form.save()
+                messages.success(request, 'Equipment saved successfully.')
+                return redirect('equipment:list')
 
     context = {
-        'form': equipment_form,
+        'equipment_form': equipment_form,
     }
-
     return render(request, template, context)
 
-def equipment_edit(request, pk, template='equipment/equipment_form.html'):
-    equipment = get_object_or_404(Equipment, pk=pk)
+def attachment_form(request, template='equipment/attachment_form.html'):
+
+    attachment_form = AttachmentForm(request.POST or None)
+
     if request.method == 'POST':
-        equipment_form = EquipmentForm(request.POST, instance=equipment)
-
-        if equipment_form.is_valid():
-            equipment_form.save(commit=False)
-            if request.user.is_authenticated:
-                equipment_form.created_user = request.user
-            equipment_form.save()
-        messages.success(request, 'equipment updated successfully.')
-        return redirect('equipment:list')
-
-    else:
-        equipment_form = EquipmentForm(instance=equipment)
-
+        if 'new_attachment' in request.POST:
+            if attachment_form.is_valid():
+                attachment_form.save(commit=False)
+                attachment_form.created_user = request.user
+                attachment_form.save()
+                messages.success(request, 'Attachment saved successfully.')
+                return redirect('equipment:list')
 
     context = {
-        'form': equipment_form,
+        'attachment_form': attachment_form,
     }
-
     return render(request, template, context)
 
-# from django.contrib.messages.views import SuccessMessageMixin
-# from django.shortcuts import get_object_or_404
-# from django.urls import reverse_lazy
-# from django.views.generic import *
-#
-# from .models import Equipment
-# from .forms import EquipmentForm
-#
-#
-# class EquipmentListView(ListView):
-#     model = Equipment
-#
-#
-# class EquipmentCreateView(SuccessMessageMixin, CreateView):
-#     model = Equipment
-#     form_class = EquipmentForm
-#     template_name = 'equipment/equipment_form.html'
-#     success_url = reverse_lazy('equipment:list')
-#     success_message = 'Equipment created succesfully.'
-#
-#     def form_valid(self, form):
-#         form.instance.created_user = self.request.user
-#         return super().form_valid(form)
-#
-#
-# class EquipmentUpdateView(SuccessMessageMixin, UpdateView):
-#     model = Equipment
-#     form_class = EquipmentForm
-#     template_name = 'equipment/equipment_form.html'
-#     success_url = reverse_lazy('equipment:list')
-#     success_message = 'Equipment updated successfully.'
+def equipment_edit(request, slug, template='equipment/equipment_edit_form.html'):
+    equipment = get_object_or_404(Equipment, slug=slug)
+
+    edit_equipment_form = EquipmentForm(request.POST or None, instance=equipment)
+
+    if request.method == 'POST':
+        if 'edit_equipment' in request.POST:
+            if edit_equipment_form.is_valid():
+                edit_equipment_form.save(commit=False)
+                edit_equipment_form.save()
+                messages.success(request, 'Equipment updated successfully.')
+                return redirect('equipment:list')
+
+    context = {
+        'edit_equipment_form': edit_equipment_form,
+    }
+    return render(request, template, context)
+
+def attachment_edit(request, slug, template='equipment/attachment_edit_form.html'):
+    attachment = get_object_or_404(Attachment, slug=slug)
+
+    edit_attachment_form = AttachmentForm(request.POST or None, instance=attachment)
+
+    if request.method == 'POST':
+        if 'edit_attachment' in request.POST:
+            if edit_attachment_form.is_valid():
+                edit_attachment_form.save(commit=False)
+                edit_attachment_form.save()
+                messages.success(request, 'Attachment updated successfully.')
+                return redirect('equipment:list')
+
+    context = {
+        'edit_attachment_form': edit_attachment_form,
+    }
+    return render(request, template, context)

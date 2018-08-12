@@ -9,7 +9,7 @@ import datetime
 import calendar
 
 from ..projects.models import Project
-from ..equipment.models import Equipment
+from ..equipment.models import Equipment, Attachment
 from ..connections.models import Company
 
 from ..timesheet.utils import calculate_hours
@@ -70,6 +70,13 @@ class Docket(models.Model):
         ('60', '60 mins'),
     )
 
+    item_options = (
+        ('No Issues', 'No Issues'),
+        ('Needs Attention', 'Needs Attention'),
+        ('Not Applicable', 'Not Applicable'),
+    )
+
+
     objects = DocketManager()
 
     week_day = calendar.day_name[datetime.date.today().weekday()]
@@ -83,45 +90,46 @@ class Docket(models.Model):
     slug = models.SlugField(blank=True, null=True)
 
     # Signatures - base64 encoded image/png
-    operator_sign = models.TextField(blank=True, null=True)
-    supervisor_sign = models.TextField(blank=True, null=True)
+    operator_sign = models.TextField(blank=False, null=True)
+    supervisor_sign = models.TextField(blank=False, null=True)
 
     # Date
-    docket_date = models.DateField(blank=True, null=True, default=todays_date)
+    docket_date = models.DateField(blank=False, null=True, default=todays_date)
     docket_day = models.CharField(max_length=20, blank=False, default=week_day, choices=day_options)
     docket_shift = models.CharField(max_length=20, blank=False, default='Day', choices=shift_options)
     # Equipment
-    equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=True, null=True)
+    attachment = models.ForeignKey(Attachment, models.SET_NULL, blank=False, null=True)
+    attachment_hours = models.CharField(max_length=80, blank=False)
+    equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=False, null=True)
     equipment_name = models.CharField(max_length=80) # copied from equipment.id
-    equipment_num = models.CharField(max_length=80)
-    equipment_hours = models.CharField(max_length=80)
-    attachments = models.CharField(max_length=80, blank=True)
+    equipment_num = models.CharField(max_length=80, blank=False)
+    equipment_hours = models.CharField(max_length=80, blank=False)
     # Company
-    company = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
+    company = models.ForeignKey(Company, models.SET_NULL, blank=False, null=True)
     company_name = models.CharField(max_length=80) # copied from company.name
     # Project
-    project = models.ForeignKey(Project, models.SET_NULL, blank=True, null=True)
+    project = models.ForeignKey(Project, models.SET_NULL, blank=False, null=True)
     project_name = models.CharField(max_length=80) # copied from project.name
     # Supervisor
-    supervisor = models.CharField(max_length=80, null=True)
+    supervisor = models.CharField(max_length=80, blank=False, null=True)
     # Time
-    start_time = models.TimeField(null=True)
-    finish_time = models.TimeField(null=True)
+    start_time = models.TimeField(null=True, blank=False)
+    finish_time = models.TimeField(null=True, blank=False)
     lunch = models.CharField(max_length=20, blank=False, default='30', choices=lunch_options)
     smoko = models.CharField(max_length=20, blank=False, default='30', choices=smoko_options)
     # Items
-    item1 = models.BooleanField()
-    item2 = models.BooleanField()
-    item3 = models.BooleanField()
-    item4 = models.BooleanField()
-    item5 = models.BooleanField()
-    item6 = models.BooleanField()
-    item7 = models.BooleanField()
-    item8 = models.BooleanField()
-    item9 = models.BooleanField()
-    item10 = models.BooleanField()
-    item11 = models.BooleanField()
-    item12 = models.BooleanField()
+    item1 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item2 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item3 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item4 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item5 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item6 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item7 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item8 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item9 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item10 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item11 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item12 = models.CharField(max_length=20, blank=False, choices=item_options)
     # Details of faults
     fault = models.TextField(blank=True)
     # Fault reported to
@@ -170,7 +178,7 @@ class Docket(models.Model):
 
     @property
     def total_hours(self):
-        return calculate_hours(self, lunch=False)
+        return calculate_hours(self, lunch=False, smoko=False)
 
     @property
     def payable_hours(self):
