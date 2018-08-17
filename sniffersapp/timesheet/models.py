@@ -83,24 +83,25 @@ class Timesheet(models.Model):
     status = models.CharField(max_length=20, blank=True, default='Open', choices=status_options)
 
     # Date
-    docket_date = models.DateField(blank=True, null=True)
-    docket_shift = models.CharField(max_length=20, blank=True, choices=shift_options)
+    week_start_date = models.DateField(null=True, blank=True)
+    week_end_date = models.DateField( null=True, blank=True)
+    timesheet_date = models.DateField(blank=False, null=True, default=todays_date)
+    docket_shift = models.CharField(max_length=20, choices=shift_options, default='Day')
     # Equipment
-    equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=True, null=True)
-    equipment_name = models.CharField(max_length=80, blank=True)
-    equipment_num = models.CharField(max_length=80, blank=True)
-    equipment_hours = models.CharField(max_length=80, blank=True)
+    equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=False, null=True)
+    equipment_name = models.CharField(max_length=80) # copied from equipment.id
+    equipment_num = models.CharField(max_length=80, blank=False)
     # Company
-    company = models.ForeignKey(Company, models.SET_NULL, blank=True, null=True)
-    company_name = models.CharField(max_length=80, blank=True)
+    company = models.ForeignKey(Company, models.SET_NULL, blank=False, null=True)
+    company_name = models.CharField(max_length=80) # copied from company.name
     # Project
-    project = models.ForeignKey(Project, models.SET_NULL, blank=True, null=True)
-    project_name = models.CharField(max_length=80, blank=True)
+    project = models.ForeignKey(Project, models.SET_NULL, blank=False, null=True)
+    project_name = models.CharField(max_length=80) # copied from project.name
     # Time
-    start_time = models.TimeField(blank=True, null=True)
-    finish_time = models.TimeField(blank=True, null=True)
-    lunch = models.CharField(max_length=20, blank=True, default='30', choices=lunch_options)
-    smoko = models.CharField(max_length=20, blank=True, default='30', choices=smoko_options)
+    start_time = models.TimeField(null=True, blank=False)
+    finish_time = models.TimeField(null=True, blank=False)
+    lunch = models.CharField(max_length=20, blank=False, default='30', choices=lunch_options)
+    smoko = models.CharField(max_length=20, blank=False, default='30', choices=smoko_options)
     # Additional Info
     additional_info = models.TextField(blank=True)
     # Created/Updated
@@ -115,6 +116,14 @@ class Timesheet(models.Model):
         return self.slug
 
     def save(self, **kwargs):
+        # Copy over ForeignKey fields
+        if self.equipment:
+            self.equipment_name = self.equipment.equipment_id
+        if self.company:
+            self.company_name = self.company.company_name
+        if self.project:
+            self.project_name = self.project.project_name
+
         # Pick new timesheet number when creating only - not on update
         if self._state.adding:
             max_timesheet_num = Timesheet.objects.filter(created_user=self.created_user) \

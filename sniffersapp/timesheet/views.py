@@ -9,7 +9,7 @@ import csv
 import pytz
 
 from .models import Timesheet
-from .forms import TimesheetForm, ApproveTimesheetForm
+from .forms import TimesheetForm, WeeklyStartTimesheetForm, ApproveTimesheetForm
 
 from ..equipment.models import Equipment
 from ..connections.models import Company
@@ -21,7 +21,7 @@ def timesheet_list(request, template='timesheet/timesheet_list.html'):
     # Create a string list of dates within timesheet_list
     timesheet_date_list = []
     for item in timesheet_list:
-        timesheet_date_list.append(str(item.docket_date))
+        timesheet_date_list.append(str(item.timesheet_date))
 
     # #Create list of Mondays and Fridays
     week_dates = []
@@ -30,12 +30,15 @@ def timesheet_list(request, template='timesheet/timesheet_list.html'):
     for x in range(0, 100):
         date = start_date + datetime.timedelta(days=(x*7))
         if date <= datetime.datetime.utcnow().replace(tzinfo=pytz.UTC):
-            week_dates.append((date, date + datetime.timedelta(days=(4))))
+            week_dates.append((date, date + datetime.timedelta(days=(6))))
             # Create a dummy entry for the monday of each week
-            timesheet_form = TimesheetForm(request.POST)
+            timesheet_form = WeeklyStartTimesheetForm(request.POST)
             if timesheet_form.is_valid():
                 timesheet_form = timesheet_form.save(commit=False)
-                timesheet_form.docket_date = date
+                timesheet_form.week_start_date = date
+                timesheet_form.timesheet_date = date
+                end_date = date + datetime.timedelta(days=(6))
+                timesheet_form.week_end_date = end_date
                 timesheet_form.created_user = request.user
                 test = datetime.datetime.strptime(str(date)[:10], '%Y-%m-%d')
                 test = test.date()
@@ -51,7 +54,7 @@ def timesheet_list(request, template='timesheet/timesheet_list.html'):
         week_dates_2.append(str(item.date()))
 
     for item in timesheet_list:
-        if str(item.docket_date) in week_dates_2 and item.start_time is None:
+        if str(item.week_start_date) in week_dates_2 and item.start_time is None:
             weekly_list.append(item)
     weekly_list = list(dict.fromkeys(weekly_list))
 
@@ -59,6 +62,7 @@ def timesheet_list(request, template='timesheet/timesheet_list.html'):
     context = {
          'weekly_list': weekly_list,
          'timesheet_date_list': timesheet_date_list,
+         'week_dates': week_dates,
      }
     return render(request, template, context)
 
@@ -76,8 +80,20 @@ def timecard_new(request, slug, *args, **kwargs):
                 timesheet_form.save()
                 return redirect('timesheet:weekly_timesheet', timesheet_form.slug)
 
+    equipment_list = Equipment.objects.all()
+    equipment = None
+    if request.method == 'GET':
+        id = request.GET.get('content')
+        if id is None:
+            try:
+                equipment = equipment_list[0]
+            except IndexError:
+                equipment = None
+        else:
+            equipment = get_object_or_404(Equipment, id=id)
+
     # Determine the week range any selected date sits within
-    today = timesheet.docket_date
+    today = timesheet.timesheet_date
     dates = []
     for i in range(0 - today.weekday(), 7 - today.weekday()):
         week_date = today + datetime.timedelta(days=i)
@@ -89,6 +105,7 @@ def timecard_new(request, slug, *args, **kwargs):
         'timesheet_form': timesheet_form,
         'timesheet': timesheet,
         'dates': dates,
+        'equipment': equipment,
     }
     template = 'timesheet/timesheet_new.html'
     return render(request, template, context)
@@ -107,7 +124,7 @@ def timecard_edit(request, slug, *args, **kwargs):
                 return redirect('timesheet:weekly_timesheet', edit_timesheet_form.slug)
 
     # Determine the week range any selected date sits within
-    today = timesheet.docket_date
+    today = timesheet.timesheet_date
     dates = []
     for i in range(0 - today.weekday(), 7 - today.weekday()):
         week_date = today + datetime.timedelta(days=i)
@@ -123,54 +140,54 @@ def timecard_edit(request, slug, *args, **kwargs):
     template = 'timesheet/timesheet_edit.html'
     return render(request, template, context)
 
-def export_weekly_timesheet_csv(request, slug, *args, **kwargs):
-    timesheet = get_object_or_404(Timesheet, slug=slug)
-    # Determine the week range any selected date sits within
-    today = timesheet.docket_date
-    dates = []
-    for i in range(0 - today.weekday(), 7 - today.weekday()):
-        week_date = today + datetime.timedelta(days=i)
-        week_day = calendar.day_name[week_date.weekday()]
-        month_day = calendar.month_name[week_date.month]
-        dates.append([week_date, week_day, month_day])
-    # Creates a specific list of all the timesheet items that fall within a given week
-    week_start = dates[0][0]
-    week_end = dates[6][0]
-    timesheet_list_weekly = Timesheet.objects.filter(docket_date__range=[week_start, week_end])
+# def export_weekly_timesheet_csv(request, slug, *args, **kwargs):
+#     timesheet = get_object_or_404(Timesheet, slug=slug)
+#     # Determine the week range any selected date sits within
+#     today = timesheet.docket_date
+#     dates = []
+#     for i in range(0 - today.weekday(), 7 - today.weekday()):
+#         week_date = today + datetime.timedelta(days=i)
+#         week_day = calendar.day_name[week_date.weekday()]
+#         month_day = calendar.month_name[week_date.month]
+#         dates.append([week_date, week_day, month_day])
+#     # Creates a specific list of all the timesheet items that fall within a given week
+#     week_start = dates[0][0]
+#     week_end = dates[6][0]
+#     timesheet_list_weekly = Timesheet.objects.filter(docket_date__range=[week_start, week_end])
+#
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="weekly_timesheet.csv"'
+#
+#     writer = csv.writer(response)
+#     writer.writerow(['Operator Name', 'Date', 'Shift', 'Equipment', 'Equipment Number', 'Equipment Hours',
+#                      'Docket Number', 'Customer', 'Project', 'Start Time', 'Finish Time', 'Lunch'])
+#
+#     timesheet_list_weekly = timesheet_list_weekly.values_list('', 'docket_date', 'docket_shift', 'equipment_name',
+#                                                               'equipment_num', 'equipment_hours', 'docket_number',
+#                                                               'company_name', 'project_name', 'start_time', 'finish_time',
+#                                                               'lunch')
+#     for item in timesheet_list_weekly:
+#         writer.writerow(item)
+#     return response
 
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="weekly_timesheet.csv"'
 
-    writer = csv.writer(response)
-    writer.writerow(['Operator Name', 'Date', 'Shift', 'Equipment', 'Equipment Number', 'Equipment Hours',
-                     'Docket Number', 'Customer', 'Project', 'Start Time', 'Finish Time', 'Lunch'])
-
-    timesheet_list_weekly = timesheet_list_weekly.values_list('', 'docket_date', 'docket_shift', 'equipment_name',
-                                                              'equipment_num', 'equipment_hours', 'docket_number',
-                                                              'company_name', 'project_name', 'start_time', 'finish_time',
-                                                              'lunch')
-    for item in timesheet_list_weekly:
-        writer.writerow(item)
-    return response
-
-
-def export_timesheet_csv(request):
-    timesheet_list = Timesheet.objects.all()
-
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="monthly_timesheet.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(['Operator Name', 'Date', 'Shift', 'Equipment', 'Equipment Number', 'Equipment Hours',
-                     'Docket Number', 'Customer', 'Project', 'Start Time', 'Finish Time', 'Lunch'])
-
-    timesheet_list = timesheet_list.values_list('user_name', 'docket_date', 'docket_shift', 'equipment_name',
-                                                              'equipment_num', 'equipment_hours', 'docket_number',
-                                                              'company_name', 'project_name', 'start_time', 'finish_time',
-                                                              'lunch')
-    for item in timesheet_list:
-        writer.writerow(item)
-    return response
+# def export_timesheet_csv(request):
+#     timesheet_list = Timesheet.objects.all()
+#
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="monthly_timesheet.csv"'
+#
+#     writer = csv.writer(response)
+#     writer.writerow(['Operator Name', 'Date', 'Shift', 'Equipment', 'Equipment Number', 'Equipment Hours',
+#                      'Docket Number', 'Customer', 'Project', 'Start Time', 'Finish Time', 'Lunch'])
+#
+#     timesheet_list = timesheet_list.values_list('user_name', 'docket_date', 'docket_shift', 'equipment_name',
+#                                                               'equipment_num', 'equipment_hours', 'docket_number',
+#                                                               'company_name', 'project_name', 'start_time', 'finish_time',
+#                                                               'lunch')
+#     for item in timesheet_list:
+#         writer.writerow(item)
+#     return response
 
 
 
@@ -179,7 +196,7 @@ def weekly_timesheet(request, slug, *args, **kwargs):
 
 
     # Determine the week range any selected date sits within
-    today = timesheet.docket_date
+    today = timesheet.timesheet_date
     day_name = calendar.day_name[today.weekday()]
     dates = []
     for i in range(0 - today.weekday(), 7 - today.weekday()):
@@ -190,8 +207,8 @@ def weekly_timesheet(request, slug, *args, **kwargs):
     # Creates a specific list of all the timesheet items that fall within a given week
     week_start = dates[0][0]
     week_end = dates[6][0]
-    timesheet_list_weekly = Timesheet.objects.filter(docket_date__range=[week_start, week_end]).filter(created_user__id = timesheet.created_user.id)
-    timesheet_list_weekly = timesheet_list_weekly.order_by('docket_date')
+    timesheet_list_weekly = Timesheet.objects.filter(timesheet_date__range=[week_start, week_end]).filter(created_user__id = timesheet.created_user.id)
+    timesheet_list_weekly = timesheet_list_weekly.order_by('timesheet_date')
 
     weekly_hours = 0
     weekly_mins = 0

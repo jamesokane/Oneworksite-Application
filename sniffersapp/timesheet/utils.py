@@ -7,7 +7,7 @@ def calculate_hours(docket, lunch=True, smoko=True ):
     if not docket.start_time or not docket.finish_time:
         return 0, 0
     combine = datetime.datetime.combine
-    shift_length = combine(docket.docket_date, docket.finish_time) - combine(docket.docket_date, docket.start_time)
+    shift_length = combine(docket.timesheet_date, docket.finish_time) - combine(docket.timesheet_date, docket.start_time)
     if lunch:
         shift_length = shift_length - datetime.timedelta(minutes=int(docket.lunch))
         if smoko:

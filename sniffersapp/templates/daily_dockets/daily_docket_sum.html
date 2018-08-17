@@ -91,7 +91,11 @@
                               <div class="row">
                                   <div class="col-sm-4 docket_text">
                                       <span class="docket_text_heading">ITEM OR PLANT:</span>
-                                      <span>{{ docket.equipment }}</span>
+                                      <span id="docket_equipment_name">{{ docket.equipment }}</span>
+                                  </div>
+                                  <div class="col-sm-8 docket_text">
+                                      <span class="docket_text_heading">ITEM OR PLANT:</span>
+                                      <span id="docket_equipment_name">{{ docket.equipment_num }}</span>
                                   </div>
                               </div>
                               <div class="row">
@@ -132,17 +136,51 @@
                                       <span>{{ docket.payable_hours.0 }}h {{ docket.payable_hours.1 }}m</span>
                                   </div>
                               </div>
+                              {% if docket.attachment_1 != None %}
                               <div class="row">
                                   <div class="col-sm-4 docket_text">
-                                      <span class="docket_text_heading">ATTACHMENT:</span>
-                                      <span>{{ docket.attachment }}</span>
+                                      <span class="docket_text_heading">ATTACHMENT 1:</span>
+                                      <span>{{ docket.attachment_1 }}</span>
                                   </div>
                                   <div class="col-sm-4 docket_text">
                                       <span class="docket_text_heading">ATTACHMENT HOURS:</span>
-                                      <span>{{ docket.attachment_hours }}</span>
+                                      <span>{{ docket.attachment_hours_1 }} hrs</span>
                                   </div>
                               </div>
-                              <div class="table-responsive m-t docket_checklist">
+                              {% endif %}
+                              {% if docket.attachment_2 != None %}
+                              <div class="row">
+                                  <div class="col-sm-4 docket_text">
+                                      <span class="docket_text_heading">ATTACHMENT 2:</span>
+                                      <span>{{ docket.attachment_2 }}</span>
+                                  </div>
+                                  <div class="col-sm-4 docket_text">
+                                      <span class="docket_text_heading">ATTACHMENT HOURS:</span>
+                                      <span>{{ docket.attachment_hours_2 }} hrs</span>
+                                  </div>
+                              </div>
+                              {% endif %}
+                              {% if docket.attachment_3 != None %}
+                              <div class="row">
+                                  <div class="col-sm-4 docket_text">
+                                      <span class="docket_text_heading">ATTACHMENT 3:</span>
+                                      <span>{{ docket.attachment_3 }}</span>
+                                  </div>
+                                  <div class="col-sm-4 docket_text">
+                                      <span class="docket_text_heading">ATTACHMENT HOURS:</span>
+                                      <span>{{ docket.attachment_hours_3 }} hrs</span>
+                                  </div>
+                              </div>
+                              {% endif %}
+                              {% if docket.daily_notes != "" %}
+                              <div class="row">
+                                  <div class="col-sm-12 docket_text">
+                                      <span class="docket_text_heading">DAILY NOTES:</span><br>
+                                      <span>{{ docket.daily_notes }}</span>
+                                  </div>
+                              </div>
+                              {% endif %}
+                              <div class="table-responsive m-t docket_checklist visible-md visible-lg" style="padding-left: 15px;">
                                   <h3>PLANT OPERATORS' DAILY SAFETY CHECKLIST</h3>
                                   <table class="table invoice-table">
                                     <tbody>
@@ -197,27 +235,33 @@
                                     </tbody>
                                   </table>
                               </div><!-- /table-responsive -->
+                              {% if docket.fault != "" %}
                               <div class="row">
                                   <div class="col-sm-12 docket_text">
                                       <span class="docket_text_heading">Details of Fault/Defect:</span>
                                       <span>{{ docket.fault }}</span>
                                   </div>
                               </div>
+                              {% endif %}
+                              {% if docket.reported_to != "" %}
                               <div class="row">
                                   <div class="col-sm-12 docket_text">
                                       <span class="docket_text_heading">Fault Reported to:</span>
                                       <span>{{ docket.reported_to }}</span>
                                   </div>
                               </div>
+                              {% endif %}
                               <div class="row docket_signature">
                                   <div class="col-sm-12 docket_text">
-                                      <span class="docket_text_heading">Operator's Signature:</span><br>
+                                      <span class="docket_text_heading">Operator's Signature:</span>
+                                      <span class="docket_text_heading" style="font-weight: 400;">{{ docket.created_user }}</span><br>
                                       <span class="docket_text_signature"><img src="{{ docket.operator_sign }}"></span>
                                   </div>
                               </div>
                               <div class="row docket_signature">
                                   <div class="col-sm-12 docket_text">
-                                      <span class="docket_text_heading">Supervisor's Signature:</span><br>
+                                      <span class="docket_text_heading">Supervisor's Signature:</span>
+                                      <span class="docket_text_heading" style="font-weight: 400;">{{ docket.supervisor }}</span><br>
                                       <span class="docket_text_signature"><img src="{{ docket.supervisor_sign }}"></span>
                                   </div>
                               </div>
