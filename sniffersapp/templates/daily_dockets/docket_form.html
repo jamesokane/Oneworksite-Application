@@ -7,6 +7,7 @@
 {% block css %}
 <link href="{% static 'css/style.css' %}" rel="stylesheet">
 <link href="{% static 'css/plugins/clockpicker/clockpicker.css' %}" rel="stylesheet">
+<link href="{% static 'css/jquery.autocomplete.css' %}" rel="stylesheet">
 {{ docket_form.media.css }}
 {% endblock %}
 
@@ -48,14 +49,13 @@
     </div>
 </div>
 <div class="col-lg-12">
-    <form id="docket_form" role="form" method="POST">
+    <form id="docket_form" class="{{docket.slug}}" role="form" method="POST">
         <input type="hidden" id="myVariable" name="" />
         {% csrf_token %}
 
         {% if docket_form.errors %}
-        <div class="ibox-content m-b-sm border-bottom">
-            <strong>Please correct the following errors:</strong>
-            {{ docket_form.errors.as_ul }}
+        <div class="ibox-content m-b-sm error-box">
+            <strong>Please ensure that you have completed all the required fields *</strong>
         </div>
         {% endif %}
 
@@ -63,19 +63,19 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ docket_form.company.label }}</label>
+                        <label>{{ docket_form.company.label }} *</label>
                         {{ docket_form.company }}
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ docket_form.project.label }}</label>
+                        <label>{{ docket_form.project.label }} *</label>
                         {{ docket_form.project }}
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ docket_form.supervisor.label }}</label>
+                        <label>{{ docket_form.supervisor.label }} *</label>
                         {{ docket_form.supervisor }}
                     </div>
                 </div>
@@ -89,24 +89,125 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group clockpicker" data-autoclose="true">
-                        <label>{{ docket_form.finish_time.label }}</label>
+                        <label>{{ docket_form.finish_time.label }} *</label>
                         {{ docket_form.finish_time }}
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>{{ docket_form.smoko.label }}</label>
-                        {{ docket_form.smoko }}
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ docket_form.lunch.label }}</label>
+                        <label>{{ docket_form.smoko.label }} *</label>
+                        {{ docket_form.smoko }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.lunch.label }} *</label>
                         {{ docket_form.lunch }}
                     </div>
                 </div>
+            </div>
+
+            <!-- Attachements  -->
+            <!-- Attachment 1 -->
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.attachment_1.label }} 1</label>
+                        {{ docket_form.attachment_1 }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.attachment_hours_1.label }}</label>
+                        {{ docket_form.attachment_hours_1 }}
+                    </div>
+                </div>
+            </div>
+            {% if docket.attachment_2 == None %}
+            <div class="row" id="attach_1_btn">
+                <div class="col-sm-8">
+                    <div class="form-group pull-left">
+                      <a class="btn btn-default btn-xs"><i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i> attachment</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- Attachment 2 -->
+            {% if docket.attachment_2 == None %}
+            <div id="attach_2" class="row" style="display: none;">
+            {% else %}
+            <div id="attach_2" class="row">
+            {% endif %}
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.attachment_2.label }} 2</label>
+                        {{ docket_form.attachment_2 }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.attachment_hours_2.label }} 2</label>
+                        {{ docket_form.attachment_hours_2 }}
+                    </div>
+                </div>
+            </div>
+            {% if docket.attachment_2 != None and docket.attachment_3 == None %}
+            <div class="row">
+                <div class="col-sm-4" id="attach_2_btn">
+                    <div class="form-group pull-left">
+                      <a class="btn btn-default btn-xs"><i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                    </div>
+                </div>
+            </div>
+            {% else  %}
+            <div class="row">
+                <div class="col-sm-4" id="attach_2_btn" style="display: none;">
+                    <div class="form-group pull-left">
+                      <a class="btn btn-default btn-xs"><i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                    </div>
+                </div>
+                <div class="col-sm-4" id="remove_2_btn" style="display: none;">
+                    <div class="form-group pull-right">
+                      <a class="btn btn-default btn-xs"><i class="fa fa-minus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- Attachment 3 -->
+            {% if docket.attachment_3 == None %}
+            <div id="attach_3" class="row" style="display: none;">
+            {% else %}
+            <div id="attach_3" class="row">
+            {% endif %}
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.attachment_3.label }} 3</label>
+                        {{ docket_form.attachment_3 }}
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.attachment_hours_3.label }} 3</label>
+                        {{ docket_form.attachment_hours_3 }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8" id="remove_3_btn" style="display: none;">
+                    <div class="form-group pull-right">
+                      <a class="btn btn-default btn-xs"><i class="fa fa-minus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label style="display: block;" >{{ docket_form.daily_notes.label }}</label>
+                  {{ docket_form.daily_notes }}
+                </div>
+              </div>
             </div>
         </div>
     </form>
@@ -118,15 +219,68 @@
       </div>
     </div>
 </div>
+
+
+{{ supervisor_name_list }}
 {% endblock content %}
 
 
 {% block javascript %}
 <!-- Autocomplete -->
+<script src="{% static 'js/jquery.autocomplete.js' %}"></script>
+
 <!-- Clockpicker -->
 <script src="{% static 'js/plugins/clockpicker/clockpicker.js' %}"></script>
 {{ docket_form.media.js }}
 <script>
 $('.clockpicker').clockpicker();
+
+$("#attach_1_btn").click(function() {
+  $("#attach_1_btn").hide();
+  $("#attach_2").show();
+  $("#attach_2_btn").show();
+  $("#remove_2_btn").show();
+});
+
+$("#remove_2_btn").click(function() {
+  $("#attach_1_btn").show();
+  $("#attach_2").hide();
+  $("#attach_2_btn").hide();
+  $("#remove_2_btn").hide();
+});
+
+$("#attach_2_btn").click(function() {
+  $("#attach_2_btn").hide();
+  $("#remove_2_btn").hide();
+  $("#attach_3").show();
+  $("#remove_3_btn").show();
+});
+
+$("#remove_3_btn").click(function() {
+  $("#attach_2_btn").show();
+  $("#remove_2_btn").show();
+  $("#attach_3").hide();
+  $("#remove_3_btn").hide();
+});
+
+// Sets the project select box to empty if the company select box is changed
+$("#id_company").on('change',function(){
+  $("#id_project").empty()
+});
+
+
+var available_tags = [
+    {% for supervisor in supervisor_name_list %}
+      "{{ supervisor }}",
+    {% endfor %}
+];
+
+$(function() {
+  $("#supervisor_tag").autocomplete({
+    source:[available_tags]
+  });
+});
+
+
 </script>
 {% endblock javascript %}

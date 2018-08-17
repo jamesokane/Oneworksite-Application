@@ -2,12 +2,14 @@ import csv
 import base64
 import PIL
 
+from collections import OrderedDict
+
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 from reportlab.platypus import Image
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib import messages
 
@@ -48,6 +50,8 @@ def prestart_form(request, slug=None, template='daily_dockets/prestart_detail.ht
     else:
         existing_docket = None
 
+    equipment_list = Equipment.objects.all()
+
     prestart_form = PrestartForm(request.POST or None, instance=existing_docket)
 
     if request.method == 'POST':
@@ -61,10 +65,23 @@ def prestart_form(request, slug=None, template='daily_dockets/prestart_detail.ht
             messages.success(request, 'Prestart saved successfully.')
             return redirect('daily_dockets:docket_start', docket.slug)
 
+    equipment = None
+    if request.method == 'GET':
+        id = request.GET.get('content')
+        if id is None:
+            try:
+                equipment = equipment_list[0]
+            except IndexError:
+                equipment = None
+        else:
+            equipment = get_object_or_404(Equipment, id=id)
+
+
     context = {
         'docket': existing_docket,
         'prestart_form': prestart_form,
         'docket_url': existing_docket.get_absolute_url() if existing_docket else None,
+        'equipment': equipment,
     }
     return render(request, template, context)
 
@@ -80,9 +97,28 @@ def docket_form(request, slug, template='daily_dockets/docket_form.html'):
             messages.success(request, 'Daily docket saved successfully.')
             return redirect('daily_dockets:docket_start', docket.slug)
 
+    company_list = Company.objects.all()
+    company = None
+    project_list = None
+    if request.method == 'GET':
+        id = request.GET.get('content')
+        if id is None:
+            try:
+                company = company_list[0]
+            except IndexError:
+                company = None
+        else:
+            company = get_object_or_404(Company, id=id)
+            project_list = Project.objects.filter(company=company)
+
+
+    supervisor_name_list = list(OrderedDict.fromkeys(Docket.objects.all().values_list('supervisor', flat=True)))
+
     context = {
         'docket_form': docket_form,
         'docket': docket,
+        'project_list': project_list,
+        'supervisor_name_list': supervisor_name_list,
     }
 
     return render(request, template, context)
@@ -113,39 +149,39 @@ def docket_summary(request, slug, template='daily_dockets/daily_docket_sum.html'
     }
     return render(request, template, context)
 
-def export_dockets(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="dockets.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(['Docket Number', 'Created By', 'Docket Date', 'Docket Day', 'Docket Shift',
-                     'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment ID', 'Equipment Number',
-                     'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
-
-    docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',
-                                                   'start_time', 'finish_time', 'smoko', 'lunch', 'equipment_name', 'equipment_num',
-                                                   'equipment_hours', 'attachments', 'company_name', 'project_name')
-
-    for docket in docket_list:
-        writer.writerow(docket)
-    return response
-
-def dockets_myob(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="myob.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(['Docket Number', 'Created By', 'Docket Date', 'Docket Day', 'Docket Shift',
-                     'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment Name', 'Equipment Number',
-                     'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
-
-    docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',
-                                                   'start_time', 'finish_time', 'smoko', 'lunch', 'equipment_name', 'equipment_num',
-                                                   'equipment_hours', 'attachments', 'company_name', 'project_name')
-
-    for docket in docket_list:
-        writer.writerow(docket)
-    return response
+# def export_dockets(request):
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="dockets.csv"'
+#
+#     writer = csv.writer(response)
+#     writer.writerow(['Docket Number', 'Created By', 'Docket Date', 'Docket Day', 'Docket Shift',
+#                      'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment ID', 'Equipment Number',
+#                      'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
+#
+#     docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',
+#                                                    'start_time', 'finish_time', 'smoko', 'lunch', 'equipment_name', 'equipment_num',
+#                                                    'equipment_hours', 'attachments', 'company_name', 'project_name')
+#
+#     for docket in docket_list:
+#         writer.writerow(docket)
+#     return response
+#
+# def dockets_myob(request):
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = 'attachment; filename="myob.csv"'
+#
+#     writer = csv.writer(response)
+#     writer.writerow(['Docket Number', 'Created By', 'Docket Date', 'Docket Day', 'Docket Shift',
+#                      'Start Time', 'Finish Time', 'Smoko', 'Lunch', 'Equipment Name', 'Equipment Number',
+#                      'Equipment Hours', 'Attachments', 'Client', 'Project Name' ])
+#
+#     docket_list = Docket.objects.all().values_list('docket_num', 'created_user_name', 'docket_date', 'docket_day', 'docket_shift',
+#                                                    'start_time', 'finish_time', 'smoko', 'lunch', 'equipment_name', 'equipment_num',
+#                                                    'equipment_hours', 'attachments', 'company_name', 'project_name')
+#
+#     for docket in docket_list:
+#         writer.writerow(docket)
+#     return response
 
 
 def dockets_pdf(request, slug):

@@ -16,6 +16,10 @@ body {
     text-align: center;
 }
 
+.select2 {
+  width: 100% !important;
+}
+
 /*nav bar */
 
 .snifferapp-logo-container {

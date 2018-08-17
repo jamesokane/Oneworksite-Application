@@ -1,9 +1,13 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from django_select2.forms import Select2Widget
+from django_select2.forms import Select2Widget, ModelSelect2Widget
 
 from .models import Docket
+
+from ..connections.models import Company
+from ..equipment.models import Equipment
+from ..projects.models import Project
 
 class PrestartForm(forms.ModelForm):
     helper = FormHelper()
@@ -13,7 +17,8 @@ class PrestartForm(forms.ModelForm):
         model = Docket
         exclude = ('slug', 'docket_num', 'created_on', 'created_on', 'docket_number', 'company_name', 'company', 'project',
                    'project_name', 'start_time', 'finish_time', 'supervisor', 'lunch', 'smoko', 'supervisor_sign', 'operator_sign', 'docket_day',
-                   'equipment_name', 'created_user', 'created_user_name', '')
+                   'equipment_name', 'created_user', 'created_user_name', 'attachment_1', 'attachment_hours_1', 'attachment_2', 'attachment_hours_2',
+                   'attachment_3', 'attachment_hours_3', 'daily_notes')
 
         labels = {
             'item1': "1. Brakes, steering, gauges, lights, warning devices",
@@ -35,8 +40,6 @@ class PrestartForm(forms.ModelForm):
             'equipment': "Item or Plant",
             'equipment_num': "Unit No.",
             'equipment_hours': "Plant Hours",
-            'attachment': "Attachment",
-            'attachment_hours': "Attachment Hours",
         }
 
         widgets = {
@@ -80,34 +83,55 @@ class PrestartForm(forms.ModelForm):
                                                     'class': 'form_control_prestart form-control '}),
             'equipment_hours': forms.TextInput(attrs={'id': 'equipment_hours_tag',
                                                       'class': 'form_control_prestart form-control '}),
-            'attachment': Select2Widget(attrs={'id': 'attachment_tag',
-                                                     'class': 'form_control_prestart form-control '}),
-            'attachment_hours': forms.TextInput(attrs={'id': 'attachment_hours',
-                                                  'class': 'form_control_prestart form-control'}),
-                                                    }
+            }
+
+
 
 class DocketForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_tag = False
 
+    company = forms.ModelChoiceField(
+        queryset=Company.objects.all(),
+        label=u"Company",
+        widget=ModelSelect2Widget(
+            model=Company,
+            search_fields=['company_name__icontains'],
+        )
+    )
+
+    project = forms.ModelChoiceField(
+        queryset=Project.objects.all(),
+        label=u"Project",
+        widget=ModelSelect2Widget(
+            model=Project,
+            search_fields=['project_name__icontains'],
+            dependent_fields={'company': 'company'},
+            max_results=500,
+        )
+    )
+
     class Meta:
         model = Docket
-        fields = ('company', 'project', 'start_time', 'finish_time', 'supervisor', 'lunch', 'smoko')
+        fields = ( 'company', 'project', 'start_time', 'finish_time', 'supervisor', 'lunch', 'smoko',
+                  'attachment_1', 'attachment_hours_1', 'attachment_2', 'attachment_hours_2',
+                  'attachment_3', 'attachment_hours_3', 'daily_notes')
         labels = {
-            'company': "Customer",
-            'project': "Project",
             'start_time': "Start Time",
             'finish_time': "Finish Time",
             'supervisor': "Supervisor",
             'lunch': "Lunch",
-            'smoko': "Smoko"
+            'smoko': "Smoko",
+            'attachment_1': "Attachment",
+            'attachment_hours_1': "Attachment Hours",
+            'attachment_2': "Attachment",
+            'attachment_hours_2': "Attachment Hours",
+            'attachment_3': "Attachment",
+            'attachment_hours_3': "Attachment Hours",
+            'daily_notes': "Daily Notes",
         }
 
         widgets = {
-            'company': Select2Widget(attrs={'id': 'company_name_tag',
-                                                   'class': 'form_control_prestart form-control'}),
-            'project': Select2Widget(attrs={'id': 'project_name_tag',
-                                                   'class': 'form_control_prestart form-control'}),
             'start_time': forms.TimeInput(attrs={'id': 'start_time_tag',
                                                  'class': 'form_control_prestart form-control'}),
             'finish_time': forms.TimeInput(attrs={'id': 'finish_time_tag',
@@ -118,6 +142,20 @@ class DocketForm(forms.ModelForm):
                                          'class': 'form_control_prestart form-control '}),
             'smoko': forms.Select(attrs={'id': 'smoko_tag',
                                          'class': 'form_control_prestart form-control '}),
+            'attachment_1': Select2Widget(attrs={'id': 'attachment_tag_1',
+                                               'class': 'form_control_prestart form-control '}),
+            'attachment_hours_1': forms.TextInput(attrs={'id': 'attachment_hours_1',
+                                                       'class': 'form_control_prestart form-control'}),
+            'attachment_2': Select2Widget(attrs={'id': 'attachment_tag_2',
+                                               'class': 'form_control_prestart form-control '}),
+            'attachment_hours_2': forms.TextInput(attrs={'id': 'attachment_hours_2',
+                                                       'class': 'form_control_prestart form-control'}),
+            'attachment_3': Select2Widget(attrs={'id': 'attachment_tag_3',
+                                               'class': 'form_control_prestart form-control '}),
+            'attachment_hours_3': forms.TextInput(attrs={'id': 'attachment_hours_3',
+                                                       'class': 'form_control_prestart form-control'}),
+            'daily_notes': forms.Textarea(attrs={'id': 'daily_notes',
+                                                     'class': 'form_control_prestart form-control'}),
             }
 
 

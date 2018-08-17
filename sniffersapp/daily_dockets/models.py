@@ -97,9 +97,14 @@ class Docket(models.Model):
     docket_date = models.DateField(blank=False, null=True, default=todays_date)
     docket_day = models.CharField(max_length=20, blank=False, default=week_day, choices=day_options)
     docket_shift = models.CharField(max_length=20, blank=False, default='Day', choices=shift_options)
+    # Attachments
+    attachment_1 = models.ForeignKey(Attachment, models.SET_NULL, blank=True, null=True, related_name='attachment_1', )
+    attachment_hours_1 = models.CharField(max_length=80, blank=True)
+    attachment_2 = models.ForeignKey(Attachment, models.SET_NULL, blank=True, null=True, related_name='attachment_2')
+    attachment_hours_2 = models.CharField(max_length=80, blank=True)
+    attachment_3 = models.ForeignKey(Attachment, models.SET_NULL, blank=True, null=True, related_name='attachment_3')
+    attachment_hours_3 = models.CharField(max_length=80, blank=True)
     # Equipment
-    attachment = models.ForeignKey(Attachment, models.SET_NULL, blank=False, null=True)
-    attachment_hours = models.CharField(max_length=80, blank=False)
     equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=False, null=True)
     equipment_name = models.CharField(max_length=80) # copied from equipment.id
     equipment_num = models.CharField(max_length=80, blank=False)
@@ -134,6 +139,8 @@ class Docket(models.Model):
     fault = models.TextField(blank=True)
     # Fault reported to
     reported_to = models.TextField(blank=True)
+    # Daily notes
+    daily_notes = models.TextField(blank=True)
     # Created/Updated
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

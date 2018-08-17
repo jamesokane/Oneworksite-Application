@@ -30,6 +30,11 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+<div class="col-lg-12">
+  <div id="fault_error_msg" class="ibox-content m-b-sm error-box" style="display: none;">
+      <strong>Please sign before submitting</strong>
+  </div>
+</div>
 <div class="row">
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
         <a class="btn btn-primary btn-sm" href="{% url 'daily_dockets:docket_start' docket.slug %}">
@@ -59,19 +64,23 @@
                 <div class="row">
                     <div class="col-sm-12 docket_text">
                         <span class="docket_text_heading">CUSTOMER:</span>
-                        <span id="docket_company_name">{{ docket.company_name }}</span>
+                        <span id="docket_company_name">{{ docket.company }}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12 docket_text">
                         <span class="docket_text_heading">PROJECT NAME/NUMBER:</span>
-                        <span id="docket_project_name">{{ docket.project_name }}</span>
+                        <span id="docket_project_name">{{ docket.project }}</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4 docket_text">
                         <span class="docket_text_heading">ITEM OR PLANT:</span>
                         <span id="docket_equipment_name">{{ docket.equipment }}</span>
+                    </div>
+                    <div class="col-sm-8 docket_text">
+                        <span class="docket_text_heading">ITEM OR PLANT:</span>
+                        <span id="docket_equipment_name">{{ docket.equipment_num }}</span>
                     </div>
                 </div>
                 <div class="row">
@@ -227,11 +236,13 @@ var opSignPad = new SignaturePad(document.getElementById('operator-sign-pad'));
 var supSignPad = new SignaturePad(document.getElementById('supervisor-sign-pad'));
 $('#sign_form').submit(function() {
     if (opSignPad.isEmpty() || supSignPad.isEmpty()) {
-        alert('You must sign to submit.');
+        $('#fault_error_msg').show();
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
         return false;
     }
     $('input#operator_sign').val(opSignPad.toDataURL());
     $('input#supervisor_sign').val(supSignPad.toDataURL());
 });
+
 </script>
 {% endblock javascript %}

@@ -54,7 +54,7 @@
                             </tr>
                             <!-- Complete Daily Docket -->
                             <tr class="table-row" data-href="{% url 'daily_dockets:docket_form' docket.slug%}" style="cursor: pointer;">
-                                {% if docket.company_name == "" %}
+                                {% if docket.company == None %}
                                 <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
                                 {% else %}
                                 <td class="docket-status"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i>
@@ -62,7 +62,7 @@
                                 <td class="docket-title" style=" border: 0px;"><b>Complete Daily Docket</b></td>
                             </tr>
                             <!-- Signed Daily Docket -->
-                            {% if docket.company_name == "" %}
+                            {% if docket.company == None %}
                             <tr class="docket_disabled">
                                 <td class="docket-status"><i class="fa fa-square-o fa-2x" aria-hidden="true"></i></td>
                                 <td class="docket-title" style=" border: 0px;"><b>Sign Daily Docket</b></td>
