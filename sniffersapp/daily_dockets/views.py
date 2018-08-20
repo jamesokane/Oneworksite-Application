@@ -111,14 +111,10 @@ def docket_form(request, slug, template='daily_dockets/docket_form.html'):
             company = get_object_or_404(Company, id=id)
             project_list = Project.objects.filter(company=company)
 
-
-    supervisor_name_list = list(OrderedDict.fromkeys(Docket.objects.all().values_list('supervisor', flat=True)))
-
     context = {
         'docket_form': docket_form,
         'docket': docket,
         'project_list': project_list,
-        'supervisor_name_list': supervisor_name_list,
     }
 
     return render(request, template, context)
@@ -136,9 +132,12 @@ def docket_signature(request, slug, template='daily_dockets/docket_signature.htm
             messages.success(request, 'Docket completed and timesheet created.')
             return redirect('daily_dockets:list')
 
+    supervisor_name_list = list(OrderedDict.fromkeys(Docket.objects.all().values_list('supervisor', flat=True)))
+
     context = {
         'docket': docket,
         'sign_form': sign_form,
+        'supervisor_name_list': supervisor_name_list,
     }
     return render(request, template, context)
 

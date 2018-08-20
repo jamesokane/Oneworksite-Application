@@ -151,6 +151,10 @@ body {
   height: 200px;
 }
 
+#supervisor_name div {
+  width: 92%;
+}
+
 .invoice-table tbody tr td {
     border-top: 1px solid #e7eaec !important;
     line-height: 1.42857 !important;
@@ -591,6 +595,19 @@ height: 100px;
     width: 100%;
     height: 200px;
   }
+
+  #supervisor_name {
+    display: block;
+    width: 100%;
+    float: none;
+    margin-left: 15px;
+    padding-right: 0px;
+  }
+
+  #supervisor_name div {
+    width: 100%;
+  }
+
 }
 
 @media only screen and (max-width: 1030px) {

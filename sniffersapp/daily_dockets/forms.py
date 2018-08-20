@@ -113,13 +113,12 @@ class DocketForm(forms.ModelForm):
 
     class Meta:
         model = Docket
-        fields = ( 'company', 'project', 'start_time', 'finish_time', 'supervisor', 'lunch', 'smoko',
+        fields = ( 'company', 'project', 'start_time', 'finish_time', 'lunch', 'smoko',
                   'attachment_1', 'attachment_hours_1', 'attachment_2', 'attachment_hours_2',
                   'attachment_3', 'attachment_hours_3', 'daily_notes')
         labels = {
             'start_time': "Start Time",
             'finish_time': "Finish Time",
-            'supervisor': "Supervisor",
             'lunch': "Lunch",
             'smoko': "Smoko",
             'attachment_1': "Attachment",
@@ -136,8 +135,6 @@ class DocketForm(forms.ModelForm):
                                                  'class': 'form_control_prestart form-control'}),
             'finish_time': forms.TimeInput(attrs={'id': 'finish_time_tag',
                                                   'class': 'form_control_prestart form-control'}),
-            'supervisor': forms.TextInput(attrs={'id': 'supervisor_tag',
-                                                 'class': 'form_control_prestart form-control'}),
             'lunch': forms.Select(attrs={'id': 'lunch_tag',
                                          'class': 'form_control_prestart form-control '}),
             'smoko': forms.Select(attrs={'id': 'smoko_tag',
@@ -165,10 +162,11 @@ class SignForm(forms.ModelForm):
 
     class Meta:
         model = Docket
-        fields = ('supervisor_sign', 'operator_sign')
+        fields = ('supervisor_sign', 'operator_sign', 'supervisor')
         labels = {
             'operator_sign': "Operator's Signature:",
             'supervisor_sign': "Supervisor's Signature:",
+            'supervisor': "Supervisor Name",
         }
 
         widgets = {
@@ -176,4 +174,6 @@ class SignForm(forms.ModelForm):
                                                     'class': 'form_control_prestart form-control'}),
             'supervisor_sign': forms.TextInput(attrs={'id': 'supervisor_sign_tag',
                                                       'class': 'form_control_prestart form-control'}),
+            'supervisor': forms.TextInput(attrs={'id': 'supervisor_tag',
+                                                 'class': 'form_control_prestart form-control'}),
             }

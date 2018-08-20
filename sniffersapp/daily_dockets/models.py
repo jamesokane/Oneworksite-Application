@@ -12,7 +12,7 @@ from ..projects.models import Project
 from ..equipment.models import Equipment, Attachment
 from ..connections.models import Company
 
-from ..timesheet.utils import calculate_hours
+from .utils import calculate_hours
 
 class DocketManager(models.Manager):
     def for_user(self, user):
@@ -116,7 +116,7 @@ class Docket(models.Model):
     project = models.ForeignKey(Project, models.SET_NULL, blank=False, null=True)
     project_name = models.CharField(max_length=80) # copied from project.name
     # Supervisor
-    supervisor = models.CharField(max_length=80, blank=False, null=True)
+    supervisor = models.CharField(max_length=80, blank=True, null=True)
     # Time
     start_time = models.TimeField(null=True, blank=False)
     finish_time = models.TimeField(null=True, blank=False)
