@@ -1,14 +1,37 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from django_select2.forms import Select2Widget
+from django_select2.forms import Select2Widget, ModelSelect2Widget
 
 from .models import Contact, Company
 
+from ..connections.models import Company
+from ..projects.models import Project
 
 class ContactForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_tag = False
+
+    # company = forms.ModelChoiceField(
+    #     queryset=Company.objects.all(),
+    #     label=u"Company",
+    #     widget=ModelSelect2Widget(
+    #         model=Company,
+    #         search_fields=['company_name__icontains'],
+    #     )
+    # )
+    #
+    # project = forms.ModelChoiceField(
+    #     queryset=Project.objects.all(),
+    #     label=u"Project",
+    #     widget=ModelSelect2Widget(
+    #         model=Project,
+    #         search_fields=['project_name__icontains'],
+    #         dependent_fields={'company': 'company'},
+    #         max_results=500,
+    #     )
+    # )
+
 
     class Meta:
         model = Contact
@@ -23,6 +46,8 @@ class ContactForm(forms.ModelForm):
                                                    'class': 'form_control_contact form-control'}),
             'job_title': forms.TextInput(attrs={'id': 'contact_job_title_tag',
                                                 'class': 'form_control_contact form-control'}),
+            'project': Select2Widget(attrs={'id': 'project_tag',
+                                            'class': 'form_control_contact form-control'}),
             'email_work': forms.EmailInput(attrs={'id': 'contact_email_work_tag',
                                                   'class': 'form_control_contact form-control'}),
             'phone_mobile': forms.TextInput(attrs={'id': 'contact_phone_mobile_tag',
@@ -35,13 +60,11 @@ class ContactForm(forms.ModelForm):
                                                'class': 'form_control_contact form-control'}),
             'twitter': forms.TextInput(attrs={'id': 'contact_twitter_tag',
                                               'class': 'form_control_contact form-control'}),
-            'location': forms.TextInput(attrs={'id': 'autocomplete',
-                                               'class': 'form_control_project form-control',
-                                               'onFocus': "geolocate()"}),
+            # 'location': forms.TextInput(attrs={'id': 'autocomplete',
+            #                                    'class': 'form_control_project form-control',
+            #                                    'onFocus': "geolocate()"}),
             'additional_info': forms.Textarea(attrs={'id': 'summernote',
                                                      'class': 'form_control_contact form-control'}),
-            'contact_status': forms.Select(attrs={'id': 'project_status_tag',
-                                                  'class': 'form_control_project form-control'}),
                     }
 
 
@@ -67,10 +90,8 @@ class CompanyForm(forms.ModelForm):
                                                'class': 'form_control_company form-control'}),
             'twitter': forms.TextInput(attrs={'id': 'company_twitter_tag',
                                               'class': 'form_control_company form-control'}),
-            'additional_info': forms.Textarea(attrs={'id': 'company_info_tag',
+            'additional_info': forms.Textarea(attrs={'id': 'summernote',
                                                      'class': 'form_control_company form-control'}),
-            'company_status': forms.Select(attrs={'id': 'company_status_tag',
-                                                  'class': 'form_control_project form-control'}),
                                                   }
 
 class CompanyContactForm(forms.ModelForm):

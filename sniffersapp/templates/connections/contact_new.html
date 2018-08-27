@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block actions %}
-<a class="btn btn-primary btn-lg visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'connections:list' %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
+<a class="btn btn-primary visible-xs visible-sm" style="margin-right: 10px;" href="{% url 'connections:list' %}"><i class="fa fa-arrow-circle-left" style="padding-right: 5px;"></i>Go Back</a></li>
 {% endblock %}
 
 {% block breadcrumb %}
@@ -45,45 +45,101 @@
 
 <div class="col-lg-12">
   <form id="contact_form" role="form" method="POST">
-      <input type="hidden" id="myVariable" name="" />
-      {% csrf_token %}
-      {% if contact_form.errors %}
-      <div class="ibox-content m-b-sm border-bottom">
-          <h4><strong>Please complete the following fields:</strong></h4>
-          {% for field in contact_form %}
-            {% if field.errors %}
-            <li style="font-weight: 700;font-size: 13px;">
-              {{ field.label }}
-            </li>
-            {% endif %}
-          {% endfor %}
-      </div>
-      {% endif %}
+    <input type="hidden" id="myVariable" name="" />
+    {% csrf_token %}
+    {% if contact_form.errors %}
+    <div class="ibox-content m-b-sm error-box">
+        <strong>Please ensure that you have completed all the required fields *</strong>
+    </div>
+    {% endif %}
       <div class="ibox-content m-b-sm border-bottom">
         <div class="row">
-            <div class="col-lg-12">
-                <dl class="dl-horizontal">
-                    <dt>First name:</dt> <dd>{{ contact_form.first_name }}</dd>
-                    <dt>Last name:</dt> <dd>{{ contact_form.last_name }}</dd>
-                    <dt>Company:</dt> <dd style="margin-bottom: 10px;">{{ contact_form.company }}</dd>
-                    <dt>Contact Status:</dt> <dd>{{ contact_form.contact_status }}</dd>
-                    <dt>Job title:</dt> <dd>{{ contact_form.job_title }}</dd>
-                    <dt>Location:</dt> <dd>{{ contact_form.location }}</dd>
-                    <dt>Email:</dt> <dd>{{ contact_form.email_work }}</dd>
-                    <dt>Mobile phone:</dt> <dd>{{ contact_form.phone_mobile }}</dd>
-                    <dt>Office phone:</dt> <dd>{{ contact_form.phone_work }}</dd>
-                    <dt>linkedin:</dt> <dd>{{ contact_form.linkedin }}</dd>
-                    <dt>facebook:</dt> <dd>{{ contact_form.facebook }}</dd>
-                    <dt>twitter:</dt> <dd>{{ contact_form.twitter }}</dd>
-                    <dt>Info:</dt> <dd>{{ contact_form.additional_info }}</dd>
-                </dl>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>{{ contact_form.first_name.label }} *</label>
+              {{ contact_form.first_name }}
             </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group clockpicker" style="margin-left: 20px;" data-autoclose="true">
+              <label>{{ contact_form.last_name.label }} *</label>
+              {{ contact_form.last_name }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>{{ contact_form.job_title.label }} *</label>
+              {{ contact_form.job_title }}
+            </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label>{{ contact_form.company.label }}</label>
+              {{ contact_form.company }}
+            </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.project.label }}</label>
+              {{ contact_form.project }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.email_work.label }}</label>
+              {{ contact_form.email_work }}
+            </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.phone_mobile.label }}</label>
+              {{ contact_form.phone_mobile }}
+            </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.phone_work.label }}</label>
+              {{ contact_form.phone_work }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.linkedin.label }}</label>
+              {{ contact_form.linkedin }}
+            </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.facebook.label }}</label>
+              {{ contact_form.facebook }}
+            </div>
+          </div>
+          <div class="col-sm-4 timesheet_fields">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >{{ contact_form.twitter.label }}</label>
+              {{ contact_form.twitter }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group" style="margin-left: 20px;">
+              <label style="display: block;" >Additional Info</label>
+              {{ contact_form.additional_info }}
+            </div>
+          </div>
         </div>
       </div>
   </form>
   <div class="row">
     <div class="docket_buttons btn-group pull-right" style="margin-right: 15px; margin-top: 20px;">
-        <a class="btn btn-primary btn-lg visible-xs visible-sm" onclick="contact_form.myVariable.name='new_contact';contact_form.submit();">
+        <a class="btn btn-primary visible-xs visible-sm" onclick="contact_form.myVariable.name='new_contact';contact_form.submit();">
           <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Contact
         </a>
     </div>
@@ -93,79 +149,6 @@
 {% endblock content %}
 
 {% block javascript %}
-
-<script>
-  // This example displays an address form, using the autocomplete feature
-  // of the Google Places API to help users fill in the information.
-
-  // This example requires the Places library. Include the libraries=places
-  // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-  var placeSearch, autocomplete;
-  var componentForm = {
-    street_number: 'short_name',
-    route: 'long_name',
-    locality: 'long_name',
-    administrative_area_level_1: 'short_name',
-    country: 'long_name',
-    postal_code: 'short_name'
-  };
-
-  function initAutocomplete() {
-    // Create the autocomplete object, restricting the search to geographical
-    // location types.
-    autocomplete = new google.maps.places.Autocomplete(
-        /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
-        {types: ['geocode']});
-
-    // When the user selects an address from the dropdown, populate the address
-    // fields in the form.
-    autocomplete.addListener('place_changed', fillInAddress);
-  }
-
-  function fillInAddress() {
-    // Get the place details from the autocomplete object.
-    var place = autocomplete.getPlace();
-
-    for (var component in componentForm) {
-      document.getElementById(component).value = '';
-      document.getElementById(component).disabled = false;
-    }
-
-    // Get each component of the address from the place details
-    // and fill the corresponding field on the form.
-    for (var i = 0; i < place.address_components.length; i++) {
-      var addressType = place.address_components[i].types[0];
-      if (componentForm[addressType]) {
-        var val = place.address_components[i][componentForm[addressType]];
-        document.getElementById(addressType).value = val;
-      }
-    }
-  }
-
-  // Bias the autocomplete object to the user's geographical location,
-  // as supplied by the browser's 'navigator.geolocation' object.
-  function geolocate() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var geolocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-        var circle = new google.maps.Circle({
-          center: geolocation,
-          radius: position.coords.accuracy
-        });
-        autocomplete.setBounds(circle.getBounds());
-      });
-    }
-  }
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVvfJfbo6XezSoU_xZL17d5p5BBs5ik38&libraries=places&callback=initAutocomplete"
-    async defer>
-</script>
 
 <script src="{% static 'js/plugins/summernote/summernote.min.js' %}"></script>
 <script src="{% static 'js/jquery.autocomplete.js' %}"></script>
@@ -178,6 +161,11 @@ $('#summernote').summernote({
     ['color', ['color']],
     ['para', ['ul', 'ol', 'paragraph']],
   ]
+});
+
+// Sets the project select box to empty if the company select box is changed
+$("#id_company").on('change',function(){
+  $("#id_project").empty()
 });
 
 </script>

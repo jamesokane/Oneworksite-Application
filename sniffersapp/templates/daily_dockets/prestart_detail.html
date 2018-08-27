@@ -57,7 +57,7 @@
         {% endif %}
     </div>
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
-        <a id="jstest" class="btn btn-primary btn-sm">
+        <a class="btn btn-primary btn-sm prestart_submit">
           <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Prestart
         </a>
     </div>
@@ -90,13 +90,13 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ prestart_form.equipment.label }} *</label>
+                        <label>Unit No. *</label>
                         {{ prestart_form.equipment }}
                     </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ prestart_form.equipment_num.label }} *</label>
+                        <label>Item or Plant *</label>
                         {{ prestart_form.equipment_num }}
                     </div>
                 </div>
@@ -174,7 +174,7 @@
     </form>
     <div class="row">
       <div class="docket_buttons btn-group pull-right" style="margin-right: 15px;">
-          <a class="btn btn-primary visible-xs visible-sm">
+          <a class="btn btn-primary visible-xs visible-sm prestart_submit">
             <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Save Prestart
           </a>
       </div>
@@ -202,11 +202,12 @@ $('#docket_date_tag').datepicker({
     autoclose: true
 });
 
-$("#jstest").click(function() {
+$(".prestart_submit").click(function() {
     var res = true;
     $(".item_option").each(function() {
       if($(this).val() === 'Needs Attention' && $.trim($('#fault_tag').val()) === '' ){
         $('#fault_error_msg').show();
+        $('html, body').animate({ scrollTop: 0 }, 'fast');
         res = false;
       }
     });

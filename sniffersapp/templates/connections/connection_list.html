@@ -22,30 +22,30 @@
       <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-user" style="padding-right: 5px;"></i>People<span class="caret" style="margin-left: 5px;"></span></button>
       <ul class="dropdown-menu">
           <li><a href="{% url 'connections:contact_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Person</a></li>
-          <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
-          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li>
+          <!-- <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li> -->
       </ul>
     </div>
     <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
       <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-user" style="padding-right: 5px;"></i>People<span class="caret" style="margin-left: 5px;"></span></button>
       <ul class="dropdown-menu">
           <li><a href="{% url 'connections:contact_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Person</a></li>
-          <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
-          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li>
+          <!-- <li><a href="{% url 'connections:export_contacts_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li>
+          <li data-toggle="modal" data-target="#modal-contact-upload"><a><i class="fa fa-upload" style="padding-right: 5px;"></i>Import CSV</a></li> -->
       </ul>
     </div>
     <div class="docket_buttons btn-group visible-md visible-lg pull-left">
       <button data-toggle="dropdown" class="btn btn-primary btn-sm dropdown-toggle"><i class="fa fa-briefcase" style="padding-right: 5px;"></i>Company<span class="caret" style="margin-left: 5px;"></span></button>
       <ul class="dropdown-menu">
           <li><a href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
-          <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li>
+          <!-- <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li> -->
       </ul>
     </div>
     <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
       <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><i class="fa fa-briefcase" style="padding-right: 5px;"></i>Company<span class="caret" style="margin-left: 5px;"></span></button>
       <ul class="dropdown-menu">
           <li><a href="{% url 'connections:company_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Company</a></li>
-          <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li>
+          <!-- <li><a href="{% url 'connections:export_companies_csv' %}"><i class="fa fa-upload" style="padding-right: 5px;"></i>Export CSV</a></li></li> -->
       </ul>
     </div>
 </div>
@@ -72,7 +72,6 @@
                             <table id="dataTables-contact" class="table table-hover dataTables-contact">
                                 <thead>
                                     <tr>
-                                        <th>Status</th>
                                         <th>Name</th>
                                         <th class="hidden-xs">Client</th>
                                         <th class="hidden-xs hidden-sm hidden-md">Position</th>
@@ -84,15 +83,6 @@
                                 <tbody>
                                     {% for contact in contact_list %}
                                     <tr class="change_contact" id="{{ contact.slug }}" data-toggle="modal" data-target="#modal-contact-sum" style="cursor: pointer;">
-                                        <td class="docket-status">
-                                            {% if contact.contact_status == "Working With" %}
-                                            <span class="label label-success" style="padding-top: 5px;">{{ contact.contact_status }}</span>
-                                            {% elif contact.contact_status == "Have Worked" %}
-                                            <span class="label label-info" style="padding-top: 5px;">{{ contact.contact_status }}</span>
-                                            {% else %}
-                                            <span class="label label-warning" style="padding-top: 5px;">{{ contact.contact_status }}</span>
-                                            {% endif %}
-                                        </td>
                                         <td class="docket-text">
                                             <b>{{ contact.contact_name }}</b><br>
                                         </td>
@@ -131,7 +121,6 @@
                             <table id="dataTables-company" class="table table-hover dataTables-company">
                                 <thead>
                                     <tr>
-                                        <th>Status</th>
                                         <th>Name</th>
                                         <th class="hidden-xs">Website</th>
                                         <th class="hidden-xs hidden-sm">Email</th>
@@ -142,15 +131,6 @@
                                 <tbody>
                                     {% for company in company_list %}
                                     <tr class="change_company" id="{{ company.slug }} "data-toggle="modal" data-target="#modal-company-sum" style="cursor: pointer;">
-                                        <td class="docket-status">
-                                            {% if company.company_status == "Working With" %}
-                                            <span class="label label-success" style="padding-top: 5px;">{{ company.company_status }}</span>
-                                            {% elif company.company_status == "Have Worked" %}
-                                            <span class="label label-info" style="padding-top: 5px;">{{ company.company_status }}</span>
-                                            {% else %}
-                                            <span class="label label-warning" style="padding-top: 5px;">{{ company.company_status }}</span>
-                                            {% endif %}
-                                        </td>
                                         <td class="docket-text">
                                             <b>{{ company.company_name }}</b><br>
                                         </td>
@@ -190,14 +170,18 @@
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <div class="row">
-                              <a class="btn btn-primary visible-md visible-lg pull-right" href="#">Edit contact</a>
-                            </div>
-                            <div class="row">
-                              <a class="btn btn-primary btn-lg visible-xs visible-sm pull-right" href="#" style="margin-bottom: 15px;">
-                                Edit contact
-                              </a>
-                            </div>
+                          {% if contact.slug != None %}
+                          <div class="row" style="margin-bottom: 20px;">
+                            <a class="btn btn-primary visible-md visible-lg pull-right" href="{% url 'connections:contact_edit' contact.slug %}">Edit contact</a>
+                            <button type="button" class="btn btn-primary visible-md visible-lg pull-left" data-dismiss="modal">Close</button>
+                          </div>
+                          <div class="row">
+                            <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'connections:contact_edit' contact.slug %}" style="margin-bottom: 15px;">
+                              Edit contact
+                            </a>
+                            <button type="button" class="btn btn-primary visible-xs visible-sm pull-left" data-dismiss="modal">Close</button>
+                          </div>
+                          {% endif %}
                             <strong>Contact details</strong>
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
@@ -208,6 +192,14 @@
                                     <li class="list-group-item">
                                         <span class="pull-right">{{ contact.job_title }}</span>
                                         Position
+                                    </li>
+                                    <li class="list-group-item">
+                                        {% if contact.project == None %}
+                                        <span class="pull-right"></span>
+                                        {% else %}
+                                        <span class="pull-right">{{ contact.project }}</span>
+                                        {% endif %}
+                                        Project
                                     </li>
                                     <li class="list-group-item">
                                         <span class="pull-right">{{ contact.email_work }}</span>
@@ -252,17 +244,14 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary visible-md visible-lg pull-right" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary btn-lg visible-xs visible-sm pull-right" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
 </div>
 
+
 <div id="modal-company-sum" class="modal fade" aria-hidden="true">
     <div class="modal-dialog timesheet_sum">
-        <div class="modal-company"  id="company_summary">
+        <div class="modal-content"  id="company_summary">
             <div class="modal-body new_timesheet_modal">
                 <div class="row">
                     <div class="ibox new_timesheet_modal">
@@ -272,23 +261,35 @@
                             </div>
                         </div>
                         <div class="ibox-content">
-                            <strong>Company details</strong>
-                            <div class="timesheet-detail">
-                                <ul class="list-group clear-list">
-                                    <li class="list-group-item fist-item">
-                                        <span class="pull-right">{{ company.webaddress_company }}</span>
-                                        Website
-                                    </li>
-                                    <li class="list-group-item">
-                                        <span class="pull-right">{{ company.company_email }}</span>
-                                        Office email
-                                    </li>
-                                    <li class="list-group-item">
-                                        <span class="pull-right">{{ company.company_phone }}</span>
-                                        Office phone
-                                    </li>
-                                </ul>
-                            </div>
+                          {% if company.slug != None %}
+                          <div class="row" style="margin-bottom: 20px;">
+                            <a class="btn btn-primary visible-md visible-lg pull-right" href="{% url 'connections:company_edit' company.slug %}">Edit company</a>
+                            <button type="button" class="btn btn-primary visible-md visible-lg pull-left" data-dismiss="modal">Close</button>
+                          </div>
+                          <div class="row">
+                            <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'connections:company_edit' company.slug %}" style="margin-bottom: 15px;">
+                              Edit company
+                            </a>
+                            <button type="button" class="btn btn-primary visible-xs visible-sm pull-left" data-dismiss="modal">Close</button>
+                          </div>
+                          {% endif %}
+                          <strong>Company details</strong>
+                          <div class="timesheet-detail">
+                              <ul class="list-group clear-list">
+                                  <li class="list-group-item fist-item">
+                                      <span class="pull-right">{{ company.webaddress_company }}</span>
+                                      Website
+                                  </li>
+                                  <li class="list-group-item">
+                                      <span class="pull-right">{{ company.company_email }}</span>
+                                      Office email
+                                  </li>
+                                  <li class="list-group-item">
+                                      <span class="pull-right">{{ company.company_phone }}</span>
+                                      Office phone
+                                  </li>
+                              </ul>
+                          </div>
                             <strong>Social media details</strong>
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
@@ -310,7 +311,7 @@
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
                                     <li class="list-group-item">
-                                        <span>{{ company.additional_info }}</span>
+                                        <span>{{ company.additional_info|safe }}</span>
                                     </li>
                                 </ul>
                             </div>
@@ -322,52 +323,7 @@
     </div>
 </div>
 
-<div id="modal-contact-upload" class="modal fade" aria-hidden="true">
-    <div class="modal-dialog timesheet_sum">
-        <div class="modal-company"  id="company_summary">
-            <div class="modal-body new_timesheet_modal">
-                <div class="row">
-                    <div class="ibox new_timesheet_modal">
-                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
-                            <div style="font-size: 20px; padding-bottom: 15px;">
-                                Import People
-                            </div>
-                        </div>
-                        <div class="ibox-content">
-                            <strong>Import Details</strong>
-                            <div class="timesheet-detail">
-                                <ul class="list-group clear-list">
-                                    <li class="list-group-item fist-item">
-                                        You can import people using the provided .csv file. Download
-                                        <a href="{{ MEDIA_URL }}/csv_import_examples/contact_import.csv"><span style="text-decoration: underline;">here.</span></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <strong>Import File</strong>
-                            <div class="timesheet-detail">
-                              <form id="csv_import_form" role="form" method="POST" style="margin-top: 10px;">
-                                <input type="hidden" id="myVariable" name="" />
-                                {% csrf_token %}
-                                  {{ csv_import_form.csv_import }}
-                              </form>
-                              <div class="row">
-                                <div class="pull-right" style="margin-top: 30px;">
-                                    <button type="button" class="btn btn-primary btn-sm " data-dismiss="modal">
-                                      <i class="fa fa-arrow-circle-left" style="padding-right: 5px;" aria-hidden="true"></i>Go Back
-                                    </button>
-                                    <a class="btn btn-primary btn-sm" onclick="csv_import_form.myVariable.name='csv_upload';csv_import_form.submit();" style="margin-left: 15px;" >
-                                      <i class="fa fa-floppy-o" style="padding-right: 5px;"></i>Import People
-                                    </a>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 {% endblock content %}
 
