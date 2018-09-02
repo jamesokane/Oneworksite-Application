@@ -27,6 +27,7 @@ def timesheet_list(request, template='timesheet/timesheet_list.html'):
     week_dates = []
     start_date = request.user.date_joined
     start_date = start_date - datetime.timedelta(days=start_date.weekday())
+    start_date = start_date + datetime.timedelta(days=2)
     for x in range(0, 100):
         date = start_date + datetime.timedelta(days=(x*7))
         if date <= datetime.datetime.utcnow().replace(tzinfo=pytz.UTC):
@@ -123,19 +124,9 @@ def timecard_edit(request, slug, *args, **kwargs):
                 edit_timesheet_form.save()
                 return redirect('timesheet:weekly_timesheet', edit_timesheet_form.slug)
 
-    # Determine the week range any selected date sits within
-    today = timesheet.timesheet_date
-    dates = []
-    for i in range(0 - today.weekday(), 7 - today.weekday()):
-        week_date = today + datetime.timedelta(days=i)
-        week_day = calendar.day_name[week_date.weekday()]
-        month_day = calendar.month_name[week_date.month]
-        dates.append([week_date, week_day, month_day])
-
     context = {
         'edit_timesheet_form': edit_timesheet_form,
         'timesheet': timesheet,
-        'dates': dates,
     }
     template = 'timesheet/timesheet_edit.html'
     return render(request, template, context)
@@ -199,7 +190,7 @@ def weekly_timesheet(request, slug, *args, **kwargs):
     today = timesheet.timesheet_date
     day_name = calendar.day_name[today.weekday()]
     dates = []
-    for i in range(0 - today.weekday(), 7 - today.weekday()):
+    for i in range(2 - today.weekday(), 9 - today.weekday()):
         week_date = today + datetime.timedelta(days=i)
         week_day = calendar.day_name[week_date.weekday()]
         month_day = calendar.month_name[week_date.month]

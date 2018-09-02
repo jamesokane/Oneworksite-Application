@@ -73,12 +73,6 @@
                         {{ docket_form.project }}
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>{{ docket_form.supervisor.label }} *</label>
-                        {{ docket_form.supervisor }}
-                    </div>
-                </div>
             </div>
             <div class="row">
                 <div class="col-sm-4">
@@ -91,6 +85,14 @@
                     <div class="form-group clockpicker" data-autoclose="true">
                         <label>{{ docket_form.finish_time.label }} *</label>
                         {{ docket_form.finish_time }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>{{ docket_form.equipment_finish_hours.label }} *</label>
+                        {{ docket_form.equipment_finish_hours }}
                     </div>
                 </div>
             </div>
@@ -129,7 +131,7 @@
             <div class="row" id="attach_1_btn">
                 <div class="col-sm-8">
                     <div class="form-group pull-left">
-                      <a class="btn btn-default btn-xs"><i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i> attachment</a>
+                      <a class="btn btn-default btn-xs">add attachment</a>
                     </div>
                 </div>
             </div>
@@ -157,7 +159,7 @@
             <div class="row">
                 <div class="col-sm-4" id="attach_2_btn">
                     <div class="form-group pull-left">
-                      <a class="btn btn-default btn-xs"><i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                      <a class="btn btn-default btn-xs">add attachment</a></a>
                     </div>
                 </div>
             </div>
@@ -165,12 +167,12 @@
             <div class="row">
                 <div class="col-sm-4" id="attach_2_btn" style="display: none;">
                     <div class="form-group pull-left">
-                      <a class="btn btn-default btn-xs"><i class="fa fa-plus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                      <a class="btn btn-default btn-xs">add attachment</a></a>
                     </div>
                 </div>
                 <div class="col-sm-4" id="remove_2_btn" style="display: none;">
                     <div class="form-group pull-right">
-                      <a class="btn btn-default btn-xs"><i class="fa fa-minus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                      <a class="btn btn-default btn-xs">remove attachment</a></a>
                     </div>
                 </div>
             </div>
@@ -197,7 +199,7 @@
             <div class="row">
                 <div class="col-sm-8" id="remove_3_btn" style="display: none;">
                     <div class="form-group pull-right">
-                      <a class="btn btn-default btn-xs"><i class="fa fa-minus-square-o fa-lg" aria-hidden="true"></i> attachment</a></a>
+                      <a class="btn btn-default btn-xs">remove attachment</a></a>
                     </div>
                 </div>
             </div>

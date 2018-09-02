@@ -78,7 +78,7 @@ class Timesheet(models.Model):
     slug = models.SlugField(blank=True, null=True)
 
     dockets = models.ManyToManyField(Docket, blank=True)
-
+    docket_num = models.CharField(max_length=80, blank=False)
     #submitted
     status = models.CharField(max_length=20, blank=True, default='Open', choices=status_options)
 
@@ -91,6 +91,15 @@ class Timesheet(models.Model):
     equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=False, null=True)
     equipment_name = models.CharField(max_length=80) # copied from equipment.id
     equipment_num = models.CharField(max_length=80, blank=False)
+    equipment_start_hours = models.CharField(max_length=80, blank=False)
+    equipment_finish_hours = models.CharField(max_length=80, blank=False)
+    # Attachments
+    attachment_1 = models.CharField(max_length=80, blank=True, null=True)
+    attachment_hours_1 = models.CharField(max_length=80, blank=True, null=True)
+    attachment_2 = models.CharField(max_length=80, blank=True, null=True)
+    attachment_hours_2 = models.CharField(max_length=80, blank=True, null=True)
+    attachment_3 = models.CharField(max_length=80, blank=True, null=True)
+    attachment_hours_3 = models.CharField(max_length=80, blank=True, null=True)
     # Company
     company = models.ForeignKey(Company, models.SET_NULL, blank=False, null=True)
     company_name = models.CharField(max_length=80) # copied from company.name
@@ -155,12 +164,14 @@ class Timesheet(models.Model):
 def timesheet_from_docket(docket):
     ts = Timesheet()
     ts.created_user = docket.created_user
+    ts.docket_num = docket.docket_num
     ts.docket_date = docket.docket_date
     ts.docket_shift = docket.docket_shift
     ts.equipment = docket.equipment
     ts.equipment_name = docket.equipment_name
     ts.equipment_num = docket.equipment_num
-    ts.equipment_hours = docket.equipment_hours
+    ts.equipment_start_hours = docket.equipment_start_hours
+    ts.equipment_finish_hours = docket.equipment_finish_hours
     ts.company = docket.company
     ts.company_name = docket.company_name
     ts.project = docket.project
@@ -168,5 +179,11 @@ def timesheet_from_docket(docket):
     ts.start_time = docket.start_time
     ts.finish_time = docket.finish_time
     ts.lunch = docket.lunch
+    ts.attachment_1 = docket.attachment_1
+    ts.attachment_hours_1 = docket.attachment_hours_1
+    ts.attachment_2 = docket.attachment_2
+    ts.attachment_hours_2 = docket.attachment_hours_2
+    ts.attachment_3 = docket.attachment_3
+    ts.attachment_hours_3 = docket.attachment_hours_3
     ts.save()
     ts.dockets.add(docket)

@@ -66,11 +66,21 @@ body {
     vertical-align: middle !important;
     line-height: 17px !important;
     border-left: 4px solid #1ab394;
+    margin-top: 10px;
 }
 
 .docket-check{
-  float: right;
-    width: 200px;
+    float: right;
+    width: 10%;
+    padding-top: 5px !important;
+    padding-right: 10px !important;
+    padding-bottom: 5px !important;
+    padding-left: 0px !important;
+}
+
+.fault-check{
+    float: left;
+    width: 10%;
     padding-top: 5px !important;
     padding-right: 10px !important;
     padding-bottom: 5px !important;
@@ -610,12 +620,18 @@ height: 100px;
 
 }
 
+@media only screen and (max-width: 1170px) {
+  .fault-check {
+    width: 15%;
+  }
+}
+
+
 @media only screen and (max-width: 1030px) {
-  .docket_text {
+  .docket-title {
     display: block;
-    width: 100%;
-    float: none;
-    margin-left: 15px;
+    width: 75%;
+    float: left;
   }
 }
 
@@ -626,8 +642,8 @@ height: 100px;
 
   .docket-check {
     display: block;
-    width: 50%;
-    float: none;
+    width: 15%;
+    float: right;
     margin-left: 15px;
   }
 }
@@ -639,13 +655,28 @@ height: 100px;
     width: 100%;
     float: none;
   }
+
+  .fault-check {
+    width: 20%;
+  }
+
+}
+
+@media only screen and (max-width: 600px) {
+
+  .fault-check {
+    display: block;
+    width: 50%;
+    float: none;
+    margin-left: 20px;
+  }
+
 }
 
 @media only screen and (max-width: 500px) {
+
   .docket-check {
-    display: block;
-    width: 100%;
-    float: none;
-    margin-left: 15px;
+    padding-top: 15px !important;
   }
+
 }

@@ -88,6 +88,20 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-4 docket_text">
+                        <span class="docket_text_heading">PLANT START HOURS:</span>
+                        <span id="docket_equipment_name">{{ docket.equipment_start_hours }} hrs</span>
+                    </div>
+                    <div class="col-sm-4 docket_text">
+                        <span class="docket_text_heading">PLANT FINISH HOURS:</span>
+                        <span id="docket_equipment_name">{{ docket.equipment_finish_hours }} hrs</span>
+                    </div>
+                    <div class="col-sm-4 docket_text">
+                        <span class="docket_text_heading">DAILY PLANT HOURS:</span>
+                        <span id="docket_equipment_name">{{ daily_equipment_hours }} hrs</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4 docket_text">
                         <span class="docket_text_heading">OPERATOR:</span>
                         <span id="docket_user">{{ docket.created_user }}</span>
                     </div>
@@ -174,68 +188,74 @@
                         <tbody>
                         <tr>
                             <td><div><strong>1. Brakes, steering, gauges, lights, warning devices</strong></div>
-                            <td class="docket_item_sum">{{ docket.item1 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>2. Visibility - windscreen, wipers, washers, demisters, mirrors, windows</strong></div>
-                            <td class="docket_item_sum">{{ docket.item2 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>3. Cabin - access, seating, seatbelts, loose objects, control levers</strong></div>
-                            <td class="docket_item_sum">{{ docket.item3 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>4. Wheels, tyres, nutes, damage, wear, pressure</strong></div>
-                            <td class="docket_item_sum">{{ docket.item4 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>5. Guards - in place, secure, warning signs lights, alarms</strong></div>
-                            <td class="docket_item_sum">{{ docket.item5 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>6. Hydraulics - rams, hoses, leaks, wear</strong></div>
-                            <td class="docket_item_sum">{{ docket.item6 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>7. Excessive wear - hooks, chains, pins, pivots, tracks, G.E.T.</strong></div>
-                            <td class="docket_item_sum">{{ docket.item7 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>8. Oils and coolants level</strong></div>
-                            <td class="docket_item_sum">{{ docket.item8 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>9. Misc, electrical, fire extinguisher, communications</strong></div>
-                            <td class="docket_item_sum">{{ docket.item9 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>10. Quick hitch attachments</strong></div>
-                            <td class="docket_item_sum">{{ docket.item10 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>11. You are free from the influences of drugs and alcohol</strong></div>
-                            <td class="docket_item_sum">{{ docket.item11 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         <tr>
                             <td><div><strong>12. You are physically and mentally fit to operate or drive</strong></div>
-                            <td class="docket_item_sum">{{ docket.item12 }}</td>
+                            <td class="docket_item_sum"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                {% if docket.fault != "" %}
                 <div class="row">
                     <div class="col-sm-12 docket_text">
-                        <span class="docket_text_heading">Details of Fault/Defect:</span>
-                        <span>{{ docket.fault }}</span>
+                        <span class="docket_text_heading">Fault/Defect found:</span>
+                        <span>{{ docket.fault_found }}</span>
+                    </div>
+                </div>
+                {% if docket.fault_found == "Yes" %}
+                <div class="row">
+                    <div class="col-sm-12 docket_text">
+                        <div class="docket_text_heading">Details of Fault/Defect:</div>
+                        <div style="overflow: auto; padding-top: 5px;" >{{ docket.fault }}</div>
                     </div>
                 </div>
                 {% endif %}
                 {% if docket.reported_to != "" %}
                 <div class="row">
                     <div class="col-sm-12 docket_text">
-                        <span class="docket_text_heading">Fault Reported to:</span>
-                        <span>{{ docket.reported_to }}</span>
+                        <div class="docket_text_heading">Fault Reported to:</div>
+                        <div style="overflow: auto; padding-top: 5px;" >{{ docket.reported_to }}</div>
                     </div>
                 </div>
                 {% endif %}

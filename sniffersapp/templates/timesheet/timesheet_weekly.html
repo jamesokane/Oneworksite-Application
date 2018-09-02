@@ -35,7 +35,7 @@
 {% block content %}
 <div class="row">
     <div class="visible-md visible-lg">
-        <p style="font-size: 20px; margin-left: 50px;">Monday {{ dates.0.0 }} - Friday {{ dates.4.0 }}</p>
+        <p style="font-size: 20px; margin-left: 50px;">Wednesday {{ dates.0.0 }} - Tuesday {{ dates.6.0 }}</p>
     </div>
     <div class="visible-sm visible-xs">
         <p style="font-size: 20px; margin-left: 50px;">{{ dates.0.0 }} - {{ dates.4.0 }}</p>
@@ -159,16 +159,33 @@
                         <div class="ibox-content">
                             {% if timesheet_sum.status == "Open" or user.is_superuser %}
                             <div class="row" style="margin-bottom: 20px;">
+                              {% if timesheet_sum.docket_num == "" or user.is_superuser %}
                               <a class="btn btn-primary visible-md visible-lg pull-right" href="{% url 'timesheet:timecard_edit' timesheet_sum.slug %}">Edit timecard</a>
+                              {% endif %}
                               <button type="button" class="btn btn-primary visible-md visible-lg pull-left" data-dismiss="modal">Close</button>
                             </div>
                             <div class="row">
+                              {% if timesheet_sum.docket_num == "" or user.is_superuser %}
                               <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'timesheet:timecard_edit' timesheet_sum.slug %}" style="margin-bottom: 15px;">
                                 Edit timecard
                               </a>
+                              {% endif %}
                               <button type="button" class="btn btn-primary visible-xs visible-sm pull-left" data-dismiss="modal">Close</button>
                             </div>
                             {% endif %}
+                            <strong>Docket details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        {% if timesheet_sum.docket_num == "" %}
+                                        <span class="pull-right">No Docket</span>
+                                        {% else %}
+                                        <span class="pull-right">D-{{ timesheet_sum.created_user.id}}-{{ timesheet_sum.docket_num }}</span>
+                                        {% endif %}
+                                        Docket
+                                    </li>
+                                </ul>
+                            </div>
                             <strong>Time details</strong>
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">
@@ -226,8 +243,64 @@
                                         <span class="pull-right">{{ timesheet_sum.equipment_num }}</span>
                                         Item or Plant
                                     </li>
+                                    {% if timesheet_sum.equipment_start_hours != "" %}
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.equipment_start_hours }}</span>
+                                        Start Hours
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.equipment_finish_hours }}</span>
+                                        Finish Hours
+                                    </li>
+                                    {% endif %}
                                 </ul>
                             </div>
+                            <strong>Attachment details</strong>
+                            {% if timesheet_sum.attachment_1 == None and timesheet_sum.attachment_2 == None and timesheet_sum.attachment_3 == None   %}
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right"></span>
+                                        No Attachments Used
+                                    </li>
+                                </ul>
+                            </div>
+                            {% else %}
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    {% if timesheet_sum.attachment_1 != None %}
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.attachment_1 }}</span>
+                                        Attachment 1
+                                    </li>
+                                    <li class="list-group-item  fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.attachment_hours_1 }}</span>
+                                        Attachment 1 Hours
+                                    </li>
+                                    {% endif %}
+                                    {% if timesheet_sum.attachment_2 != None %}
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.attachment_2 }}</span>
+                                        Attachment 2
+                                    </li>
+                                    <li class="list-group-item fist-item" >
+                                        <span class="pull-right">{{ timesheet_sum.attachment_hours_2 }}</span>
+                                        Attachment 2 Hours
+                                    </li>
+                                    {% endif %}
+                                    {% if timesheet_sum.attachment_3 != None %}
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ timesheet_sum.attachment_3 }}</span>
+                                        Attachment 3
+                                    </li>
+                                    <li class="list-group-item  fist-item">
+                                        <span class="pull-right">{{ timesheet_sum.attachment_hours_3 }}</span>
+                                        Attachment 3 Hours
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
                             <strong>Additional info</strong>
                             <div class="timesheet-detail">
                                 <ul class="list-group clear-list">

@@ -40,6 +40,9 @@
 
 {% block content %}
 <div class="col-lg-12">
+  <div id="check_error_msg" class="ibox-content m-b-sm error-box" style="display: none;">
+      <strong>Please ensure you have checked all the items in the Checklist   </strong>
+  </div>
   <div id="fault_error_msg" class="ibox-content m-b-sm error-box" style="display: none;">
       <strong>Please enter the details about any items that need attention at the bottom of the page   </strong>
   </div>
@@ -102,68 +105,72 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label>{{ prestart_form.equipment_hours.label }} *</label>
-                        {{ prestart_form.equipment_hours }}
+                        <label>{{ prestart_form.equipment_start_hours.label }} *</label>
+                        {{ prestart_form.equipment_start_hours }}
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-12">
+            <div>
                 <div class="ibox">
                     <div class="ibox-title">
                         <h4>Operators are required to check the following items before commencing work. These records are for the basis of a  plant maintenace procedure and will be subject to random inspection.</h4>
                         <h4>Before commencing operation check:</h4>
                     </div>
                     <div class="ibox-content">
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item1.label }}</b></div>
-                        <div class="docket-check" ><b>{{ prestart_form.item1 }}</b></div>
+                        <div class="docket-check" >{{ prestart_form.item1 }}</div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item2.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item2 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item3.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item3 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item4.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item4 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item5.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item5 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item6.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item6 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item7.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item7 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item8.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item8 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item9.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item9 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item10.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item10 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 1px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item11.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item11 }}</b></div>
                       </div>
-                      <div class='row' style='border-bottom: 1px solid #e7eaec;'>
+                      <div class='row check_items' style='border-bottom: 2px solid #e7eaec;'>
                         <div class="docket-title"><b>{{ prestart_form.item12.label }}</b></div>
                         <div class="docket-check" ><b>{{ prestart_form.item12 }}</b></div>
+                      </div>
+                      <div class='row' style='padding-top: 25px;'>
+                        <div class="docket-title" style='margin-right: 30px;'><b>{{ prestart_form.fault_found.label }} *</b></div>
+                        <div class="fault-check" ><b>{{ prestart_form.fault_found }}</b></div>
                       </div>
                       {{ prestart_form.fault }}
                       {{ prestart_form.reported_to }}
@@ -205,18 +212,39 @@ $('#docket_date_tag').datepicker({
 $(".prestart_submit").click(function() {
     var res = true;
     $(".item_option").each(function() {
-      if($(this).val() === 'Needs Attention' && $.trim($('#fault_tag').val()) === '' ){
-        $('#fault_error_msg').show();
+      if($(this).prop('checked') !== true ){
+        $('#check_error_msg').show();
         $('html, body').animate({ scrollTop: 0 }, 'fast');
         res = false;
       }
     });
+    if($('#fault_found_tag').val() === 'Yes' && $.trim($('#fault_tag').val()) === '' ){
+      $('#fault_error_msg').show();
+      $('html, body').animate({ scrollTop: 0 }, 'fast');
+      res = false;
+    }
     if(res === false){
       return false;
     } else {
       $( "#prestart_form_test" ).submit();
     }
 });
+
+// $(".prestart_submit").click(function() {
+//     var res = true;
+//     $(".item_option").each(function() {
+//       if($(this).val() === 'Needs Attention' && $.trim($('#fault_tag').val()) === '' ){
+//         $('#fault_error_msg').show();
+//         $('html, body').animate({ scrollTop: 0 }, 'fast');
+//         res = false;
+//       }
+//     });
+//     if(res === false){
+//       return false;
+//     } else {
+//       $( "#prestart_form_test" ).submit();
+//     }
+// });
 
 
 $("#equipment_tag").on('change',function(){
@@ -232,7 +260,13 @@ $("#equipment_tag").on('change',function(){
 
 
 
-    // $("#equipment_num_tag").val(equip_name);
+/* Toggle checkbox when clicking row */
+$('.check_items').click(function(event) {
+  if (event.target.type !== 'checkbox') {
+    $(':checkbox', this).trigger('click');
+  }
+});
+
 
 
 </script>

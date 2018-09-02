@@ -70,12 +70,10 @@ class Docket(models.Model):
         ('60', '60 mins'),
     )
 
-    item_options = (
-        ('No Issues', 'No Issues'),
-        ('Needs Attention', 'Needs Attention'),
-        ('Not Applicable', 'Not Applicable'),
+    fault_options = (
+        ('Yes', 'Yes'),
+        ('No', 'No'),
     )
-
 
     objects = DocketManager()
 
@@ -108,7 +106,8 @@ class Docket(models.Model):
     equipment = models.ForeignKey(Equipment, models.SET_NULL, blank=False, null=True)
     equipment_name = models.CharField(max_length=80) # copied from equipment.id
     equipment_num = models.CharField(max_length=80, blank=False)
-    equipment_hours = models.CharField(max_length=80, blank=False)
+    equipment_start_hours = models.CharField(max_length=80, blank=False)
+    equipment_finish_hours = models.CharField(max_length=80, blank=False)
     # Company
     company = models.ForeignKey(Company, models.SET_NULL, blank=False, null=True)
     company_name = models.CharField(max_length=80) # copied from company.name
@@ -123,19 +122,20 @@ class Docket(models.Model):
     lunch = models.CharField(max_length=20, blank=False, default='30', choices=lunch_options)
     smoko = models.CharField(max_length=20, blank=False, default='30', choices=smoko_options)
     # Items
-    item1 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item2 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item3 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item4 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item5 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item6 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item7 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item8 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item9 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item10 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item11 = models.CharField(max_length=20, blank=False, choices=item_options)
-    item12 = models.CharField(max_length=20, blank=False, choices=item_options)
+    item1 = models.BooleanField()
+    item2 = models.BooleanField()
+    item3 = models.BooleanField()
+    item4 = models.BooleanField()
+    item5 = models.BooleanField()
+    item6 = models.BooleanField()
+    item7 = models.BooleanField()
+    item8 = models.BooleanField()
+    item9 = models.BooleanField()
+    item10 = models.BooleanField()
+    item11 = models.BooleanField()
+    item12 = models.BooleanField()
     # Details of faults
+    fault_found = models.CharField(max_length=20, blank=False, choices=fault_options)
     fault = models.TextField(blank=True)
     # Fault reported to
     reported_to = models.TextField(blank=True)

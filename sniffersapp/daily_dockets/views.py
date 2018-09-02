@@ -125,6 +125,8 @@ def docket_signature(request, slug, template='daily_dockets/docket_signature.htm
 
     sign_form = SignForm(request.POST or None, instance=docket)
 
+    daily_equipment_hours = int(docket.equipment_finish_hours) - int(docket.equipment_start_hours)
+
     if request.method == 'POST':
         if sign_form.is_valid():
             sign_form.save()
@@ -138,6 +140,7 @@ def docket_signature(request, slug, template='daily_dockets/docket_signature.htm
         'docket': docket,
         'sign_form': sign_form,
         'supervisor_name_list': supervisor_name_list,
+        'daily_equipment_hours': daily_equipment_hours,
     }
     return render(request, template, context)
 

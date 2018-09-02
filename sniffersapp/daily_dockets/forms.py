@@ -18,7 +18,7 @@ class PrestartForm(forms.ModelForm):
         exclude = ('slug', 'docket_num', 'created_on', 'created_on', 'docket_number', 'company_name', 'company', 'project',
                    'project_name', 'start_time', 'finish_time', 'supervisor', 'lunch', 'smoko', 'supervisor_sign', 'operator_sign', 'docket_day',
                    'equipment_name', 'created_user', 'created_user_name', 'attachment_1', 'attachment_hours_1', 'attachment_2', 'attachment_hours_2',
-                   'attachment_3', 'attachment_hours_3', 'daily_notes')
+                   'attachment_3', 'attachment_hours_3', 'daily_notes', 'equipment_finish_hours')
 
         labels = {
             'item1': "1. Brakes, steering, gauges, lights, warning devices",
@@ -33,40 +33,43 @@ class PrestartForm(forms.ModelForm):
             'item10': "10. Quick hitch attachments",
             'item11': "11. You are free from the influences of drugs and alcohol",
             'item12': "12. You are physically and mentally fit to operate or drive",
+            'fault_found': "Did you find a fault/defect during your inspection?",
             'fault': "Details of Fault/defect:",
             'reported_to': "Fault Reported to:",
             'docket_date': "Select Date",
             'docket_shift': "Select Shift",
             'equipment': "Item or Plant",
             'equipment_num': "Unit No.",
-            'equipment_hours': "Plant Hours",
+            'equipment_start_hours': "Plant Hours Start of Day",
         }
 
         widgets = {
-            'item1': forms.Select(attrs={'id': 'item1_tag',
+            'item1': forms.CheckboxInput(attrs={'id': 'item1_tag',
                                                 'class': 'form_control_prestart form-control item_option '}),
-            'item2': forms.Select(attrs={'id': 'item2_tag',
+            'item2': forms.CheckboxInput(attrs={'id': 'item2_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item3': forms.Select(attrs={'id': 'item3_tag',
+            'item3': forms.CheckboxInput(attrs={'id': 'item3_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item4': forms.Select(attrs={'id': 'item4_tag',
+            'item4': forms.CheckboxInput(attrs={'id': 'item4_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item5': forms.Select(attrs={'id': 'item5_tag',
+            'item5': forms.CheckboxInput(attrs={'id': 'item5_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item6': forms.Select(attrs={'id': 'item6_tag',
+            'item6': forms.CheckboxInput(attrs={'id': 'item6_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item7': forms.Select(attrs={'id': 'item7_tag',
+            'item7': forms.CheckboxInput(attrs={'id': 'item7_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item8': forms.Select(attrs={'id': 'item8_tag',
+            'item8': forms.CheckboxInput(attrs={'id': 'item8_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item9': forms.Select(attrs={'id': 'item9_tag',
+            'item9': forms.CheckboxInput(attrs={'id': 'item9_tag',
                                                 'class': 'form_control_prestart form-control item_option'}),
-            'item10': forms.Select(attrs={'id': 'item10_tag',
+            'item10': forms.CheckboxInput(attrs={'id': 'item10_tag',
                                                  'class': 'form_control_prestart form-control item_option'}),
-            'item11': forms.Select(attrs={'id': 'item11_tag',
+            'item11': forms.CheckboxInput(attrs={'id': 'item11_tag',
                                                  'class': 'form_control_prestart form-control item_option'}),
-            'item12': forms.Select(attrs={'id': 'item12_tag',
+            'item12': forms.CheckboxInput(attrs={'id': 'item12_tag',
                                                  'class': 'form_control_prestart form-control item_option'}),
+            'fault_found': forms.Select(attrs={'id': 'fault_found_tag',
+                                                 'class': 'form_control_prestart form-control'}),
             'fault': forms.Textarea(attrs={'id': 'fault_tag',
                                                  'class': 'form_control_prestart form-control ',
                                                  'placeholder': 'Details of Fault/Defect:'}),
@@ -81,7 +84,7 @@ class PrestartForm(forms.ModelForm):
                                                      'class': 'form_control_prestart form-control '}),
             'equipment_num': forms.TextInput(attrs={'id': 'equipment_num_tag',
                                                     'class': 'form_control_prestart form-control '}),
-            'equipment_hours': forms.TextInput(attrs={'id': 'equipment_hours_tag',
+            'equipment_start_hours': forms.TextInput(attrs={'id': 'equipment_start_hours_tag',
                                                       'class': 'form_control_prestart form-control '}),
             }
 
@@ -115,12 +118,13 @@ class DocketForm(forms.ModelForm):
         model = Docket
         fields = ( 'company', 'project', 'start_time', 'finish_time', 'lunch', 'smoko',
                   'attachment_1', 'attachment_hours_1', 'attachment_2', 'attachment_hours_2',
-                  'attachment_3', 'attachment_hours_3', 'daily_notes')
+                  'attachment_3', 'attachment_hours_3', 'daily_notes', 'equipment_finish_hours')
         labels = {
             'start_time': "Start Time",
             'finish_time': "Finish Time",
             'lunch': "Lunch",
             'smoko': "Smoko",
+            'equipment_finish_hours': "Plant Hours End of Day",
             'attachment_1': "Attachment",
             'attachment_hours_1': "Attachment Hours",
             'attachment_2': "Attachment",
@@ -153,6 +157,8 @@ class DocketForm(forms.ModelForm):
                                                        'class': 'form_control_prestart form-control'}),
             'daily_notes': forms.Textarea(attrs={'id': 'daily_notes',
                                                      'class': 'form_control_prestart form-control'}),
+            'equipment_finish_hours': forms.TextInput(attrs={'id': 'equipment_finish_hours_tag',
+                                                      'class': 'form_control_prestart form-control '}),
             }
 
 
