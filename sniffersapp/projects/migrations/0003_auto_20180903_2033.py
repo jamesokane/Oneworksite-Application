@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='slug',
-            field=models.CharField(default=self.id, max_length=80, unique=True),
+            field=models.CharField(null=True, max_length=80, unique=True),
             preserve_default=False,
         ),
         migrations.AddField(
