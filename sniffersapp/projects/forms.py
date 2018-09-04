@@ -11,7 +11,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        exclude = ('created_user', 'created_on', 'updated_on')
+        fields = ('company', 'project_name', 'project_address', 'project_status', 'project_start_date', 'project_end_date', 'additional_info')
 
         widgets = {
             'company': Select2Widget(attrs={'id': 'company_name_tag',
@@ -23,11 +23,10 @@ class ProjectForm(forms.ModelForm):
                                                       'onFocus': "geolocate()"}),
             'project_status': forms.Select(attrs={'id': 'project_status_tag',
                                                         'class': 'form_control_project form-control'}),
-            'project_forecast_cost': forms.TextInput(attrs={'id': 'project_forecast_cost_tag',
-                                                            'class': 'form_control_project form-control'}),
             'project_start_date': forms.DateInput(attrs={'id': 'project_start_date_tag',
                                                                'class': 'form_control_project form-control'}),
             'project_end_date': forms.DateInput(attrs={'id': 'project_end_date_tag',
                                                        'class': 'form_control_project form-control'}),
             'additional_info': forms.Textarea(attrs={'id': "summernote",
-                                                     'class': 'form_control_project form-control'}), }
+                                                     'class': 'form_control_project form-control'}),
+            }

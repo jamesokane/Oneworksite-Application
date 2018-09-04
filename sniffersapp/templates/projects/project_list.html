@@ -16,18 +16,18 @@
 </ol>
 {% endblock %}
 
-{% block actions %}
-<a class="btn btn-primary visible-sm visible-xs" href="{% url 'projects:project_new' %}">Create Project</a></li>
-{% endblock %}
-
-
 {% block content %}
-<div class="docket_buttons btn-group visible-md visible-lg pull-left">
-    <a class="btn btn-primary btn-sm" href="{% url 'projects:project_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Project</a></li>
+<div class="row">
+  <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+      <a class="btn btn-primary btn-sm" href="{% url 'projects:project_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Project</a></li>
+  </div>
+  <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+      <a class="btn btn-primary" href="{% url 'projects:project_new' %}"><i class="fa fa-paste" style="padding-right: 5px;"></i>New Project</a></li>
+  </div>
 </div>
-<div class="docket_buttons btn-group visible-md visible-lg pull-left">
+<!-- <div class="docket_buttons btn-group visible-md visible-lg pull-left">
     <a class="btn btn-primary btn-sm" href=""><i class="fa fa-upload" style="padding-right: 5px;"></i>Export Projects</a></li>
-</div>
+</div> -->
 
 <div class="col-lg-12">
     <div class="ibox float-e-margins col-lg-12">
@@ -39,12 +39,12 @@
                             <th>Status</th>
                             <th>Name</th>
                             <th>Client</th>
-                            <th class="hidden-xs hidden-sm">Location</th>
+                            <th class="hidden-xs hidden-sm hidden-md">Location</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for project in project_list %}
-                        <tr style="cursor: pointer;">
+                        <tr class="change_project" id="{{ project.slug }}" data-toggle="modal" data-target="#modal-project-sum" style="cursor: pointer;">
                             <td class="docket-status">
                                 {% if project.project_status == "Open" %}
                                 <span class="label label-success">{{ project.project_status }} </span>
@@ -58,13 +58,86 @@
                             <td class="docket-text">
                                 {{ project.company }}
                             </td>
-                            <td class="docket-text hidden-xs">
+                            <td class="docket-text hidden-xs hidden-sm hidden-md">
                                 {{ project.project_address }}
                             </td>
                         </tr>
                         {% endfor project%}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-project-sum" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog project_sum">
+        <div class="modal-content"  id="project_summary">
+            <div class="modal-body new_timesheet_modal">
+                <div class="row">
+                    <div class="ibox new_timesheet_modal">
+                        <div class="ibox-title weekly_timesheet_sum_heading" style="text-align: center;">
+                            <div style="font-size: 20px; padding-bottom: 15px;">
+                                {{ project.project_name }}
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                          {% if project.slug != None %}
+                          <div class="row" style="margin-bottom: 20px;">
+                            <a class="btn btn-primary visible-md visible-lg pull-right" href="{% url 'projects:project_edit' project.slug %}">Edit Project</a>
+                            <button type="button" class="btn btn-primary visible-md visible-lg pull-left" data-dismiss="modal">Close</button>
+                          </div>
+                          <div class="row">
+                            <a class="btn btn-primary visible-xs visible-sm pull-right" href="{% url 'projects:project_edit' project.slug %}" style="margin-bottom: 15px;">
+                              Edit Project
+                            </a>
+                            <button type="button" class="btn btn-primary visible-xs visible-sm pull-left" data-dismiss="modal">Close</button>
+                          </div>
+                          {% endif %}
+                            <strong>Project details</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item fist-item">
+                                        <span class="pull-right">{{ project.project_status }}</span>
+                                        Status
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ project.project_name }}</span>
+                                        Name
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ project.company }}</span>
+                                        Company
+                                    </li>
+                                    <li class="list-group-item project_address_item">
+                                        <span class="project_address_heading">Address</span>
+                                        {% if project.project_address == None %}
+                                        <span class="pull-right"></span>
+                                        {% else %}
+                                        <span class="pull-right">{{ project.project_address }}</span>
+                                        {% endif %}
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ project.project_start_date }}</span>
+                                        Start Date
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="pull-right">{{ project.project_end_date}}</span>
+                                        End Date
+                                    </li>
+                                </ul>
+                            </div>
+                            <strong>Additional info</strong>
+                            <div class="timesheet-detail">
+                                <ul class="list-group clear-list">
+                                    <li class="list-group-item">
+                                        <span>{{ project.additional_info|safe }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -77,20 +150,32 @@
 <script src="{% static 'js/datatables.min.js' %}"></script>
 <script>
 $('.dataTables-projects').DataTable({
-    "ordering": false,
-    "dom": "ft",
-    "lengthChange": false,
-    "paging": false,
-    responsive: true,
-    language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Search Projects",
-        "emptyTable": "No projects have been created yet."
-    },
+  "pagingType": "simple",
+  "ordering": false,
+  "lengthChange": false,
+  "bInfo" : false,
+  pageLength:15,
+  responsive: true,
+  language: {
+      search: "_INPUT_",
+      searchPlaceholder: "Search Projects",
+      "emptyTable": "No projects have been created yet.",
+      "info": "",
+  },
 });
-$('tr.change_project').click(function() {
-    window.location = $(this).attr('data-href');
+
+
+$('.change_project').click(function(){
+  var catid;
+  catid = $(this).attr("id");
+  $.get("{% url 'projects:list' %}", {content: catid, name: "project_sum"},
+  function(data){
+    var result = $('<div />').append(data).find('#project_summary').html();
+    $('#project_summary').html(result);
+  });
 });
+
+
 </script>
 
 {% endblock javascript %}

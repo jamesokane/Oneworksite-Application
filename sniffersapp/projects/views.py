@@ -5,8 +5,24 @@ from .models import Project
 from .forms import ProjectForm
 
 def project_list(request, template='projects/project_list.html'):
+    project_list = Project.objects.order_by('project_name')
+
+
+
+    if request.method == 'GET':
+        slug = request.GET.get('content')
+        if slug is None:
+            try:
+                project = project_list[0]
+            except IndexError:
+                project = None
+        elif 'project_sum' in request.GET.get('name'):
+            project = get_object_or_404(Project, slug=slug)
+
+
     context = {
-         'project_list': Project.objects.all(),
+         'project_list': project_list,
+         'project': project,
      }
     return render(request, template, context)
 
@@ -18,14 +34,14 @@ def project_detail(request, project_id):
     template = 'projects/project_detail.html'
     return render(request, template, context)
 
-def project_form(request, project_id=None, template='projects/project_form.html'):
-    if project_id:
-        existing_project = get_object_or_404(Project, pk=project_id)
+def project_form(request, slug=None, template='projects/project_form.html'):
+    if slug:
+        existing_project = get_object_or_404(Project, slug=slug)
     else:
         existing_project = None
 
     project_form = ProjectForm(request.POST or None, instance=existing_project)
-    
+
     if request.method == 'POST':
         if project_form.is_valid():
             project = project_form.save(commit=False)

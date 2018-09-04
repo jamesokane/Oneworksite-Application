@@ -387,7 +387,7 @@ dd.project-people {
 /* Project Forms */
 .form_control_project {
     margin-bottom: 10px;
-    width: 280px;
+    width: 100%;
     height: 35px;
 }
 #id_additional_info_iframe{
@@ -633,6 +633,13 @@ height: 100px;
     width: 75%;
     float: left;
   }
+
+  .project_fields {
+    display: block;
+    width: 100%;
+    float: none;
+  }
+
 }
 
 @media only screen and (max-width: 1010px) {
@@ -677,6 +684,10 @@ height: 100px;
 
   .docket-check {
     padding-top: 15px !important;
+  }
+
+  .project_address_item{
+    height: 75px;
   }
 
 }

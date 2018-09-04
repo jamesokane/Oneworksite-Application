@@ -7,6 +7,6 @@ app_name = 'projects'
 urlpatterns = [
     path('', project_list, name='list'),
     path('new/', project_form, name='project_new'),
-    path('<int:project_id>/', project_detail, name='project_detail'),
-    path('<int:project_id>/edit/', project_form, name='project_edit'),
+    path('<slug:slug>/', project_detail, name='project_detail'),
+    path('<slug:slug>/edit/', project_form, name='project_edit'),
 ]

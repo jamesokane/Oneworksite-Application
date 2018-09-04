@@ -4,6 +4,8 @@ from django.conf import settings
 
 from ..connections.models import Company
 
+from shortuuidfield import ShortUUIDField
+
 class Project(models.Model):
     status_options = (
         ('Open', 'Project Open'),
@@ -13,10 +15,12 @@ class Project(models.Model):
     created_user = models.ForeignKey(settings.AUTH_USER_MODEL,
             blank=True, null=True, on_delete=models.PROTECT)
 
+    uuid = ShortUUIDField()
+    slug = models.CharField(max_length=80, unique=True)
     # Company
     company = models.ForeignKey(Company, models.SET_NULL, null=True)
     # Project Name
-    project_name = models.CharField(max_length=80)
+    project_name = models.CharField(max_length=80, blank=False,)
     # Address Info
     project_address = models.CharField(max_length=200, blank=True, null=True)
     # Project Status
@@ -37,7 +41,14 @@ class Project(models.Model):
         return self.project_name
 
     def get_absolute_url(self):
-        return reverse('projects:project_new', kwargs={'slug': self.slug})        
+        return reverse('projects:project_new', kwargs={'slug': self.slug})
+
+    # Create slug using first 8 characters of uuid
+    def save(self, **kwargs):
+        super(Project, self).save()
+        slug = self.uuid
+        self.slug = slug[:8]
+        super(Project, self).save()
 
     @property
     def duration(self):
