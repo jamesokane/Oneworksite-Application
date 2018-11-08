@@ -70,6 +70,7 @@ LOCAL_APPS = [
     'sniffersapp.timesheet',  # Timesheets app
     'sniffersapp.csv_import',  # Timesheets app
     'sniffersapp.dashboard', #dashboard app
+    'sniffersapp.create_forms', #dashboard app
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

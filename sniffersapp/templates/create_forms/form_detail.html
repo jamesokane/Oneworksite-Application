@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+
+{% block title %}Forms{% endblock %}
+{% block head_title %}Forms{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <a href="{% url 'create_forms:list' %}">Forms</a>
+    </li>
+    <li class="active">
+        <strong>{{ form.form_name }}</strong>
+    </li>
+</ol>
+{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-12">
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <!-- Form Field Buttons Start-->
+            <div class="row">
+              <p id="add_form_field">Add Form Item</>
+            </div>
+            <div class="row">
+              <div class="pull-left">
+                  <a id="text_btn" class="btn btn-default"><i class="fa fa-font"></i>Text</a>
+              </div>
+              <div class="pull-left">
+                  <a id="checkbox_btn" class="btn btn-default"><i class="fa fa-square-o"></i>Checkbox</a>
+              </div>
+              <div class="pull-left">
+                  <a id="textfield_btn" class="btn btn-default"><i class="fa fa-text-width"></i>TextField</a>
+              </div>
+            </div>
+            <!-- Form Field Buttons Finish-->
+
+            <div id="form_preview_break" class="row"> Form Preview </div>
+
+            <!-- Form Preview Start-->
+            <div id="form_preview">
+              <div id="form_title">{{ form.form_name }}
+                <a data-toggle="modal" data-target="#modal_name_form">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </a>
+              </div>
+              <ul class="sortable-list formItemList agile-list" id="{{ form.id }}">
+                  {% for item in form_list %}
+                      <!-- If item is a checkbox start -->
+                      {% if item.form_type == "checkbox" %}
+                          <li id="{{ item.id }}" class="row checkbox_row">
+                            <div class="checkbox_select">
+                              <div class="checkbox_label col-lg-10 col-sm-9">{{ item.label }} - {{ item.order }} </div>
+                              <div class="col-lg-1 col-sm-1"><input type="checkbox"></div>
+                            </div>
+                            <div class="col-lg-1 col-sm-2 ">
+                              <a id="{{ item.slug }}" class="edit_info">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                              </a>
+                              <a id="{{ item.slug }}" class="remove_info">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                              </a>
+                            </div>
+                          </li>
+                      {% endif  %}
+                      <!-- If item is a checkbox finish -->
+                      <!-- If item is a textfield start -->
+                      {% if item.form_type == "textfield" %}
+                        <li id="{{ item.id }}" class="row textfield_row">
+                          <div class="col-lg-11 col-sm-10">
+                            <textarea class="textfield_area" placeholder="{{ item.label }}"></textarea>
+                          </div>
+                          <div class="col-lg-1 col-sm-2 ">
+                            <a id="{{ item.slug }}" class="edit_info">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </a>
+                            <a id="{{ item.slug }}" class="remove_info">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                          </div>
+                        </li>
+                      {% endif  %}
+                      <!-- If item is a textfield finish -->
+                  {% endfor item %}
+              </ul>
+              <!-- {% for item in form_list %} -->
+                <!-- If item is a checkbox start -->
+                <!-- {% if item.form_type == "checkbox" %}
+                  <div class="row checkbox_row">
+                    <div class="checkbox_select">
+                      <div class="checkbox_label col-lg-10 col-sm-9">{{ item.label }}</div>
+                      <div class="col-lg-1 col-sm-1"><input type="checkbox"></div>
+                    </div>
+                    <div class="col-lg-1 col-sm-2 ">
+                      <a id="{{ item.slug }}" class="edit_info">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                      </a>
+                      <a id="{{ item.slug }}" class="remove_info">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                  </div>
+                {% endif  %} -->
+                <!-- If item is a checkbox finish -->
+                <!-- If item is a textfield start -->
+                <!-- {% if item.form_type == "textfield" %}
+                  <div class="row textfield_row">
+                    <div class="col-lg-11 col-sm-10">
+                      <textarea class="textfield_area" placeholder="{{ item.label }}"></textarea>
+                    </div>
+                    <div class="col-lg-1 col-sm-2 ">
+                      <a id="{{ item.slug }}" class="edit_info">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                      </a>
+                      <a id="{{ item.slug }}" class="remove_info">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      </a>
+                    </div>
+                  </div>
+                {% endif  %} -->
+                <!-- If item is a textfield finish -->
+              <!-- {% endfor %} -->
+            </div>
+            <!-- Form Preview Finish-->
+        </div>
+    </div>
+</div>
+
+<!-- Edit Form Name Modal Start  -->
+<div class="modal inmodal fade" id="modal_name_form" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Form Name</h4>
+            </div>
+            <div class="modal-body">
+              <form id="name_form" role="form" method="POST">
+                  <input id="input1" type="hidden" name="" />
+                  {% csrf_token %}
+                  <div class="row hidden"><strong>Please ensure that you have completed all the required fields *</strong></div>
+                  <div class="row">
+                    <div class="">
+                        <div class="form-group">
+                            <label>Form Name *</label>
+                            {{ form_name.form_name }}
+                        </div>
+                    </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <input id="form_name_submit" class="btn btn-primary" type="submit" form="name_form" value="Save Changes" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Form Name Modal Finish  -->
+
+<!-- New Form Item Modal Start  -->
+<div class="modal inmodal fade" id="modal_form_item" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+              <form id="item_form" role="form" method="POST">
+                  <input id="input1" type="hidden" name=""/>
+                  {% csrf_token %}
+                  <div class="row hidden"><strong>Please ensure that you have completed all the required fields *</strong></div>
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ item_form.label.label }} *</label>
+                      {{ item_form.label }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ item_form.help_text.label }}</label>
+                      {{ item_form.help_text }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ item_form.required.label }}</label>
+                      {{ item_form.required }}
+                    </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <input id="item_form_submit" class="btn btn-primary" type="submit" form="item_form" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- New Form Item Modal Finish  -->
+
+<!-- Edit Form Item Modal Start  -->
+<div class="modal inmodal fade" id="modal_item_edit" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Edit Form Item</h4>
+            </div>
+            <div class="modal-body">
+              <form id="edit_item_form" role="form" method="POST">
+                  <input id="slug" type="hidden" name="slug" value="{{ item_slug }}" />
+                  <input id="edit" type="hidden" name="edit" value="edit"/>
+                  {% csrf_token %}
+                  <div class="row hidden"><strong>Please ensure that you have completed all the required fields *</strong></div>
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ edit_item_form.label.label }} *</label>
+                      {{ edit_item_form.label }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ edit_item_form.help_text.label }}</label>
+                      {{ edit_item_form.help_text }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ edit_item_form.required.label }}</label>
+                      {{ edit_item_form.required }}
+                    </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <input id="edit_item_form_submit" class="btn btn-primary" type="submit" value="Update Item" form="edit_item_form" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit Form Item Modal Finish  -->
+
+<!-- Remove Form Item Modal Start  -->
+<div class="modal inmodal fade" id="modal_item_remove" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Remove Form Item</h4>
+            </div>
+            <div class="modal-body">
+              <form id="remove_item_form" role="form" method="POST">
+                  <input id="slug" type="hidden" name="slug" value="{{ item_slug }}" />
+                  <input id="remove" type="hidden" name="remove" value="remove"/>
+                  {% csrf_token %}
+                  <div class="row"><strong>The following item will be removed from the form</strong></div>
+                  <div class="row">
+                    <div class="form-group">
+                      {{ edit_item.label }}
+                      <div class="hidden">{{ edit_item_form }}</div>
+                    </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <input id="remove_item_form_submit" class="btn btn-primary" type="submit" value="Remove Item" form="remove_item_form" />
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Remove Form Item Modal Finish -->
+
+{% endblock content %}
+
+
+{% block javascript %}
+<!-- jquery UI -->
+<script src="{% static 'js/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Touch Punch - Touch Event Support for jQuery UI -->
+<script src="{% static 'js/plugins/touchpunch/jquery.ui.touch-punch.min.js' %}"></script>
+
+<script>
+// Function for sorting form items
+function doSortable() {
+      $("#{{ form.id }}").sortable({
+          connectWith: ".formItemList",
+          update: function(event, ui) {
+              item_order = {};
+              $("#{{ form.id }}").children().each(function(){
+                item_order[$(this).attr('id')] = $(this).index();
+              });
+              $.ajax({
+                  url: "{% url 'create_forms:detail' form.slug %}",
+                  type: "POST",
+                  data: { 'content': JSON.stringify(item_order),
+                          'csrfmiddlewaretoken' : '{{ csrf_token }}',
+                          'action': 'Edit'},
+                  success : function(data) {
+                      var result = $('<div />').append(data).find('#form_preview').html();
+                      $('#form_preview').html(result);
+                      doSortable();
+                          }
+              });
+          }
+      }).disableSelection();
+}
+</script>
+
+<script>
+$(document).ready(function($) {
+
+  // Call the sortable function on page load
+  doSortable();
+
+  // Show checkbox form
+  $("#checkbox_btn").click(function(){
+      $('#input1').attr('name', 'checkbox'); // Set name attribute for form
+      $("#modal_form_item .modal-title").html('Checkbox') // Set title for modal
+      $("#item_form_submit").val('Add Checkbox') // Set button value
+      // Clear form fields
+      $('#item_form #label_tag').val(''); // remove the value from the input
+      $('#item_form #help_text_tag').val(''); // remove the value from the input
+      $('#item_form #required_tag').prop('checked', false); // remove the value from the input
+      // Show modal
+      $('#modal_form_item').modal('show');
+  });
+
+  // Show textfield form
+  $("#textfield_btn").click(function(){
+      $('#input1').attr('name', 'textfield'); // Set name attribute for form
+      $("#modal_form_item .modal-title").html('Textfield') // Set title for modal
+      $("#item_form_submit").val('Add Textfield') // Set button value
+      // Clear form fields
+      $('#item_form #label_tag').val(''); // remove the value from the input
+      $('#item_form #help_text_tag').val(''); // remove the value from the input
+      $('#item_form #required_tag').prop('checked', false); // remove the value from the input
+      // Show modal
+      $('#modal_form_item').modal('show');
+  });
+
+
+  // Edit Form Name
+  $('#name_form').on('submit', function(event){
+      event.preventDefault();
+      edit_formname();
+  });
+  // AJAX call for editing form name
+  function edit_formname() {
+      $.ajax({
+          url : "{% url 'create_forms:detail' form.slug %}",
+          type : "POST",
+          data : {
+              'form_name': $('#form_name_tag').val(),
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          success : function(data) {
+              //
+              var result = $('<div />').append(data).find('#form_preview').html();
+              $('#form_preview').html(result);
+              doSortable();
+              var breadcrumb = $('<ol />').append(data).find('.breadcrumb').html();
+              $('.breadcrumb').html(breadcrumb);
+              $('#modal_name_form').modal('toggle');
+          }
+      });
+  };
+
+
+  // Create new form item
+  $('#item_form').on('submit', function(event){
+      event.preventDefault();
+      create_formitem();
+  });
+  // AJAX call for creating new form item
+  function create_formitem() {
+      $.ajax({
+          url : "{% url 'create_forms:detail' form.slug %}",
+          type : "POST",
+          data : {
+              'label': $('#label_tag').val(),
+              'help_text': $('#help_text_tag').val(),
+              'required': $('#required_tag').is(':checked'),
+              'form_type': $('#input1').attr('name'),
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          success : function(data) {
+              var result = $('<div />').append(data).find('#form_preview').html();
+              $('#form_preview').html(result);
+              $('#modal_form_item').modal('toggle');
+              doSortable();
+          }
+      });
+  };
+
+
+  // Edit Form Item modal
+  $(document).on('click', '.edit_info', function(){
+    $('#modal_item_edit').modal('show');
+    var catid = $(this).attr("id");
+    $.get("{% url 'create_forms:detail' form.slug %}", {content: catid, name: "form_edit"},
+    function(data){
+      var result = $('<div />').append(data).find('#modal_item_edit').html();
+      $('#modal_item_edit').html(result);
+    });
+  });
+
+  // Edit form item
+  $('#edit_item_form').on('submit', function(event){
+      event.preventDefault();
+      edit_formitem();
+  });
+  // AJAX call for editing form item
+  function edit_formitem() {
+      $.ajax({
+          url : "{% url 'create_forms:detail' form.slug %}",
+          type : "POST",
+          data : {
+              'label': $('#label_tag').val(),
+              'help_text': $('#help_text_tag').val(),
+              'required': $('#required_tag').is(':checked'),
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+              'slug': $('#cat_id').val(),
+              'edit': $('#edit').val(),
+          },
+          // handle a successful response
+          success : function(data) {
+            var result = $('<div />').append(data).find('#form_preview').html();
+            $('#form_preview').html(result);
+            $('#modal_item_edit').modal('toggle');
+            doSortable();
+          }
+      });
+  };
+
+
+  // Remove Form Item modal
+  $(document).on('click', '.remove_info', function(){
+    $('#modal_item_remove').modal('show');
+    var catid = $(this).attr("id");
+    $.get("{% url 'create_forms:detail' form.slug %}", {content: catid, name: "form_edit"},
+    function(data){
+      var result = $('<div />').append(data).find('#modal_item_remove').html();
+      $('#modal_item_remove').html(result);
+    });
+  });
+
+  // Remove form item
+  $('#remove_item_form').on('submit', function(event){
+      event.preventDefault();
+      remove_formitem();
+  });
+  // AJAX call for editing form item
+  function remove_formitem() {
+      $.ajax({
+          url : "{% url 'create_forms:detail' form.slug %}",
+          type : "POST",
+          data : {
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+              'slug': $('#cat_id').val(),
+              'remove': $('#remove').val(),
+              'label': $('#label_tag').val(),
+              'help_text': $('#help_text_tag').val(),
+              'required': $('#required_tag').is(':checked'),
+          },
+          // handle a successful response
+          success : function(data) {
+            var result = $('<div />').append(data).find('#form_preview').html();
+            $('#form_preview').html(result);
+            $('#modal_item_edit').modal('toggle');
+            doSortable();
+          }
+      });
+  };
+
+
+
+
+  /* Toggle checkbox when clicking row */
+  $(document).on('click', '.checkbox_select', function(){
+    if (event.target.type !== 'checkbox') {
+      $(':checkbox', this).trigger('click');
+    }
+  });
+
+
+});
+
+</script>
+{% endblock javascript %}

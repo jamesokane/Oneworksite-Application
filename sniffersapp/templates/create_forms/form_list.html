@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% load humanize %}
+
+{% block title %}Forms{% endblock %}
+{% block head_title %}Forms{% endblock %}
+
+{% block css %}
+<link href="{% static 'css/datatables.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb">
+    <li>
+        <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="active">
+        <strong>Forms</strong>
+    </li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="docket_buttons btn-group visible-md visible-lg pull-left">
+      <a class="btn btn-primary btn-sm" href=""><i class="fa fa-paste" style="padding-right: 5px;"></i>New Form</a></li>
+  </div>
+  <div class="docket_buttons btn-group visible-xs visible-sm pull-left">
+      <a class="btn btn-primary" href=""><i class="fa fa-paste" style="padding-right: 5px;"></i>New Form</a></li>
+  </div>
+</div>
+
+
+<div class="col-lg-12">
+    <div class="ibox float-e-margins col-lg-12">
+        <div class="ibox-content ibox-content-65vh">
+            <div class="table-responsive">
+                <table id="dataTables-forms" class="table table-hover dataTables-projects">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="hidden-xs hidden-sm hidden-md">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in form_list %}
+                        <tr class="table-row" data-href="{% url 'create_forms:detail' form.slug %}" id="{{ form.slug }}" style="cursor: pointer;">
+                            <td class="docket-text">
+                                {{ form.form_name }}
+                            </td>
+                            <td class="docket-text hidden-xs hidden-sm hidden-md">
+                                {{ form.form_description }}
+                            </td>
+                        </tr>
+                        {% endfor form%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block javascript %}
+<script src="{% static 'js/datatables.min.js' %}"></script>
+<script>
+
+$(document).ready(function($) {
+
+    $(".table-row").click(function() {
+        window.location = $(this).data("href");
+    });
+
+    $('.dataTables-forms').DataTable({
+      "pagingType": "simple",
+      "ordering": false,
+      "lengthChange": false,
+      "bInfo" : false,
+      pageLength:15,
+      responsive: true,
+      language: {
+          search: "_INPUT_",
+          searchPlaceholder: "Search Forms",
+          "emptyTable": "No forms have been created yet.",
+          "info": "",
+      },
+    });
+
+});
+
+</script>
+
+{% endblock javascript %}

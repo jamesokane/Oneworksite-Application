@@ -16,6 +16,7 @@ urlpatterns = [
     path('projects/', include('sniffersapp.projects.urls')),
     path('dockets/', include('sniffersapp.daily_dockets.urls')),
     path('timesheets/', include('sniffersapp.timesheet.urls')),
+    path('create_forms/', include('sniffersapp.create_forms.urls')),
 
     path('admin/', admin.site.urls),
 
