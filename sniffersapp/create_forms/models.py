@@ -34,6 +34,7 @@ class FormNew(models.Model):
 class FormItem(models.Model):
 
     form_options = (
+        ('text', 'text'),
         ('checkbox', 'checkbox'),
         ('textfield', 'textfield'),
     )
@@ -43,15 +44,19 @@ class FormItem(models.Model):
     uuid = ShortUUIDField()
     slug = models.CharField(max_length=80, unique=True)
 
+    # General fields in a form field
+    text = models.TextField(blank=True)
     label = models.CharField(max_length=80, blank=True)
     help_text = models.CharField(max_length=80, blank=True)
-    required = models.BooleanField()
+    required = models.BooleanField(blank=True, default=False)
 
-    removed = models.BooleanField(blank=True)
+    # Used to remove form items instead of deleting them
+    removed = models.BooleanField(blank=True, default=False)
 
     form_type = models.CharField(max_length=80, blank=False, choices=form_options)
 
-    checkbox = models.BooleanField(blank=True)
+    # Fields used once form has been created
+    checkbox = models.BooleanField(blank=True, default=False)
     textfield = models.TextField(blank=True)
 
     created_on = models.DateTimeField(auto_now_add=True)

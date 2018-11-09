@@ -27,7 +27,7 @@ class FormItemForm(forms.ModelForm):
 
     class Meta:
         model = FormItem
-        fields = ('label', 'help_text', 'required', 'checkbox')
+        fields = ('label', 'help_text', 'required', 'text')
 
         widgets = {
             'label': forms.TextInput(attrs={'id': 'label_tag',
@@ -36,6 +36,6 @@ class FormItemForm(forms.ModelForm):
                                                      'class': 'form-control'}),
             'required': forms.CheckboxInput(attrs={'id': "required_tag",
                                                      'class': 'form-control'}),
-            'checkbox': forms.CheckboxInput(attrs={'id': "checkbox_tag",
+            'text': forms.Textarea(attrs={'id': "text_tag",
                                                      'class': 'form-control'}),
             }

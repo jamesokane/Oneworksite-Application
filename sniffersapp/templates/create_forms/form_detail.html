@@ -40,30 +40,58 @@
                   <a id="checkbox_btn" class="btn btn-default"><i class="fa fa-square-o"></i>Checkbox</a>
               </div>
               <div class="pull-left">
-                  <a id="textfield_btn" class="btn btn-default"><i class="fa fa-text-width"></i>TextField</a>
+                  <a id="textfield_btn" class="textfield_btn btn btn-default"><i class="fa fa-text-width"></i>TextField</a>
               </div>
             </div>
+
             <!-- Form Field Buttons Finish-->
-
-            <div id="form_preview_break" class="row"> Form Preview </div>
-
+            <div id="form_preview_area" class="row">
+            <div id="form_preview_break">Preview/Edit Form</div>
+            </div>
             <!-- Form Preview Start-->
+
             <div id="form_preview">
-              <div id="form_title">{{ form.form_name }}
+              <div class="form_title">{{ form.form_name }}
                 <a data-toggle="modal" data-target="#modal_name_form">
                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </a>
               </div>
               <ul class="sortable-list formItemList agile-list" id="{{ form.id }}">
                   {% for item in form_list %}
+                      <!-- If item is a text start -->
+                      {% if item.form_type == "text" %}
+                        <li id="{{ item.id }}" class="row text_row">
+                          <div class="text_info col-lg-11 col-md-10 col-sm-9">
+                            <div>{{ item.text }}</div>
+                          </div>
+                          <div class="edit_buttons ">
+                            <a id="{{ item.slug }}" class="edit_info">
+                              <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </a>
+                            <a id="{{ item.slug }}" class="remove_info">
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                          </div>
+                        </li>
+                      {% endif  %}
+                      <!-- If item is a textfield finish -->
                       <!-- If item is a checkbox start -->
                       {% if item.form_type == "checkbox" %}
                           <li id="{{ item.id }}" class="row checkbox_row">
-                            <div class="checkbox_select">
-                              <div class="checkbox_label col-lg-10 col-sm-9">{{ item.label }} - {{ item.order }} </div>
-                              <div class="col-lg-1 col-sm-1"><input type="checkbox"></div>
+                            <div class="help_icon" id="{{ item.slug }}">
+                              {% if item.help_text != "" %}
+                                <a>
+                                <i class="fa fa-question-circle" aria-hidden="true"></i>
+                                </a>
+                              {% endif %}
                             </div>
-                            <div class="col-lg-1 col-sm-2 ">
+                            <div class="checkbox_select col-lg-11 col-md-10 col-sm-9">
+                              <div class="checkbox_label">
+                                {{ item.label }}
+                              </div>
+                              <div class="checkbox_box"><input type="checkbox"></div>
+                            </div>
+                            <div class="edit_buttons">
                               <a id="{{ item.slug }}" class="edit_info">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               </a>
@@ -77,10 +105,17 @@
                       <!-- If item is a textfield start -->
                       {% if item.form_type == "textfield" %}
                         <li id="{{ item.id }}" class="row textfield_row">
-                          <div class="col-lg-11 col-sm-10">
+                          <div class="help_icon" id="{{ item.slug }}">
+                            {% if item.help_text != "" %}
+                              <a>
+                              <i class="fa fa-question-circle" aria-hidden="true"></i>
+                              </a>
+                            {% endif %}
+                          </div>
+                          <div class="textfield_info col-lg-11 col-md-10 col-sm-9">
                             <textarea class="textfield_area" placeholder="{{ item.label }}"></textarea>
                           </div>
-                          <div class="col-lg-1 col-sm-2 ">
+                          <div class="edit_buttons ">
                             <a id="{{ item.slug }}" class="edit_info">
                               <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             </a>
@@ -93,43 +128,6 @@
                       <!-- If item is a textfield finish -->
                   {% endfor item %}
               </ul>
-              <!-- {% for item in form_list %} -->
-                <!-- If item is a checkbox start -->
-                <!-- {% if item.form_type == "checkbox" %}
-                  <div class="row checkbox_row">
-                    <div class="checkbox_select">
-                      <div class="checkbox_label col-lg-10 col-sm-9">{{ item.label }}</div>
-                      <div class="col-lg-1 col-sm-1"><input type="checkbox"></div>
-                    </div>
-                    <div class="col-lg-1 col-sm-2 ">
-                      <a id="{{ item.slug }}" class="edit_info">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      </a>
-                      <a id="{{ item.slug }}" class="remove_info">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                      </a>
-                    </div>
-                  </div>
-                {% endif  %} -->
-                <!-- If item is a checkbox finish -->
-                <!-- If item is a textfield start -->
-                <!-- {% if item.form_type == "textfield" %}
-                  <div class="row textfield_row">
-                    <div class="col-lg-11 col-sm-10">
-                      <textarea class="textfield_area" placeholder="{{ item.label }}"></textarea>
-                    </div>
-                    <div class="col-lg-1 col-sm-2 ">
-                      <a id="{{ item.slug }}" class="edit_info">
-                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                      </a>
-                      <a id="{{ item.slug }}" class="remove_info">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                      </a>
-                    </div>
-                  </div>
-                {% endif  %} -->
-                <!-- If item is a textfield finish -->
-              <!-- {% endfor %} -->
             </div>
             <!-- Form Preview Finish-->
         </div>
@@ -181,19 +179,25 @@
                   <input id="input1" type="hidden" name=""/>
                   {% csrf_token %}
                   <div class="row hidden"><strong>Please ensure that you have completed all the required fields *</strong></div>
-                  <div class="row">
+                  <div class="row text_form_item">
+                    <div class="form-group">
+                      <label>{{ item_form.text.label }} *</label>
+                      {{ item_form.text }}
+                    </div>
+                  </div>
+                  <div class="row other_form_item">
                     <div class="form-group">
                       <label>{{ item_form.label.label }} *</label>
                       {{ item_form.label }}
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="row other_form_item">
                     <div class="form-group">
                       <label>{{ item_form.help_text.label }}</label>
                       {{ item_form.help_text }}
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="row other_form_item">
                     <div class="form-group">
                       <label>{{ item_form.required.label }}</label>
                       {{ item_form.required }}
@@ -220,10 +224,19 @@
             </div>
             <div class="modal-body">
               <form id="edit_item_form" role="form" method="POST">
-                  <input id="slug" type="hidden" name="slug" value="{{ item_slug }}" />
+                  <input id="slug" type="hidden" name="slug" value="{{ edit_item.slug }}" />
                   <input id="edit" type="hidden" name="edit" value="edit"/>
                   {% csrf_token %}
                   <div class="row hidden"><strong>Please ensure that you have completed all the required fields *</strong></div>
+                  {% if edit_item.label == "" %}
+                  <div class="row">
+                    <div class="form-group">
+                      <label>{{ edit_item_form.text.label }} *</label>
+                      {{ edit_item_form.text }}
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if edit_item.text == "" %}
                   <div class="row">
                     <div class="form-group">
                       <label>{{ edit_item_form.label.label }} *</label>
@@ -242,6 +255,7 @@
                       {{ edit_item_form.required }}
                     </div>
                   </div>
+                  {% endif %}
               </form>
             </div>
             <div class="modal-footer">
@@ -263,14 +277,13 @@
             </div>
             <div class="modal-body">
               <form id="remove_item_form" role="form" method="POST">
-                  <input id="slug" type="hidden" name="slug" value="{{ item_slug }}" />
+                  <input id="slug" type="hidden" name="slug" value="{{ edit_item.slug }}" />
                   <input id="remove" type="hidden" name="remove" value="remove"/>
                   {% csrf_token %}
                   <div class="row"><strong>The following item will be removed from the form</strong></div>
                   <div class="row">
                     <div class="form-group">
                       {{ edit_item.label }}
-                      <div class="hidden">{{ edit_item_form }}</div>
                     </div>
                   </div>
               </form>
@@ -283,6 +296,25 @@
     </div>
 </div>
 <!-- Remove Form Item Modal Finish -->
+
+<!-- Help Info Modal Start  -->
+<div class="modal inmodal fade" id="modal_help_info" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Help Information</h4>
+            </div>
+            <div class="modal-body">
+              {{ help_item.help_text }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Help Info Modal Finish -->
 
 {% endblock content %}
 
@@ -318,13 +350,28 @@ function doSortable() {
           }
       }).disableSelection();
 }
-</script>
 
-<script>
 $(document).ready(function($) {
 
   // Call the sortable function on page load
   doSortable();
+
+  // Show text form
+  $("#text_btn").click(function(){
+      $('#input1').attr('name', 'text'); // Set name attribute for form
+      $("#modal_form_item .modal-title").html('Text') // Set title for modal
+      $("#item_form_submit").val('Add Text') // Set button value
+      // Clear form fields
+      $('#item_form #text_tag').val(''); // remove the value from the input
+      $('#item_form #label_tag').val(''); // remove the value from the input
+      $('#item_form #help_text_tag').val(''); // remove the value from the input
+      $('#item_form #required_tag').prop('checked', false); // remove the value from the input
+      // Show modal
+      $('#modal_form_item').modal('show');
+      // Hide other form <fieldset>
+      $('#item_form .text_form_item').show();
+      $('#item_form .other_form_item').hide();
+  });
 
   // Show checkbox form
   $("#checkbox_btn").click(function(){
@@ -332,11 +379,15 @@ $(document).ready(function($) {
       $("#modal_form_item .modal-title").html('Checkbox') // Set title for modal
       $("#item_form_submit").val('Add Checkbox') // Set button value
       // Clear form fields
+      $('#item_form #text_tag').val(''); // remove the value from the input
       $('#item_form #label_tag').val(''); // remove the value from the input
       $('#item_form #help_text_tag').val(''); // remove the value from the input
       $('#item_form #required_tag').prop('checked', false); // remove the value from the input
       // Show modal
       $('#modal_form_item').modal('show');
+      // Hide other form <fieldset>
+      $('#item_form .text_form_item').hide();
+      $('#item_form .other_form_item').show();
   });
 
   // Show textfield form
@@ -345,11 +396,15 @@ $(document).ready(function($) {
       $("#modal_form_item .modal-title").html('Textfield') // Set title for modal
       $("#item_form_submit").val('Add Textfield') // Set button value
       // Clear form fields
+      $('#item_form #text_tag').val(''); // remove the value from the input
       $('#item_form #label_tag').val(''); // remove the value from the input
       $('#item_form #help_text_tag').val(''); // remove the value from the input
       $('#item_form #required_tag').prop('checked', false); // remove the value from the input
       // Show modal
       $('#modal_form_item').modal('show');
+      // Hide other form <fieldset>
+      $('#item_form .text_form_item').hide();
+      $('#item_form .other_form_item').show();
   });
 
 
@@ -391,6 +446,7 @@ $(document).ready(function($) {
           url : "{% url 'create_forms:detail' form.slug %}",
           type : "POST",
           data : {
+              'text': $('#text_tag').val(),
               'label': $('#label_tag').val(),
               'help_text': $('#help_text_tag').val(),
               'required': $('#required_tag').is(':checked'),
@@ -429,6 +485,7 @@ $(document).ready(function($) {
           url : "{% url 'create_forms:detail' form.slug %}",
           type : "POST",
           data : {
+              'text': $('#text_tag').val(),
               'label': $('#label_tag').val(),
               'help_text': $('#help_text_tag').val(),
               'required': $('#required_tag').is(':checked'),
@@ -472,9 +529,6 @@ $(document).ready(function($) {
               'csrfmiddlewaretoken': '{{ csrf_token }}',
               'slug': $('#cat_id').val(),
               'remove': $('#remove').val(),
-              'label': $('#label_tag').val(),
-              'help_text': $('#help_text_tag').val(),
-              'required': $('#required_tag').is(':checked'),
           },
           // handle a successful response
           success : function(data) {
@@ -486,7 +540,16 @@ $(document).ready(function($) {
       });
   };
 
-
+  // Help Info modal
+  $(document).on('click', '.help_icon', function(){
+    $('#modal_help_info').modal('show');
+    var catid = $(this).attr("id");
+    $.get("{% url 'create_forms:detail' form.slug %}", {content: catid, name: "help_info"},
+    function(data){
+      var result = $('<div />').append(data).find('#modal_help_info').html();
+      $('#modal_help_info').html(result);
+    });
+  });
 
 
   /* Toggle checkbox when clicking row */
